@@ -1,0 +1,72 @@
+.main{
+    padding-left: 60px;
+}
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 60px;
+    height: 100%;
+    background-color: #f7f7f7;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.sidebar:hover {
+    width: 200px;
+}
+
+.nav {
+    padding: 40px 10px;
+}
+
+.nav li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.inputRow{
+    display: flex;
+    flex-direction: row;
+}
+.iconPlaceholder {
+    width: 40px;
+    height: 40px;
+    background-color: #d0d0d0;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.menuText {
+    opacity: 0;
+    white-space: nowrap;
+    margin-left: 10px;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar:hover .menuText {
+    opacity: 1;
+}
+
+.sidebar:hover+.content {
+    margin-left: 250px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 1;
+    pointer-events: none;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar:hover~.overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
