@@ -1,3 +1,4 @@
+"use server"
 import { makeAutoObservable } from 'mobx';
 import { Tender } from './Tender';
 
@@ -21,7 +22,8 @@ class TenderStorage {
             "John Doe",
             "123456789",
             "john.doe@example.com",
-            []
+            [],
+            ["lab2.pdf", "lab2.pdf"]
         );
 
         const tender2 = new Tender(1,
@@ -36,6 +38,7 @@ class TenderStorage {
             "Jane Smith",
             "987654321",
             "jane.smith@example.com",
+            [],
             []
         );
         const tender3 = new Tender(2,
@@ -50,6 +53,7 @@ class TenderStorage {
             "Alice Johnson",
             "456789123",
             "alice.johnson@example.com",
+            [],
             []
         );
         this.allTenders.push(tender1)
@@ -69,4 +73,12 @@ class TenderStorage {
 
 }
 
-export const tenderStorage = new TenderStorage();
+const tenderStorage = new TenderStorage();
+
+export async function getAllTenders() {
+    return tenderStorage.getAll().map(tender => Tender.toPlainObject(tender));
+}
+
+export async function getTenderById(id:number) {
+    return Tender.toPlainObject(tenderStorage.getById(id));
+}

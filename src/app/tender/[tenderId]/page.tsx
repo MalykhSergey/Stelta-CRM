@@ -1,36 +1,50 @@
 "use client"
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
+import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
+import { Tender } from '@/app/models/Tender';
+import { getTenderById } from '@/app/models/TenderStorage';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { useContext } from 'react';
+import { useEffect } from 'react';
 import TenderForm from '../../components/TenderForm/TenderForm';
-import { TenderStorageContext } from '../../layout';
 
-const TenderPage = observer(({ params }: { params: { tenderId: string } }) => {
-  let tenderStorage = useContext(TenderStorageContext)
-  let isEditable = useLocalObservable(() => ({
-    company: false,
-    name: false,
-    regNumber: true,
-    lotNumber: true,
-    initialMaxPrice: true,
-    price: true,
-    dates: true,
-    contactPerson: true,
-    phoneNumber: true,
-    email: true,
-  }))
-  const handleToggle = (field: keyof typeof isEditable) => {
-    isEditable[field] = !isEditable[field];
-  };
-  const tender = tenderStorage.getById(Number.parseInt(params.tenderId));
-  return (
-    <div>
-      <h1>Форма для тендера</h1>
-      <div>
-        <TenderForm tender={tender} isEditable={isEditable} />
-        <CommentsForm tender={tender}></CommentsForm>
-        {/* <TenderFormCopy tender={tenderStorage.getAll()[0]}/> */}
-        {/* <form style={{ marginTop: '50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
+    let isEditable = useLocalObservable(() => ({
+        company: false,
+        name: false,
+        regNumber: true,
+        lotNumber: true,
+        initialMaxPrice: true,
+        price: true,
+        dates: true,
+        contactPerson: true,
+        phoneNumber: true,
+        email: true,
+    }))
+    let tender = useLocalObservable(() => ({
+        tender: Tender.getEmpty(),
+        update(tender: Tender) {
+            this.tender = tender
+        }
+    }))
+    const handleToggle = (field: keyof typeof isEditable) => {
+        isEditable[field] = !isEditable[field];
+    };
+    useEffect(() => {
+        const loadTender = async () => {
+            let loaded_tender = await getTenderById(params.tenderId)
+            tender.update(Tender.fromPlainObject(loaded_tender))
+        }
+        loadTender()
+    }, []);
+    return (
+        <div>
+            <h1>Форма для тендера</h1>
+            <div>
+                <TenderForm tender={tender.tender} isEditable={isEditable} />
+                <CommentsForm tender={tender.tender}></CommentsForm>
+                <DocumentsForm tender={tender.tender}></DocumentsForm>
+                {/* <TenderFormCopy tender={tenderStorage.getAll()[0]}/> */}
+                {/* <form style={{ marginTop: '50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {Object.keys(isEditable).map((key) => (
             <div key={key} style={{ marginBottom: '10px' }}>
               <label>
@@ -44,9 +58,9 @@ const TenderPage = observer(({ params }: { params: { tenderId: string } }) => {
             </div>
           ))}
         </form> */}
-      </div>
-    </div>
-  );
+            </div>
+        </div>
+    );
 });
 
 export default TenderPage;

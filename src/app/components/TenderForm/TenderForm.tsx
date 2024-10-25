@@ -64,7 +64,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
                 </div>
             )
         }
-        return <input type="text" className={styles.input} disabled value={value}/>
+        return <input type="text" className={styles.input} disabled value={value} />
     }
 
     const company = renderField("Company", tender.company, isEditable.company)
@@ -77,7 +77,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, isEditable.phoneNumber)
     const email = renderField("Email", tender.email, isEditable.email)
     return (
-        <form className={styles.form}>
+        <form className={`${styles.form} card`} >
             <label className={styles.label}>Статус:</label>
             <div className={styles.formGroup}>
                 <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}>
@@ -90,17 +90,17 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
                 </select>
             </div>
             <label className={styles.label}>Организация:</label>
-            {company}
-            <label className={styles.label}>Наименование тендера:</label>
-            {name}
-            <label className={styles.label}>Рег. №:</label>
-            {regNumber}
-            <label className={styles.label}>Лот №:</label>
-            {lotNumber}
-            <label className={styles.label}>НМЦК:</label>
-            {initialMaxPrice}
-            <label className={styles.label}>Наша цена:</label>
-            {price}
+    { company }
+    <label className={styles.label}>Наименование тендера:</label>
+    { name }
+    <label className={styles.label}>Рег. №:</label>
+    { regNumber }
+    <label className={styles.label}>Лот №:</label>
+    { lotNumber }
+    <label className={styles.label}>НМЦК:</label>
+    { initialMaxPrice }
+    <label className={styles.label}>Наша цена:</label>
+    { price }
             <label className={styles.label}>Dates:</label>
             <div className={styles.formGroup}>
                 <input
@@ -114,12 +114,12 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
             </div>
 
             <label className={styles.label}>Контактное лицо:</label>
-            {contactPerson}
-            <label className={styles.label}>Тел.:</label>
-            {phoneNumber}
-            <label className={styles.label}>Email:</label>
-            {email}
-        </form>
+    { contactPerson }
+    <label className={styles.label}>Тел.:</label>
+    { phoneNumber }
+    <label className={styles.label}>Email:</label>
+    { email }
+        </form >
     )
 })
 

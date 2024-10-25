@@ -2,7 +2,6 @@ import { makeAutoObservable } from "mobx"
 import { Result } from "../Result"
 
 export class Tender {
-
   constructor(
     public id: number,
     public status: number,
@@ -16,7 +15,8 @@ export class Tender {
     public contactPerson: string,
     public phoneNumber: string,
     public email: string,
-    public comments: string[]
+    public comments: string[],
+    public fileNames: string[]
   ) {
     if (comments.length == 0) {
       for (let i = 0; i < 6; i++)
@@ -96,5 +96,43 @@ export class Tender {
       return { ok: false, error: 'Email не содержит @!' }
     }
     return { ok: true, value: '' }
+  }
+  static getEmpty() {
+    return new Tender(2,
+      3,
+      "TEST",
+      "TEST",
+      "TEST",
+      "LOT-003",
+      '2000',
+      '1800',
+      [["2021-03-01", "2021-03-15"]],
+      "Alice Johnson",
+      "456789123",
+      "alice.johnson@example.com",
+      [],
+      []
+    );
+  }
+  static toPlainObject(tender: Tender) {
+    return { ...tender };
+  }
+  static fromPlainObject(obj: any): Tender {
+    return new Tender(
+      obj.id,
+      obj.status,
+      obj.company,
+      obj.name,
+      obj.regNumber,
+      obj.lotNumber,
+      obj.initialMaxPrice,
+      obj.price,
+      obj.dates,
+      obj.contactPerson,
+      obj.phoneNumber,
+      obj.email,
+      obj.comments,
+      obj.fileNames
+    );
   }
 }  

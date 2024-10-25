@@ -25,7 +25,6 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({ tender }) => {
             comments.push(<p key={`p_${i}`}>{tender.comments[i]}</p>)
         }
     }
-    console.log(tender.comments[tender.status])
     comments.push(<label key={`label_${tender.status}`} className={styles.label}>{Object.values(Status)[tender.status]}</label>)
     comments.push(<textarea key='textarea' className={styles.input} onChange={handleChange} value={tender.comments[tender.status]}></textarea>)
     return (

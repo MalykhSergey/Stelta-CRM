@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { createContext } from "react";
 import "./globals.css";
 import styles from "./layout.module.css";
-import { tenderStorage } from "./models/TenderStorage";
+// import { tenderStorage } from "./models/TenderStorage";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,7 +16,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const TenderStorageContext = createContext(tenderStorage);
+// export const TenderStorageContext = createContext(tenderStorage);
 
 export default function RootLayout({
   children,
@@ -50,7 +50,7 @@ export default function RootLayout({
         </div>
         <div className={styles.overlay}></div>
         <main className={styles.main}>
-          <TenderStorageContext.Provider value={tenderStorage}></TenderStorageContext.Provider>
+          {/* <TenderStorageContext.Provider value={tenderStorage}></TenderStorageContext.Provider> */}
           {children}
         </main>
       </body>

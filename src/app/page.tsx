@@ -1,12 +1,21 @@
 "use client"
-import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
 import TenderCard from './components/TenderCard/TenderCard';
-import { tenderStorage } from './models/TenderStorage';
+import { Tender } from './models/Tender';
+import { getAllTenders } from './models/TenderStorage';
 import styles from './page.module.css';
 
-export default observer(() => {
+export default function HomePage() {
 
-  let tenders = tenderStorage.getAll();
+  const [tenders, setTenders] = useState<Tender[]>([]);
+
+  useEffect(() => {
+    const loadTenders = async () => {
+      let tenders = await getAllTenders()
+      setTenders(tenders.map(tender => Tender.fromPlainObject(tender)))
+    }
+    loadTenders()
+  }, []);
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -52,4 +61,4 @@ export default observer(() => {
       </main>
     </div>
   );
-});
+};
