@@ -2,7 +2,7 @@
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
 import { Tender } from '@/app/models/Tender';
-import { getTenderById } from '@/app/models/TenderStorage';
+import { getTenderById } from '@/app/models/TenderService';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import TenderForm from '../../components/TenderForm/TenderForm';
@@ -31,7 +31,7 @@ const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
     };
     useEffect(() => {
         const loadTender = async () => {
-            let loaded_tender = await getTenderById(params.tenderId)
+            let loaded_tender = JSON.parse(await getTenderById(params.tenderId))
             tender.update(Tender.fromPlainObject(loaded_tender))
         }
         loadTender()

@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import TenderCard from './components/TenderCard/TenderCard';
 import { Tender } from './models/Tender';
-import { getAllTenders } from './models/TenderStorage';
 import styles from './page.module.css';
+import { getAllTenders } from './models/TenderService';
 
 export default function HomePage() {
 
@@ -11,8 +11,8 @@ export default function HomePage() {
 
   useEffect(() => {
     const loadTenders = async () => {
-      let tenders = await getAllTenders()
-      setTenders(tenders.map(tender => Tender.fromPlainObject(tender)))
+      let tenders = JSON.parse(await getAllTenders())
+      setTenders(tenders.map((tender: any) => Tender.fromPlainObject(tender)))
     }
     loadTenders()
   }, []);

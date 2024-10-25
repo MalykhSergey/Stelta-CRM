@@ -1,7 +1,5 @@
-"use server"
-import { makeAutoObservable } from 'mobx';
-import { Tender } from './Tender';
-
+import { makeAutoObservable } from "mobx";
+import { Tender } from "./Tender";
 
 class TenderStorage {
     private allTenders = [] as Tender[]
@@ -72,13 +70,5 @@ class TenderStorage {
     }
 
 }
-
 const tenderStorage = new TenderStorage();
-
-export async function getAllTenders() {
-    return tenderStorage.getAll().map(tender => Tender.toPlainObject(tender));
-}
-
-export async function getTenderById(id:number) {
-    return Tender.toPlainObject(tenderStorage.getById(id));
-}
+export default tenderStorage;
