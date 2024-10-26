@@ -2,7 +2,12 @@
 import tenderStorage from '@/app/models/TenderStorage';
 import fs from 'fs/promises';
 export default async function uploadHadler(formData: FormData) {
-    let file = formData.get('file') as File
-    await fs.writeFile(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, Buffer.from(await file.arrayBuffer()));
-    tenderStorage.getById(Number.parseInt(formData.get('tenderId') + "")).fileNames.push(file.name)
+    const files = formData.getAll('file') as File[]
+    const tenderId = formData.get('tenderId')?.toString()
+    if (tenderId)
+        for (let file of files) {
+            let file_name = decodeURI(file.name)
+            await fs.writeFile(`${process.env.FILE_UPLOAD_PATH}/${file_name}`, Buffer.from(await file.arrayBuffer()));
+            await tenderStorage.addFile(Number.parseInt(tenderId), file_name)
+        }
 }

@@ -9,7 +9,7 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import TenderForm from '../../components/TenderForm/TenderForm';
 
-const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
+const TenderPage = observer(({ params }: { params: { tenderId: string } }) => {
     let isEditable = useLocalObservable(() => ({
         company: false,
         name: false,
@@ -33,7 +33,7 @@ const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
     };
     useEffect(() => {
         const loadTender = async () => {
-            let loaded_tender = Tender.fromPlainObject(JSON.parse(await getTenderById(params.tenderId)))
+            let loaded_tender = Tender.fromPlainObject(JSON.parse(await getTenderById(Number.parseInt(params.tenderId))))
             makeAutoObservable(loaded_tender)
             tender.update(loaded_tender)
         }

@@ -17,14 +17,11 @@ export class Tender {
   public contactPerson: string = ''
   public phoneNumber: string = ''
   public email: string = ''
-  public comments: string[] = []
+  public comments: string[] = ['','','','','','']
   public fileNames: string[] = []
-  private rebiddingPrices: RebiddingPrice[] = []
-  private datesRequests: DatesRequests[] = []
-  constructor() {
-    for (let i = 0; i < 6; i++)
-      this.comments.push('')
-  }
+  public rebiddingPrices: RebiddingPrice[] = []
+  public datesRequests: DatesRequests[] = []
+  constructor() {}
   setStatus(value: string): Result<string, string> {
     this.status = Number.parseInt(value)
     if (value == "") {
