@@ -23,7 +23,7 @@ const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
         email: true,
     }))
     let tender = useLocalObservable(() => ({
-        tender: Tender.getEmpty(),
+        tender: new Tender(),
         update(tender: Tender) {
             this.tender = tender
         }

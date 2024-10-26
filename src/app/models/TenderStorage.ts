@@ -1,62 +1,26 @@
-import { makeAutoObservable } from "mobx";
 import { Tender } from "./Tender";
 
 class TenderStorage {
     private allTenders = [] as Tender[]
     constructor() {
-        console.log('init tender storage')
-        makeAutoObservable(this);
-        // for test
-
-        const tender1 = new Tender(0,
-            3,
-            "Company A",
-            "Tender 1",
-            "REG-001",
-            "LOT-001",
-            '1000',
-            '900',
-            [["2021-01-01", "2021-01-15"]],
-            "John Doe",
-            "123456789",
-            "john.doe@example.com",
-            [],
-            ["lab2.pdf", "lab2.pdf"]
-        );
-
-        const tender2 = new Tender(1,
-            2,
-            "Company B",
-            "Tender 2",
-            "REG-002",
-            "LOT-002",
-            1500,
-            1400,
-            [["2021-02-01", "2021-02-15"]],
-            "Jane Smith",
-            "987654321",
-            "jane.smith@example.com",
-            [],
-            []
-        );
-        const tender3 = new Tender(2,
-            3,
-            "Company C",
-            "Tender 3",
-            "REG-003",
-            "LOT-003",
-            '2000',
-            '1800',
-            [["2021-03-01", "2021-03-15"]],
-            "Alice Johnson",
-            "456789123",
-            "alice.johnson@example.com",
-            [],
-            []
-        );
+        const tender1 = new Tender();
+        tender1.id = 0
+        tender1.status = 3
+        tender1.company = "Company A"
+        tender1.name = "Tender 1"
+        tender1.regNumber = "REG-001"
+        tender1.lotNumber = "LOT-001"
+        tender1.initialMaxPrice = '1000'
+        tender1.price = '900'
+        tender1.date1_start = "2021-01-01"
+        tender1.date1_finish = "2021-01-01"
+        tender1.date2_finish = "2021-01-01"
+        tender1.contactPerson = "John Doe"
+        tender1.phoneNumber = "123456789"
+        tender1.email = "john.doe@example.com"
+        tender1.comments = []
+        tender1.fileNames = ["lab2.pdf", "lab2.pdf"]
         this.allTenders.push(tender1)
-        this.allTenders.push(tender2)
-        this.allTenders.push(tender3)
     }
     add(tender: Tender) {
         this.allTenders.push(tender)

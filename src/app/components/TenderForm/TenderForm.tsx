@@ -1,9 +1,9 @@
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { observer, useLocalObservable } from 'mobx-react-lite'
+import { Status } from '../../models/Status'
 import { Tender } from '../../models/Tender'
 import styles from './TenderForm.module.css'
-import { Status } from '../../models/Status'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
 interface TenderFormProps {
     tender: Tender,
@@ -90,35 +90,57 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
                 </select>
             </div>
             <label className={styles.label}>Организация:</label>
-    { company }
-    <label className={styles.label}>Наименование тендера:</label>
-    { name }
-    <label className={styles.label}>Рег. №:</label>
-    { regNumber }
-    <label className={styles.label}>Лот №:</label>
-    { lotNumber }
-    <label className={styles.label}>НМЦК:</label>
-    { initialMaxPrice }
-    <label className={styles.label}>Наша цена:</label>
-    { price }
-            <label className={styles.label}>Dates:</label>
+            {company}
+            <label className={styles.label}>Наименование тендера:</label>
+            {name}
+            <label className={styles.label}>Рег. №:</label>
+            {regNumber}
+            <label className={styles.label}>Лот №:</label>
+            {lotNumber}
+            <label className={styles.label}>НМЦК:</label>
+            {initialMaxPrice}
+            <label className={styles.label}>Наша цена:</label>
+            {price}
+            <label className={styles.label}>Дата и время начала подачи 1 этапа:</label>
             <div className={styles.formGroup}>
                 <input
-                    type="text"
-                    name="Dates"
-                    value={tender.dates}
+                    type="datetime-local"
+                    name="Date1_start"
+                    value={tender.date1_start}
                     onChange={handleChange}
                     className={styles.input}
                 />
-                {errors.Dates && <span className={styles.error}>{errors.Dates}</span>}
+                {errors.Date1_start && <span className={styles.error}>{errors.Date1_start}</span>}
             </div>
-
+            <label htmlFor="date1_start" className={styles.label}>Дата и время окончания подачи 1 этапа:</label>
+            <div className={styles.formGroup}>
+                <input
+                    type="datetime-local"
+                    name="Date1_start"
+                    id='date1_start'
+                    value={tender.date1_finish}
+                    onChange={handleChange}
+                    className={styles.input}
+                />
+                {errors.Date1_finish && <span className={styles.error}>{errors.Date1_finish}</span>}
+            </div>
+            <label className={styles.label}>Дата и время окончания подачи 2 этапа:</label>
+            <div className={styles.formGroup}>
+                <input
+                    type="datetime-local"
+                    name="Date1_start"
+                    value={tender.date2_finish}
+                    onChange={handleChange}
+                    className={styles.input}
+                />
+                {errors.Date2_finish && <span className={styles.error}>{errors.Date2_finish}</span>}
+            </div>
             <label className={styles.label}>Контактное лицо:</label>
-    { contactPerson }
-    <label className={styles.label}>Тел.:</label>
-    { phoneNumber }
-    <label className={styles.label}>Email:</label>
-    { email }
+            {contactPerson}
+            <label className={styles.label}>Тел.:</label>
+            {phoneNumber}
+            <label className={styles.label}>Email:</label>
+            {email}
         </form >
     )
 })

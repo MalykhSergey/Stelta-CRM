@@ -1,31 +1,29 @@
-import { makeAutoObservable } from "mobx"
 import { Result } from "../Result"
+import { DatesRequests } from "./DateRequest"
 import { RebiddingPrice } from "./RebiddingPrice"
-import { DatesRequests } from "./DatesRequests"
 
 export class Tender {
-  constructor(
-    public id: number,
-    public status: number,
-    public company: string,
-    public name: string,
-    public regNumber: string,
-    public lotNumber: string,
-    public initialMaxPrice: string,
-    public price: string,
-    public dates: string[2][2],
-    public contactPerson: string,
-    public phoneNumber: string,
-    public email: string,
-    public comments: string[],
-    public fileNames: string[],
-    private rebiddingPrices: RebiddingPrice[],
-    private datesRequests: DatesRequests[],
-  ) {
-    if (comments.length == 0) {
-      for (let i = 0; i < 6; i++)
-        this.comments.push('')
-    }
+  public id: number = 0
+  public status: number = 0
+  public company: string = ''
+  public name: string = ''
+  public regNumber: string = ''
+  public lotNumber: string = ''
+  public initialMaxPrice: string = ''
+  public price: string = ''
+  public date1_start = ''
+  public date1_finish = ''
+  public date2_finish = ''
+  public contactPerson: string = ''
+  public phoneNumber: string = ''
+  public email: string = ''
+  public comments: string[] = []
+  public fileNames: string[] = []
+  private rebiddingPrices: RebiddingPrice[] = []
+  private datesRequests: DatesRequests[] = []
+  constructor() {
+    for (let i = 0; i < 6; i++)
+      this.comments.push('')
   }
   setStatus(value: string): Result<string, string> {
     this.status = Number.parseInt(value)
@@ -76,6 +74,27 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
+  setDate1_start(value: string) {
+    this.date1_start = value
+    if (value == "") {
+      return { ok: false, error: 'Поле не должно быть пустым!' }
+    }
+    return { ok: true, value: '' }
+  }
+  setDate1_finish(value: string) {
+    this.date1_finish = value
+    if (value == "") {
+      return { ok: false, error: 'Поле не должно быть пустым!' }
+    }
+    return { ok: true, value: '' }
+  }
+  setDate2_finish(value: string) {
+    this.date2_finish = value
+    if (value == "") {
+      return { ok: false, error: 'Поле не должно быть пустым!' }
+    }
+    return { ok: true, value: '' }
+  }
   setContactPerson(value: string): Result<string, string> {
     this.contactPerson = value
     if (value == "") {
@@ -100,42 +119,27 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
-  static getEmpty() {
-    return new Tender(2,
-      3,
-      "TEST",
-      "TEST",
-      "TEST",
-      "LOT-003",
-      '2000',
-      '1800',
-      [["2021-03-01", "2021-03-15"]],
-      "Alice Johnson",
-      "456789123",
-      "alice.johnson@example.com",
-      [],
-      []
-    );
-  }
   static toPlainObject(tender: Tender) {
     return { ...tender };
   }
   static fromPlainObject(obj: any): Tender {
-    return new Tender(
-      obj.id,
-      obj.status,
-      obj.company,
-      obj.name,
-      obj.regNumber,
-      obj.lotNumber,
-      obj.initialMaxPrice,
-      obj.price,
-      obj.dates,
-      obj.contactPerson,
-      obj.phoneNumber,
-      obj.email,
-      obj.comments,
-      obj.fileNames
-    );
+    let tender = new Tender()
+    tender.id = obj.id,
+      tender.status = obj.status,
+      tender.company = obj.company,
+      tender.name = obj.name,
+      tender.regNumber = obj.regNumber,
+      tender.lotNumber = obj.lotNumber,
+      tender.initialMaxPrice = obj.initialMaxPrice,
+      tender.price = obj.price,
+      tender.date1_start = obj.date1_start,
+      tender.date1_finish = obj.date1_finish,
+      tender.date2_finish = obj.date2_finish,
+      tender.contactPerson = obj.contactPerson,
+      tender.phoneNumber = obj.phoneNumber,
+      tender.email = obj.email,
+      tender.comments = obj.comments,
+      tender.fileNames = obj.fileNames
+    return tender
   }
 }  
