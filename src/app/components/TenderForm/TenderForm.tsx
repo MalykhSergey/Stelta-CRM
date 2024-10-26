@@ -33,49 +33,18 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
             delete errors[name]
         }
     }
-    const renderField = (fieldName: string, value: any, isEditableField: boolean) => {
-        if (isEditableField) {
-            return (
-                <div className={styles.formGroup}>
-                    <div className={styles.inputRow}>
-                        <input
-                            type={fieldName === "Email" ? "email" : "text"}
-                            name={fieldName}
-                            value={fieldName === "InitialMaxPrice" || fieldName === "Price"
-                                ? value + " ₽"
-                                : value
-                            }
-                            onChange={(e) => {
-                                if (["InitialMaxPrice", "Price"].includes(fieldName)) {
-                                    e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                                }
-                                handleChange(e)
-                                const cursorPosition = e.target.selectionStart;
-                                requestAnimationFrame(() => {
-                                    e.target.selectionStart = cursorPosition;
-                                    e.target.selectionEnd = cursorPosition;
-                                });
-                            }}
-                            className={styles.input}
-                        />
-                        <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />
-                    </div>
-                    {errors[fieldName] && <span className={styles.error}>{errors[fieldName]}</span>}
-                </div>
-            )
-        }
-        return <input type="text" className={styles.input} disabled value={value} />
-    }
-
-    const company = renderField("Company", tender.company, isEditable.company)
-    const name = renderField("Name", tender.name, isEditable.name)
-    const regNumber = renderField("RegNumber", tender.regNumber, isEditable.regNumber)
-    const lotNumber = renderField("LotNumber", tender.lotNumber, isEditable.lotNumber)
-    const initialMaxPrice = renderField("InitialMaxPrice", tender.initialMaxPrice, isEditable.initialMaxPrice)
-    const price = renderField("Price", tender.price, isEditable.price)
-    const contactPerson = renderField("ContactPerson", tender.contactPerson, isEditable.contactPerson)
-    const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, isEditable.phoneNumber)
-    const email = renderField("Email", tender.email, isEditable.email)
+    const company = renderField("Company", tender.company, 'Организация', isEditable.company, errors, handleChange)
+    const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
+    const regNumber = renderField("RegNumber", tender.regNumber, 'Рег. №:', isEditable.regNumber, errors, handleChange)
+    const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
+    const initialMaxPrice = renderField("InitialMaxPrice", tender.initialMaxPrice, 'НМЦК:', isEditable.initialMaxPrice, errors, handleChange)
+    const price = renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange)
+    const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
+    const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
+    const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
+    const date1_start = renderField("Date1_start", tender.date1_start, 'Дата и время начала подачи 1 этапа:', isEditable.price, errors, handleChange)
+    const date1_finish = renderField("Date1_finish", tender.date1_finish, 'Дата и время окончания подачи 1 этапа:', isEditable.price, errors, handleChange)
+    const date2_finish = renderField("Date2_finish", tender.date2_finish, 'Дата и время окончания подачи 2 этапа:', isEditable.price, errors, handleChange)
     return (
         <form className={`${styles.form} card`} >
             <label className={styles.label}>Статус:</label>
@@ -89,60 +58,67 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
                     <option value="5">{Status.STAGE_FINISH}</option>
                 </select>
             </div>
-            <label className={styles.label}>Организация:</label>
             {company}
-            <label className={styles.label}>Наименование тендера:</label>
             {name}
-            <label className={styles.label}>Рег. №:</label>
             {regNumber}
-            <label className={styles.label}>Лот №:</label>
             {lotNumber}
-            <label className={styles.label}>НМЦК:</label>
             {initialMaxPrice}
-            <label className={styles.label}>Наша цена:</label>
             {price}
-            <label className={styles.label}>Дата и время начала подачи 1 этапа:</label>
-            <div className={styles.formGroup}>
-                <input
-                    type="datetime-local"
-                    name="Date1_start"
-                    value={tender.date1_start}
-                    onChange={handleChange}
-                    className={styles.input}
-                />
-                {errors.Date1_start && <span className={styles.error}>{errors.Date1_start}</span>}
-            </div>
-            <label htmlFor="date1_start" className={styles.label}>Дата и время окончания подачи 1 этапа:</label>
-            <div className={styles.formGroup}>
-                <input
-                    type="datetime-local"
-                    name="Date1_start"
-                    id='date1_start'
-                    value={tender.date1_finish}
-                    onChange={handleChange}
-                    className={styles.input}
-                />
-                {errors.Date1_finish && <span className={styles.error}>{errors.Date1_finish}</span>}
-            </div>
-            <label className={styles.label}>Дата и время окончания подачи 2 этапа:</label>
-            <div className={styles.formGroup}>
-                <input
-                    type="datetime-local"
-                    name="Date1_start"
-                    value={tender.date2_finish}
-                    onChange={handleChange}
-                    className={styles.input}
-                />
-                {errors.Date2_finish && <span className={styles.error}>{errors.Date2_finish}</span>}
-            </div>
-            <label className={styles.label}>Контактное лицо:</label>
+            {date1_start}
+            {date1_finish}
+            {date2_finish}
             {contactPerson}
-            <label className={styles.label}>Тел.:</label>
             {phoneNumber}
-            <label className={styles.label}>Email:</label>
             {email}
         </form >
     )
 })
 
 export default TenderForm
+
+const renderField = (fieldName: string, value: any, labelTitle: string, isEditableField: boolean, errors: { [key: string]: string }, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
+    let elem = <input type="text" className={styles.input} disabled value={value} />
+    if (isEditableField) {
+        let fieldType = 'text'
+        if (fieldName.includes('Date'))
+            fieldType = 'datetime-local'
+        if (fieldName == 'Email')
+            fieldType = 'email'
+        elem = <>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <input
+                        type={fieldType}
+                        name={fieldName}
+                        id={fieldName}
+                        value={fieldName === "InitialMaxPrice" || fieldName === "Price"
+                            ? value + " ₽"
+                            : value
+                        }
+                        onChange={(e) => {
+                            if (["InitialMaxPrice", "Price"].includes(fieldName)) {
+                                e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
+                                const cursorPosition = e.target.selectionStart;
+                                requestAnimationFrame(() => {
+                                    e.target.selectionStart = cursorPosition;
+                                    e.target.selectionEnd = cursorPosition;
+                                });
+                            }
+                            handleChange(e)
+
+                        }}
+                        className={styles.input}
+                    />
+                    {fieldType != 'datetime-local' && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />}
+                </div>
+            </div>
+            {errors[fieldName] && <span></span>} {errors[fieldName] && <span className={styles.error}>{errors[fieldName]}</span>}
+        </>
+    }
+    return (
+        <>
+            <label htmlFor={fieldName} className={styles.label}>{labelTitle}</label>
+            {elem}
+        </>
+    )
+}
