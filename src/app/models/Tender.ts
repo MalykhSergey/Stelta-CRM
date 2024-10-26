@@ -1,5 +1,7 @@
 import { makeAutoObservable } from "mobx"
 import { Result } from "../Result"
+import { RebiddingPrice } from "./RebiddingPrice"
+import { DatesRequests } from "./DatesRequests"
 
 export class Tender {
   constructor(
@@ -16,13 +18,14 @@ export class Tender {
     public phoneNumber: string,
     public email: string,
     public comments: string[],
-    public fileNames: string[]
+    public fileNames: string[],
+    private rebiddingPrices: RebiddingPrice[],
+    private datesRequests: DatesRequests[],
   ) {
     if (comments.length == 0) {
       for (let i = 0; i < 6; i++)
         this.comments.push('')
     }
-    makeAutoObservable(this)
   }
   setStatus(value: string): Result<string, string> {
     this.status = Number.parseInt(value)

@@ -1,8 +1,10 @@
 "use client"
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
+import StageForm_1 from '@/app/components/StageForm_1/StageForm_1';
 import { Tender } from '@/app/models/Tender';
 import { getTenderById } from '@/app/models/TenderService';
+import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useEffect } from 'react';
 import TenderForm from '../../components/TenderForm/TenderForm';
@@ -31,19 +33,23 @@ const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
     };
     useEffect(() => {
         const loadTender = async () => {
-            let loaded_tender = JSON.parse(await getTenderById(params.tenderId))
-            tender.update(Tender.fromPlainObject(loaded_tender))
+            let loaded_tender = Tender.fromPlainObject(JSON.parse(await getTenderById(params.tenderId)))
+            makeAutoObservable(loaded_tender)
+            tender.update(loaded_tender)
         }
         loadTender()
     }, []);
     return (
         <div>
             <h1>Форма для тендера</h1>
-            <div style={{display:'flex',flexDirection:'row'}}>
-                <TenderForm tender={tender.tender} isEditable={isEditable} />
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '100px' }}>
+                <div style={{ flexGrow: '1' }}>
+                    <TenderForm tender={tender.tender} isEditable={isEditable} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: '2', gap: '50px' }}>
+                    <DocumentsForm tender={tender.tender} title='Документы тендера' isEditable={true}></DocumentsForm>
+                    <StageForm_1 tender={tender.tender} title='' isEditable={true}></StageForm_1>
                     <CommentsForm tender={tender.tender}></CommentsForm>
-                    <DocumentsForm tender={tender.tender}></DocumentsForm>
                 </div>
                 {/* <TenderFormCopy tender={tenderStorage.getAll()[0]}/> */}
                 {/* <form style={{ marginTop: '50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
