@@ -39,10 +39,12 @@ const TenderPage = observer(({ params }: { params: { tenderId: number } }) => {
     return (
         <div>
             <h1>Форма для тендера</h1>
-            <div>
+            <div style={{display:'flex',flexDirection:'row'}}>
                 <TenderForm tender={tender.tender} isEditable={isEditable} />
-                <CommentsForm tender={tender.tender}></CommentsForm>
-                <DocumentsForm tender={tender.tender}></DocumentsForm>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <CommentsForm tender={tender.tender}></CommentsForm>
+                    <DocumentsForm tender={tender.tender}></DocumentsForm>
+                </div>
                 {/* <TenderFormCopy tender={tenderStorage.getAll()[0]}/> */}
                 {/* <form style={{ marginTop: '50px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {Object.keys(isEditable).map((key) => (
