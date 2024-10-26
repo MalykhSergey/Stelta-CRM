@@ -1,6 +1,7 @@
 import { dates_requests, file_names, Prisma, rebidding_prices, tenders } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { DatesRequests } from './DateRequest';
+import FileName from './FileName';
 import { RebiddingPrice } from './RebiddingPrice';
 import { Tender } from './Tender';
 
@@ -24,7 +25,7 @@ export class TenderAdapter {
         if ('rebidding_prices' in data) {
             tender.rebiddingPrices = data.rebidding_prices.map((r: { id: number; price: Prisma.Decimal; tender_id: number; } & { file_names: file_names[]; }) => RebiddingPriceAdapter.fromPrisma(r));
             tender.datesRequests = data.dates_requests.map((d: { id: number; date: Date; tender_id: number; } & { file_names: file_names[]; }) => DatesRequestsAdapter.fromPrisma(d));
-            tender.fileNames = data.file_names.map((f: { name: any; }) => f.name);
+            tender.fileNames = data.file_names.map((f: { id: number; name: string; }) => new FileName(f.id, f.name));
         }
         return tender;
     }

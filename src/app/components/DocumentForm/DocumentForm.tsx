@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import styles from './DocumentForm.module.css';
-import uploadHandler from './Handler';
+import { deleteHandler, uploadHandler } from './Handler';
 interface DocumentsFormProps {
     tender: Tender,
     title: string,
@@ -22,12 +22,14 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tender, title, i
             formData.append('file', file, file_name);
         }
         formData.append('tenderId', tender.id.toString());
-        console.log(formData)
         uploadHandler(formData)
     }
     let files = []
     for (let fileName of tender.fileNames) {
-        files.push(<p key={fileName + files.length}><a href={`/download/${fileName}`} download>{fileName}</a></p>)
+        files.push(<p key={fileName.name + files.length}><a href={`/download/${fileName}`} download>{fileName.name}</a><button onClick={() => {
+            tender.fileNames = tender.fileNames.filter(file => fileName.name != file.name)
+            deleteHandler(fileName.id)
+        }}>Delete</button></p>)
     }
     return (
         <div className={`card ${styles.form} ${collapsed.isTrue ? styles.expanded : ''}`}><h3>{title} <button className={styles.toggler} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button></h3>

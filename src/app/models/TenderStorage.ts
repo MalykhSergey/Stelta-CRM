@@ -50,6 +50,9 @@ class TenderStorage {
     async addFile(tenderId: number, fileName: string) {
         await prisma.file_names.create({ data: { tender_id: tenderId, name: fileName } });
     }
+    async deleteFile(id: number) {
+        await prisma.file_names.delete({ where: { id: id } });
+    }
 
 }
 const tenderStorage = new TenderStorage();

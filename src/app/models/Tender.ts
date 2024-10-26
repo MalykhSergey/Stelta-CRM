@@ -1,5 +1,6 @@
 import { Result } from "../Result"
 import { DatesRequests } from "./DateRequest"
+import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
 
 export class Tender {
@@ -18,7 +19,7 @@ export class Tender {
   public phoneNumber: string = ''
   public email: string = ''
   public comments: string[] = ['','','','','','']
-  public fileNames: string[] = []
+  public fileNames: FileName[] = []
   public rebiddingPrices: RebiddingPrice[] = []
   public datesRequests: DatesRequests[] = []
   constructor() {}
