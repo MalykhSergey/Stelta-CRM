@@ -5,6 +5,7 @@ import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
 import StageForm_1 from '@/app/components/StageForm_1/StageForm_1';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import { Tender } from '@/app/models/Tender';
+import { updateTenderById } from '@/app/models/TenderService';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 
@@ -39,6 +40,7 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
                     <DocumentsForm tender={tender} title='Документы тендера' isEditable={true} />
                     <StageForm_1 tender={tender}/>
                     <CommentsForm tender={tender} />
+                    <button onClick={()=>{updateTenderById(JSON.stringify(tender))}}>UPDATE!!!</button>
                 </div>
             </div>
         </div>

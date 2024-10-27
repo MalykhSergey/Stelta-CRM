@@ -1,60 +1,65 @@
-import { PrismaClient } from "@prisma/client";
-import { TenderAdapter } from "./Adapters";
+import connection from "./Database";
 import { Tender } from "./Tender";
 
-const prisma = new PrismaClient(
-    // {log: ['query', 'info', 'warn', 'error']}
-);
-console.log('Prisma created')
-
 class TenderStorage {
-    constructor() { 
+    constructor() {
         console.log('Created Tender storage')
     }
     // add(tender: Tender) {
     //     // this.allTenders.push(tender)
     // }
 
+    async update(tender: Tender) {
+        await connection.query(`
+            UPDATE tenders 
+            SET status = $1,
+                company = $2,
+                name = $3,
+                lot_number = $4,
+                register_number = $5,
+                initial_max_price = $6,
+                price = $7,
+                contact_person = $8,
+                phone_number = $9,
+                email = $10,
+                date1_start = $11,
+                date1_finish = $12,
+                date2_finish = $13
+            WHERE id = $14
+            `, [
+            tender.status,
+            tender.company,
+            tender.name,
+            tender.lotNumber,
+            tender.regNumber,
+            tender.initialMaxPrice,
+            tender.price,
+            tender.contactPerson,
+            tender.phoneNumber,
+            tender.email,
+            tender.date1_start,
+            tender.date1_finish,
+            tender.date2_finish,
+            tender.id
+        ])
+    }
+
     async getAll(): Promise<Tender[]> {
-        const tenders = await prisma.tenders.findMany({
-            include: {
-                rebidding_prices: {
-                    include: {
-                        file_names: true,
-                    },
-                },
-                dates_requests: {
-                    include: {
-                        file_names: true,
-                    },
-                },
-                file_names: true
-            }
-        });
-        return tenders.map(tender => TenderAdapter.fromPrisma(tender))
+        const tenders_rows = (await connection.query('SELECT * FROM tenders')).rows;
+        return tenders_rows.map(tender => Tender.fromQueryRow(tender))
     }
     async getById(id: number): Promise<Tender> {
-        return TenderAdapter.fromPrisma(await prisma.tenders.findUnique({
-            where: { id: id }, include: {
-                rebidding_prices: {
-                    include: {
-                        file_names: true,
-                    },
-                },
-                dates_requests: {
-                    include: {
-                        file_names: true,
-                    },
-                },
-                file_names: true
-            }
-        }))
+        const tenders_row = (await connection.query('SELECT * FROM tenders WHERE id = $1', [id])).rows
+        const tender_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND request_date_id is NULL', [id])).rows
+        const tender = Tender.fromQueryRow(tenders_row[0])
+        tender.fileNames = tender_files
+        return tender
     }
     async addFile(tenderId: number, fileName: string) {
-        await prisma.file_names.create({ data: { tender_id: tenderId, name: fileName } });
+        await connection.query('INSERT INTO file_names(tender_id, "name") VALUES ($1,$2)', [tenderId, fileName]);
     }
     async deleteFile(id: number) {
-        await prisma.file_names.delete({ where: { id: id } });
+        await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
     }
 
 }

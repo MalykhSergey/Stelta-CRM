@@ -1,4 +1,5 @@
 import { Result } from "../Result"
+import conn from "./Database"
 import { DatesRequests } from "./DateRequest"
 import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
@@ -117,10 +118,28 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
-  static toJSON(tender: Tender): string {
+  static fromQueryRow(row: any) {
+    const tender = new Tender()
+    tender.id = row.id
+    tender.status = row.status
+    tender.company = row.company
+    tender.name = row.name
+    tender.lotNumber = row.lot_number
+    tender.regNumber = row.register_number
+    tender.initialMaxPrice = row.initial_max_price.slice(0, -2)
+    tender.price = row.price.slice(0, -2)
+    tender.contactPerson = row.contact_person
+    tender.phoneNumber = row.phone_number
+    tender.email = row.email
+    tender.date1_start = row.date1_start.toISOString().slice(0, 16)
+    tender.date1_finish = row.date1_finish.toISOString().slice(0, 16)
+    tender.date2_finish = row.date2_finish.toISOString().slice(0, 16)
+    return tender
+  }
+  static toJSON(tender: Tender) {
     return JSON.stringify(tender);
   }
-  static fromJSON(data: string): Tender {
+  static fromJSON(data: string) {
     const obj = JSON.parse(data)
     const tender = new Tender()
     tender.id = obj.id
