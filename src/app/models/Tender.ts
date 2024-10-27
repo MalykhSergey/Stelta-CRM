@@ -1,5 +1,5 @@
 import { Result } from "../Result"
-import { DatesRequests } from "./DateRequest"
+import { DateRequest } from "./DateRequest"
 import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
 
@@ -19,9 +19,9 @@ export class Tender {
   public phoneNumber: string = ''
   public email: string = ''
   public comments: string[] = ['', '', '', '', '', '']
-  public stagedFileNames: FileName[][] = [[],[],[],[],[],[],[]]
+  public stagedFileNames: FileName[][] = [[], [], [], [], [], [], []]
   public rebiddingPrices: RebiddingPrice[] = []
-  public datesRequests: DatesRequests[] = []
+  public datesRequests: DateRequest[] = []
   constructor() { }
   setStatus(value: string): Result<string, string> {
     this.status = Number.parseInt(value)

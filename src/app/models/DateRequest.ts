@@ -1,7 +1,9 @@
-export class DatesRequests {
+import FileName from "./FileName";
+
+export class DateRequest {
     constructor(
         public id: number,
         public date: string,
-        public fileNames: string[]
+        public fileNames: FileName[] = []
     ) { }
 }

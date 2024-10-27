@@ -1,3 +1,4 @@
+import { DateRequest } from '@/app/models/DateRequest';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
@@ -14,6 +15,7 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
     }));
     // let input_file = useRef(null)
     const handleClick = () => {
+        tender.datesRequests.push(new DateRequest(0, '', []))
         // input_file.current.click()
     }
     // const handleInputFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,15 +24,15 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
     //             tender.fileNames.push(file.name)
     //         }
     // }
-    const files = []
-    for (const fileName of tender.stagedFileNames[1]) {
-        files.push(<p key={files.length}><a href={`/download/${fileName}`} download>{fileName.name}</a></p>)
-    }
+    const datesRequests:any = []
+    tender.datesRequests.forEach((dateRequest, index) => {
+        datesRequests.push(<DocumentsForm key={index} tenderId={tender.id} stage={1} fileNames={dateRequest.fileNames} title={`Дозапрос ${index + 1} этапа`} isEditable={true} ></DocumentsForm >)
+    })
     return (
         <div className={`card ${styles.form} ${collapsed.isTrue ? styles.expanded : ''}`}><h3>Этап 1 <button className={styles.toggler} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button></h3>
             <DocumentsForm tenderId={tender.id} stage={1} fileNames={tender.stagedFileNames[1]} title='Формы 1 этапа' isEditable={true}></DocumentsForm>
+            {datesRequests}
             <button onClick={handleClick}>Дозапрос документов</button>
-            {/* <input ref={input_file} onChange={handleInputFile} type="file" name="file" hidden multiple /> */}
         </div>
     )
 });
