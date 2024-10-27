@@ -1,5 +1,4 @@
 import { Result } from "../Result"
-import conn from "./Database"
 import { DatesRequests } from "./DateRequest"
 import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
@@ -20,7 +19,7 @@ export class Tender {
   public phoneNumber: string = ''
   public email: string = ''
   public comments: string[] = ['', '', '', '', '', '']
-  public fileNames: FileName[] = []
+  public stagedFileNames: FileName[][] = [[],[],[],[],[],[],[]]
   public rebiddingPrices: RebiddingPrice[] = []
   public datesRequests: DatesRequests[] = []
   constructor() { }
@@ -134,6 +133,10 @@ export class Tender {
     tender.date1_start = row.date1_start.toISOString().slice(0, 16)
     tender.date1_finish = row.date1_finish.toISOString().slice(0, 16)
     tender.date2_finish = row.date2_finish.toISOString().slice(0, 16)
+    for (let i = 0; i < 6; i++) {
+      if (row[`comment${i}`] != null)
+        tender.comments[i] = row[`comment${i}`]
+    }
     return tender
   }
   static toJSON(tender: Tender) {
@@ -157,7 +160,7 @@ export class Tender {
     tender.phoneNumber = obj.phoneNumber
     tender.email = obj.email
     tender.comments = obj.comments
-    tender.fileNames = obj.fileNames
+    tender.stagedFileNames = obj.stagedFileNames
     tender.rebiddingPrices = obj.rebiddingPrices
     tender.datesRequests = obj.datesRequests
     return tender

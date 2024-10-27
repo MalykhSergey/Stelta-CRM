@@ -24,11 +24,6 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
     }));
     const tender = Tender.fromJSON(tenderString)
     makeAutoObservable(tender)
-
-    // const handleToggle = (field: keyof typeof isEditable) => {
-    //     isEditable[field] = !isEditable[field];
-    // };
-
     return (
         <div>
             <h1>Форма для тендера</h1>
@@ -37,10 +32,10 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
                     <TenderForm tender={tender} isEditable={isEditable} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flexGrow: '2', gap: '50px' }}>
-                    <DocumentsForm tender={tender} title='Документы тендера' isEditable={true} />
-                    <StageForm_1 tender={tender}/>
+                    <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]} title='Документы тендера' isEditable={true} />
+                    <StageForm_1 tender={tender} />
                     <CommentsForm tender={tender} />
-                    <button onClick={()=>{updateTenderById(JSON.stringify(tender))}}>UPDATE!!!</button>
+                    <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>UPDATE!!!</button>
                 </div>
             </div>
         </div>

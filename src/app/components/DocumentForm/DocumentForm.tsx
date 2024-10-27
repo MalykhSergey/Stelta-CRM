@@ -1,15 +1,17 @@
+import FileName from '@/app/models/FileName';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { Tender } from '../../models/Tender';
 import styles from './DocumentForm.module.css';
 import { deleteHandler, uploadHandler } from './Handler';
 interface DocumentsFormProps {
-    tender: Tender,
+    tenderId: number,
+    stage: number,
+    fileNames: FileName[],
     title: string,
     isEditable: boolean,
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tender, title, isEditable }) => {
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, fileNames, title, isEditable }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -17,17 +19,18 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tender, title, i
     const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
         const formData = new FormData();
         for (const file of e.target.files) {
-            tender.fileNames.push(file.name)
+            fileNames.push(new FileName(0, file.name))
             const file_name = encodeURI(file.name)
             formData.append('file', file, file_name);
         }
-        formData.append('tenderId', tender.id.toString());
+        formData.append('stage', stage.toString());
+        formData.append('tenderId', tenderId.toString());
         uploadHandler(formData)
     }
     const files = []
-    for (const fileName of tender.fileNames) {
-        files.push(<p key={fileName.name + files.length}><a href={`/download/${fileName}`} download>{fileName.name}</a><button onClick={() => {
-            tender.fileNames = tender.fileNames.filter(file => fileName.name != file.name)
+    for (const fileName of fileNames) {
+        files.push(<p key={fileName.name + files.length}><a href={`/download/${tenderId}/${stage}/${fileName.name}`} download>{fileName.name}</a><button onClick={() => {
+            fileNames = fileNames.filter(file => fileName.name != file.name)
             deleteHandler(fileName.id)
         }}>Delete</button></p>)
     }
@@ -37,7 +40,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tender, title, i
             {isEditable &&
                 <form onChange={handleChange}>
                     <input type="file" name="file" multiple />
-                    <input type="hidden" name="tenderId" value={tender.id} />
+                    <input type="hidden" name="tenderId" value={tenderId} />
                 </form>
             }
         </div>

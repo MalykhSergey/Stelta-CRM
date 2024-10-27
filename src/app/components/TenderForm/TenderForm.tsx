@@ -34,7 +34,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
             delete errors[name]
         }
     }
-    const company = renderField("Company", tender.company, 'Организация', isEditable.company, errors, handleChange)
+    const company = renderField("Company", tender.company, 'Организация:', isEditable.company, errors, handleChange)
     const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
     const regNumber = renderField("RegNumber", tender.regNumber, 'Рег. №:', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
