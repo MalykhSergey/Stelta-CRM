@@ -18,11 +18,11 @@ export class Tender {
   public contactPerson: string = ''
   public phoneNumber: string = ''
   public email: string = ''
-  public comments: string[] = ['','','','','','']
+  public comments: string[] = ['', '', '', '', '', '']
   public fileNames: FileName[] = []
   public rebiddingPrices: RebiddingPrice[] = []
   public datesRequests: DatesRequests[] = []
-  constructor() {}
+  constructor() { }
   setStatus(value: string): Result<string, string> {
     this.status = Number.parseInt(value)
     if (value == "") {
@@ -117,27 +117,30 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
-  static toPlainObject(tender: Tender) {
-    return { ...tender };
+  static toJSON(tender: Tender): string {
+    return JSON.stringify(tender);
   }
-  static fromPlainObject(obj: any): Tender {
-    let tender = new Tender()
-    tender.id = obj.id,
-      tender.status = obj.status,
-      tender.company = obj.company,
-      tender.name = obj.name,
-      tender.regNumber = obj.regNumber,
-      tender.lotNumber = obj.lotNumber,
-      tender.initialMaxPrice = obj.initialMaxPrice,
-      tender.price = obj.price,
-      tender.date1_start = obj.date1_start,
-      tender.date1_finish = obj.date1_finish,
-      tender.date2_finish = obj.date2_finish,
-      tender.contactPerson = obj.contactPerson,
-      tender.phoneNumber = obj.phoneNumber,
-      tender.email = obj.email,
-      tender.comments = obj.comments,
-      tender.fileNames = obj.fileNames
+  static fromJSON(data: string): Tender {
+    const obj = JSON.parse(data)
+    const tender = new Tender()
+    tender.id = obj.id
+    tender.status = obj.status
+    tender.company = obj.company
+    tender.name = obj.name
+    tender.regNumber = obj.regNumber
+    tender.lotNumber = obj.lotNumber
+    tender.initialMaxPrice = obj.initialMaxPrice
+    tender.price = obj.price
+    tender.date1_start = obj.date1_start
+    tender.date1_finish = obj.date1_finish
+    tender.date2_finish = obj.date2_finish
+    tender.contactPerson = obj.contactPerson
+    tender.phoneNumber = obj.phoneNumber
+    tender.email = obj.email
+    tender.comments = obj.comments
+    tender.fileNames = obj.fileNames
+    tender.rebiddingPrices = obj.rebiddingPrices
+    tender.datesRequests = obj.datesRequests
     return tender
   }
 }  

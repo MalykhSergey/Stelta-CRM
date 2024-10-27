@@ -5,15 +5,18 @@ import { Tender } from "./Tender";
 const prisma = new PrismaClient(
     // {log: ['query', 'info', 'warn', 'error']}
 );
+console.log('Prisma created')
 
 class TenderStorage {
-    constructor() { }
-    add(tender: Tender) {
-        // this.allTenders.push(tender)
+    constructor() { 
+        console.log('Created Tender storage')
     }
+    // add(tender: Tender) {
+    //     // this.allTenders.push(tender)
+    // }
 
     async getAll(): Promise<Tender[]> {
-        let tenders = await prisma.tenders.findMany({
+        const tenders = await prisma.tenders.findMany({
             include: {
                 rebidding_prices: {
                     include: {

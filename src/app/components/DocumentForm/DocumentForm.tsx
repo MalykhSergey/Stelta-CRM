@@ -10,22 +10,22 @@ interface DocumentsFormProps {
     isEditable: boolean,
 }
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tender, title, isEditable }) => {
-    let collapsed = useLocalObservable(() => ({
+    const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
     }));
     const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
         const formData = new FormData();
-        for (let file of e.target.files) {
+        for (const file of e.target.files) {
             tender.fileNames.push(file.name)
-            let file_name = encodeURI(file.name)
+            const file_name = encodeURI(file.name)
             formData.append('file', file, file_name);
         }
         formData.append('tenderId', tender.id.toString());
         uploadHandler(formData)
     }
-    let files = []
-    for (let fileName of tender.fileNames) {
+    const files = []
+    for (const fileName of tender.fileNames) {
         files.push(<p key={fileName.name + files.length}><a href={`/download/${fileName}`} download>{fileName.name}</a><button onClick={() => {
             tender.fileNames = tender.fileNames.filter(file => fileName.name != file.name)
             deleteHandler(fileName.id)

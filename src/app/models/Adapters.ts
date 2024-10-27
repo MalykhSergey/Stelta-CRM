@@ -6,6 +6,7 @@ import { RebiddingPrice } from './RebiddingPrice';
 import { Tender } from './Tender';
 
 export class TenderAdapter {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromPrisma(data: any): Tender {
         const tender = new Tender();
         tender.id = data.id;
@@ -16,9 +17,9 @@ export class TenderAdapter {
         tender.lotNumber = data.lot_number;
         tender.initialMaxPrice = data.initial_max_price.toString();
         tender.price = data.price.toString();
-        tender.date1_start = data.date1_start.toISOString();
-        tender.date1_finish = data.date1_finish.toISOString();
-        tender.date2_finish = data.date2_finish.toISOString();
+        tender.date1_start = data.date1_start.toISOString().slice(0, 16);
+        tender.date1_finish = data.date1_finish.toISOString().slice(0, 16);
+        tender.date2_finish = data.date2_finish.toISOString().slice(0, 16);
         tender.contactPerson = data.contact_person;
         tender.phoneNumber = data.phone_number;
         tender.email = data.email;

@@ -9,7 +9,10 @@ export default function TenderCard(props: { tender: Tender }) {
       <div className={styles.card}>
         <p>{props.tender.status}</p>
         <p>{props.tender.name}</p>
-        <p>{props.tender.dates}</p>
+        <p>{props.tender.company}</p>
+        <p>{props.tender.date1_start}</p>
+        <p>{props.tender.date1_finish}</p>
+        <p>{props.tender.date2_finish}</p>
       </div>
     </Link>
   );

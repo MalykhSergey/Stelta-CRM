@@ -10,14 +10,14 @@ interface CommentsFormProps {
 }
 
 const CommentsForm: React.FC<CommentsFormProps> = observer(({ tender }) => {
-    let collapsed = useLocalObservable(() => ({
+    const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
     }));
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         tender.comments[tender.status] = e.target.value
     }
-    let comments = []
+    const comments = []
     for (let i = 0; i < tender.status; i++) {
         if (tender.comments.length > i && tender.comments[i] != '') {
             comments.push(<label key={`label_${i}`} className={styles.label}>{Object.values(Status)[i]}</label>)

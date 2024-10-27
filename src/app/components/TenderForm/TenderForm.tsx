@@ -22,10 +22,11 @@ interface TenderFormProps {
 }
 
 const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) => {
-    let errors: { [key: string]: string } = useLocalObservable(() => ({}))
+    const errors: { [key: string]: string } = useLocalObservable(() => ({}))
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
-        let result = (tender as any)["set" + name](value)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result = (tender as any)["set" + name](value)
         if (!result.ok) {
             errors[name] = result.error
         }
@@ -75,7 +76,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
 })
 
 export default TenderForm
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderField = (fieldName: string, value: any, labelTitle: string, isEditableField: boolean, errors: { [key: string]: string }, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
     let elem = <input type="text" className={styles.input} disabled value={value} />
     if (isEditableField) {

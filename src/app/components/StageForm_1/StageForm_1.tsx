@@ -6,11 +6,9 @@ import DocumentsForm from '../DocumentForm/DocumentForm';
 import styles from './StageForm_1.module.css';
 interface StageForm_1Props {
     tender: Tender,
-    title: string,
-    isEditable: boolean,
 }
-const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender, title, isEditable }) => {
-    let collapsed = useLocalObservable(() => ({
+const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender}) => {
+    const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
     }));
@@ -24,9 +22,9 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender, title, isEdi
     //             tender.fileNames.push(file.name)
     //         }
     // }
-    let files = []
-    for (let fileName of tender.fileNames) {
-        files.push(<p key={fileName + files.length}><a href={`/download/${fileName}`} download>{fileName}</a></p>)
+    const files = []
+    for (const fileName of tender.fileNames) {
+        files.push(<p key={files.length}><a href={`/download/${fileName}`} download>{fileName.name}</a></p>)
     }
     return (
         <div className={`card ${styles.form} ${collapsed.isTrue ? styles.expanded : ''}`}><h3>Этап 1 <button className={styles.toggler} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button></h3>

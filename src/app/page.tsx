@@ -1,21 +1,9 @@
-"use client"
-import { useEffect, useState } from 'react';
 import TenderCard from './components/TenderCard/TenderCard';
-import { Tender } from './models/Tender';
+import tenderStorage from './models/TenderStorage';
 import styles from './page.module.css';
-import { getAllTenders } from './models/TenderService';
 
-export default function HomePage() {
-
-  const [tenders, setTenders] = useState<Tender[]>([]);
-
-  useEffect(() => {
-    const loadTenders = async () => {
-      let tenders = JSON.parse(await getAllTenders())
-      setTenders(tenders.map((tender: any) => Tender.fromPlainObject(tender)))
-    }
-    loadTenders()
-  }, []);
+export default async function HomePage() {
+  const tenders = await tenderStorage.getAll()
   return (
     <div className={styles.container}>
       <main className={styles.main}>

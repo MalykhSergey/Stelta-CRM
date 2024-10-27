@@ -5,8 +5,8 @@ export async function uploadHandler(formData: FormData) {
     const files = formData.getAll('file') as File[]
     const tenderId = formData.get('tenderId')?.toString()
     if (tenderId)
-        for (let file of files) {
-            let file_name = decodeURI(file.name)
+        for (const file of files) {
+            const file_name = decodeURI(file.name)
             await fs.writeFile(`${process.env.FILE_UPLOAD_PATH}/${file_name}`, Buffer.from(await file.arrayBuffer()));
             await tenderStorage.addFile(Number.parseInt(tenderId), file_name)
         }
