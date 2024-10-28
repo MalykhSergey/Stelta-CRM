@@ -32,7 +32,10 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
                     <TenderForm tender={tender} isEditable={isEditable} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flexGrow: '2', gap: '50px' }}>
-                    <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]} title='Документы тендера' isEditable={true} />
+                    <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
+                        pushFile={(fileName: string) => tender.addToStagedComments(fileName, 0)}
+                        removeFile={(fileName: string) => tender.removeFileFromStagedComments(fileName, 0)}
+                        title='Документы тендера' isEditable={true} />
                     <StageForm_1 tender={tender} />
                     <CommentsForm tender={tender} />
                     <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>UPDATE!!!</button>

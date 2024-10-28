@@ -7,30 +7,37 @@ import { deleteHandler, uploadHandler } from './Handler';
 interface DocumentsFormProps {
     tenderId: number,
     stage: number,
+    specialPlaceName?: string,
+    specialPlaceId?: number,
     fileNames: FileName[],
+    pushFile: (fileName: FileName) => void,
+    removeFile: (fileName: FileName) => void,
     title: string,
     isEditable: boolean,
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, fileNames, title, isEditable }) => {
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
     }));
-    const handleChange = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const handleChange = async (e: React.ChangeEvent<HTMLFormElement>) => {
         const formData = new FormData();
         for (const file of e.target.files) {
-            fileNames.push(new FileName(0, file.name))
             const file_name = encodeURI(file.name)
             formData.append('file', file, file_name);
         }
         formData.append('stage', stage.toString());
         formData.append('tenderId', tenderId.toString());
-        uploadHandler(formData)
+        formData.append(specialPlaceName, specialPlaceId.toString());
+        const newFiles = JSON.parse(await uploadHandler(formData)) as FileName[]
+        for (const newFile of newFiles) {
+            pushFile(newFile)
+        }
     }
     const files = []
     for (const fileName of fileNames) {
         files.push(<p key={fileName.name + files.length}><a href={`/download/${tenderId}/${stage}/${fileName.name}`} download>{fileName.name}</a><button onClick={() => {
-            fileNames = fileNames.filter(file => fileName.name != file.name)
+            removeFile(fileName)
             deleteHandler(fileName.id)
         }}>Delete</button></p>)
     }

@@ -1,3 +1,4 @@
+import { makeAutoObservable } from "mobx"
 import { Result } from "../Result"
 import { DateRequest } from "./DateRequest"
 import FileName from "./FileName"
@@ -139,6 +140,14 @@ export class Tender {
     }
     return tender
   }
+  public removeFileFromStagedComments(fileName: FileName, arrayIndex: number): void {
+    const index = this.stagedFileNames[arrayIndex].findIndex(item => item.name === fileName.name);
+    if (index > -1)
+      this.stagedFileNames[arrayIndex].splice(index, 1);
+  }
+  public addToStagedComments(fileName: FileName, arrayIndex: number): void {
+    this.stagedFileNames[arrayIndex].push(new FileName(0, fileName.name));
+  }
   static toJSON(tender: Tender) {
     return JSON.stringify(tender);
   }
@@ -161,8 +170,8 @@ export class Tender {
     tender.email = obj.email
     tender.comments = obj.comments
     tender.stagedFileNames = obj.stagedFileNames
-    tender.rebiddingPrices = obj.rebiddingPrices
-    tender.datesRequests = obj.datesRequests
+    tender.rebiddingPrices = obj.rebiddingPrices.map((value: { id: number; price: number; fileNames: FileName[] }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
+    tender.datesRequests = obj.datesRequests.map((value: { id: number; date: string; fileNames: FileName[] }) => makeAutoObservable(new DateRequest(value.id, value.date, value.fileNames)))
     return tender
   }
 }  

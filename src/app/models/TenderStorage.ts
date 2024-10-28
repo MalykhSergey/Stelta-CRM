@@ -54,6 +54,11 @@ class TenderStorage {
             tender.comments[5],
             tender.id
         ])
+        for (const dateRequest of tender.datesRequests) {
+            if (dateRequest.id == 0) {
+                await connection.query("INSERT INTO dates_requests(date, tender_id) VALUES (now(), $1)", [tender.id])
+            }
+        }
     }
 
     async getAll(): Promise<Tender[]> {
@@ -64,17 +69,31 @@ class TenderStorage {
         const tenders_row = (await connection.query('SELECT * FROM tenders WHERE id = $1', [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         for (let i = 0; i < 6; i++) {
-            const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND request_date_id is NULL AND stage = $2', [id, i])).rows
+            const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
             tender.stagedFileNames[i] = stage_files
         }
+        let datesRequests = (await connection.query('SELECT * FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
+        datesRequests = await Promise.all(datesRequests.map(async dateRequest => {
+            dateRequest.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id = $2 AND stage = 1', [id, dateRequest.id])).rows
+            return dateRequest
+        }))
+        tender.datesRequests = datesRequests
         return tender
     }
-    async addFile(tenderId: number, fileName: string, stage: number) {
-        console.log('stage = ' + stage.toString())
-        await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3)', [tenderId, fileName, stage]);
+    async addFile(tenderId: number, fileName: string, stage: number, dateRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
+        if (dateRequestId)
+            return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, date_request_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, dateRequestId])).rows[0].id;
+        else if (rebiddingPriceId)
+            return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, rebidding_price_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, rebiddingPriceId])).rows[0].id;
+        else
+            return (await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
     }
     async deleteFile(id: number) {
         await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
+    }
+
+    async addDateRequest(tenderId: number) {
+        return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
     }
 
 }
