@@ -1,5 +1,5 @@
 import FileName from '@/app/models/FileName';
-import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import styles from './DocumentForm.module.css';
@@ -36,21 +36,29 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
     }
     const files = []
     for (const fileName of fileNames) {
-        files.push(<p key={fileName.name + files.length}><a href={`/download/${tenderId}/${stage}/${fileName.name}`} download>{fileName.name}</a><button onClick={() => {
+        files.push(<p key={fileName.name + files.length}><a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name}</a><button onClick={() => {
             removeFile(fileName)
-            deleteHandler(fileName.id)
+            deleteHandler(tenderId, fileName.id)
         }}>Delete</button></p>)
     }
     return (
-        <div className={`card ${styles.form} ${collapsed.isTrue ? styles.expanded : ''}`}><h3>{title} <button className={styles.toggler} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button></h3>
-            {files}
-            {isEditable &&
-                <form onChange={handleChange}>
-                    <input type="file" name="file" multiple />
-                    <input type="hidden" name="tenderId" value={tenderId} />
-                </form>
-            }
-        </div>
+        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
+            <div className='cardHeader'>
+                <h3>{title}</h3>
+                <button className={`iconButton ${styles.toggler}`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button>
+                <button className={`iconButton closeButton`}><FontAwesomeIcon icon={faXmark} className={``} /></button>
+            </div>
+            <div className='hiddenContent'>
+                {files}
+                {
+                    isEditable &&
+                    <form onChange={handleChange}>
+                        <input type="file" name="file" multiple />
+                        <input type="hidden" name="tenderId" value={tenderId} />
+                    </form>
+                }
+            </div>
+        </div >
     )
 });
 export default DocumentsForm

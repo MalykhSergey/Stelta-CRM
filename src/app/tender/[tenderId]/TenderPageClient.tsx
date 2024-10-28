@@ -4,6 +4,7 @@ import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
 import StageForm_1 from '@/app/components/StageForm_1/StageForm_1';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
+import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
 import { updateTenderById } from '@/app/models/TenderService';
 import { makeAutoObservable } from 'mobx';
@@ -33,8 +34,8 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flexGrow: '2', gap: '50px' }}>
                     <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
-                        pushFile={(fileName: string) => tender.addToStagedComments(fileName, 0)}
-                        removeFile={(fileName: string) => tender.removeFileFromStagedComments(fileName, 0)}
+                        pushFile={(fileName: FileName) => tender.addToStagedComments(fileName, 0)}
+                        removeFile={(fileName: FileName) => tender.removeFileFromStagedComments(fileName, 0)}
                         title='Документы тендера' isEditable={true} />
                     <StageForm_1 tender={tender} />
                     <CommentsForm tender={tender} />
