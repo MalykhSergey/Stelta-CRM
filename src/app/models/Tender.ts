@@ -146,7 +146,7 @@ export class Tender {
       this.stagedFileNames[arrayIndex].splice(index, 1);
   }
   public addToStagedFileNames(fileName: FileName, arrayIndex: number): void {
-    this.stagedFileNames[arrayIndex].push(new FileName(0, fileName.name));
+    this.stagedFileNames[arrayIndex].push(fileName);
   }
   static toJSON(tender: Tender) {
     return JSON.stringify(tender);
