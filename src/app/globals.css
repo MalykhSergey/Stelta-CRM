@@ -98,15 +98,29 @@ a {
 }
 
 
-.closeButton {
+
+.fullWidth{
+  width: 100%;
+}
+
+
+.redButton {
   font-size: 18px;
   transition: color 0.3s ease;
 }
 
-.closeButton:hover {
+.redButton:hover {
   color: #ff4d4d;
 }
 
-.fullWidth{
-  width: 100%;
+.icon {
+  transition: transform 0.3s ease;
+}
+
+.toggler {
+  margin-left: auto;
+}
+
+.rotated {
+  transform: rotate(180deg);
 }

@@ -1,19 +1,5 @@
-
-.icon {
-    transition: transform 0.3s ease;
-}
-
-.toggler {
-    margin-left: auto;
-}
-
-.rotated {
-    transform: rotate(180deg);
-}
-
 .dateRequest{
     display: flex;
     flex-direction: column;
     gap: 20px;
-    /* align-items: end; */
 }

@@ -41,7 +41,7 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>Этап 1</h3>
-                <button className={`iconButton ${styles.toggler}`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button>
+                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
             </div>
             <div className='hiddenContent'>
                 <DocumentsForm tenderId={tender.id} stage={1}

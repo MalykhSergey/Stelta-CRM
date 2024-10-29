@@ -43,15 +43,15 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                     removeFile(fileName)
                     deleteHandler(tenderId, fileName.id)
                 }}
-                    className='iconButton closeButton'
+                    className='iconButton redButton'
                 ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></div>)
     }
     return (
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>{title}</h3>
-                <button className={`iconButton ${styles.toggler}`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button>
-                <button className={`iconButton closeButton`}><FontAwesomeIcon icon={faXmark} className={``} /></button>
+                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+                <button className={`iconButton redButton`}><FontAwesomeIcon icon={faXmark} className={``} /></button>
             </div>
             <div className='hiddenContent'>
                 {files}
