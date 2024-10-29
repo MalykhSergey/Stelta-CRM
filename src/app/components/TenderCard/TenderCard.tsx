@@ -33,6 +33,8 @@ export default function TenderCard(props: { tender: Tender }) {
     <Link href={`/tender/${props.tender.id}`} className={`fullWidth`}>
       <div className={`card inherit ${styles.hoverCard}`}>
         <div className={styles.title}>{props.tender.name}</div>
+        <label className={styles.label}>Рег. №: </label>
+        <div className={styles.info}>{props.tender.regNumber}</div>
         <label className={styles.label}>Организация: </label>
         <div className={styles.info}>{props.tender.company}</div>
         <label className={styles.label}>Контактное лицо: </label>

@@ -1,3 +1,6 @@
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
 import TenderCard from './components/TenderCard/TenderCard';
 import tenderStorage from './models/TenderStorage';
 import styles from './page.module.css';
@@ -11,6 +14,7 @@ export default async function HomePage() {
         {tenders.filter(tender => tender.status == 0).map((tender, index) => (
           <TenderCard key={index} tender={tender} />
         ))}
+          <Link style={{width:'20px'}} href='./tender/create'><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Link>
       </div>
       <div className={`${styles.column}`}>
         <h3 className={`${styles.second} card ${styles.columnHeader}`}>Подготовка 1 Этап</h3>

@@ -7,10 +7,9 @@ import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
 import { updateTenderById } from '@/app/models/TenderService';
-import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 
-const TenderPageClient = observer(({ tenderString }: { tenderString: string }) => {
+const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
     const isEditable = useLocalObservable(() => ({
         company: false,
         name: false,
@@ -23,8 +22,6 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
         phoneNumber: true,
         email: true,
     }));
-    const tender = Tender.fromJSON(tenderString)
-    makeAutoObservable(tender)
     return (
         <div>
             <h1>Форма для тендера</h1>
@@ -32,15 +29,17 @@ const TenderPageClient = observer(({ tenderString }: { tenderString: string }) =
                 <div style={{}}>
                     <TenderForm tender={tender} isEditable={isEditable} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '50px', width:'800px'}}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '50px', width: '800px' }}>
                     <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                         pushFile={(fileName: FileName) => tender.addToStagedComments(fileName, 0)}
                         removeFile={(fileName: FileName) => tender.removeFileFromStagedComments(fileName, 0)}
                         title='Документы тендера' isEditable={true} />
-                    <StageForm_1 tender={tender} />
+                    {tender.status == 1 && <StageForm_1 tender={tender} isDone={false} />}
+                    {tender.status > 1 && <StageForm_1 tender={tender} isDone={true} />}
                     <CommentsForm tender={tender} />
                     <button onClick={() => {
-                        updateTenderById(JSON.stringify(tender)) }}>UPDATE!!!</button>
+                        updateTenderById(JSON.stringify(tender))
+                    }}>UPDATE!!!</button>
                 </div>
             </div>
         </div>

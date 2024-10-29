@@ -173,6 +173,6 @@ export class Tender {
     tender.stagedFileNames = obj.stagedFileNames
     tender.rebiddingPrices = obj.rebiddingPrices.map((value: { id: number; price: number; fileNames: FileName[] }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
     tender.datesRequests = obj.datesRequests.map((value: { id: number; date: string; fileNames: FileName[] }) => makeAutoObservable(new DateRequest(value.id, value.date, value.fileNames)))
-    return tender
+    return makeAutoObservable(tender)
   }
 }  

@@ -8,7 +8,9 @@ class TenderStorage {
     // add(tender: Tender) {
     //     // this.allTenders.push(tender)
     // }
-
+    async create() {
+        return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
+    }
     async update(tender: Tender) {
         await connection.query(`
             UPDATE tenders 

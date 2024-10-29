@@ -10,6 +10,7 @@ import DocumentsForm from '../DocumentForm/DocumentForm';
 import styles from './StageForm_1.module.css';
 interface StageForm_1Props {
     tender: Tender,
+    isDone: boolean,
 }
 const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
     const collapsed = useLocalObservable(() => ({
