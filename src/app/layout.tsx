@@ -22,31 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <div className={styles.sidebar}>
-          <nav className={styles.nav}>
-            <ul>
-              <li>
-                <div className={styles.iconPlaceholder}></div>
-                <span className={styles.menuText}>Navigation Item 1</span>
-              </li>
-              <li>
-                <div className={styles.iconPlaceholder}></div>
-                <span className={styles.menuText}>Navigation Item 2</span>
-              </li>
-              <li>
-                <div className={styles.iconPlaceholder}></div>
-                <span className={styles.menuText}>Navigation Item 3</span>
-              </li>
-              <li>
-                <div className={styles.iconPlaceholder}></div>
-                <span className={styles.menuText}>Navigation Item 4</span>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div className={styles.overlay}></div>
         <main className={styles.main}>
-          {/* <TenderStorageContext.Provider value={tenderStorage}></TenderStorageContext.Provider> */}
           {children}
         </main>
       </body>

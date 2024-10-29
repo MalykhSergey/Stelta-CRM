@@ -5,48 +5,43 @@ import styles from './page.module.css';
 export default async function HomePage() {
   const tenders = await tenderStorage.getAll()
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>6 Column Layout with Dynamic Cards</h1>
-        <div className={styles.grid}>
-          <div className={styles.column}>
-            <h2>Заявка создана</h2>
-            {tenders.map((tender, index) => (
-              <TenderCard key={index} tender={tender} />
-            ))}
-          </div>
-          <div className={styles.column}>
-            <h2>Подготовка заявки <p>1 Этап</p></h2>
-            {tenders.map((tender, index) => (
-              <TenderCard key={index} tender={tender} />
-            ))}
-          </div>
-          <div className={styles.column}>
-            <h2>Заявка подана <p>1 Этап</p></h2>
-            {tenders.map((tender, index) => (
-              <TenderCard key={index} tender={tender} />
-            ))}
-          </div>
-          <div className={styles.column}>
-            <h2>Подготовка заявки <p>2 Этап</p></h2>
-            {tenders.map((tender, index) => (
-              <TenderCard key={index} tender={tender} />
-            ))}
-          </div>
-          <div className={styles.column}>
-            <h2>Заявка подана <p>2 Этап</p></h2>
-            {tenders.map((tender, index) => (
-              <TenderCard key={index} tender={tender} />
-            ))}
-          </div>
-          <div className={styles.column}>
-            <h2>Заключение договора</h2>
-            {tenders.map((tender, index) => (
-              <TenderCard key={index} tender={tender} />
-            ))}
-          </div>
-        </div>
-      </main>
+    <div className={`${styles.grid} inherit`}>
+      <div className={` ${styles.column}`}>
+        <h3 className={`${styles.first} card ${styles.columnHeader}`}>Заявка создана</h3>
+        {tenders.filter(tender => tender.status == 0).map((tender, index) => (
+          <TenderCard key={index} tender={tender} />
+        ))}
+      </div>
+      <div className={`${styles.column}`}>
+        <h3 className={`${styles.second} card ${styles.columnHeader}`}>Подготовка 1 Этап</h3>
+        {tenders.filter(tender => tender.status == 1).map((tender, index) => (
+          <TenderCard key={index} tender={tender} />
+        ))}
+      </div>
+      <div className={`${styles.column}`}>
+        <h3 className={`${styles.third} card ${styles.columnHeader}`}>Подана 1 Этап</h3>
+        {tenders.filter(tender => tender.status == 2).map((tender, index) => (
+          <TenderCard key={index} tender={tender} />
+        ))}
+      </div>
+      <div className={`${styles.column}`}>
+        <h3 className={`${styles.forth} card ${styles.columnHeader}`}>Подготовка 2 Этап</h3>
+        {tenders.filter(tender => tender.status == 3).map((tender, index) => (
+          <TenderCard key={index} tender={tender} />
+        ))}
+      </div>
+      <div className={`${styles.column}`}>
+        <h3 className={`${styles.fifth} card ${styles.columnHeader}`}>Подана 2 Этап</h3>
+        {tenders.filter(tender => tender.status == 4).map((tender, index) => (
+          <TenderCard key={index} tender={tender} />
+        ))}
+      </div>
+      <div className={`${styles.column}`}>
+        <h3 className={`${styles.sixth} card ${styles.columnHeader}`}>Заключение договора</h3>
+        {tenders.filter(tender => tender.status == 5).map((tender, index) => (
+          <TenderCard key={index} tender={tender} />
+        ))}
+      </div>
     </div>
   );
 };

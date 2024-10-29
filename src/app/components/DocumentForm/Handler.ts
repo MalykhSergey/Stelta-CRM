@@ -23,5 +23,5 @@ export async function uploadHandler(formData: FormData) {
 }
 export async function deleteHandler(tenderId: number, fileId: number) {
     await tenderStorage.deleteFile(fileId)
-    await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${fileId}`)
+    await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${fileId}`, { recursive: true})
 }

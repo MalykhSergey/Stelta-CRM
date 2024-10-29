@@ -13,6 +13,7 @@
 
 .dateRequest{
     display: flex;
-    gap: 50px;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 20px;
+    /* align-items: end; */
 }

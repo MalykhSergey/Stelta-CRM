@@ -56,23 +56,24 @@ class TenderStorage {
         ])
         for (const dateRequest of tender.datesRequests) {
             if (dateRequest.id == 0) {
-                await connection.query("INSERT INTO dates_requests(date, tender_id) VALUES (now(), $1)", [tender.id])
+                await connection.query("INSERT INTO dates_requests(tender_id, date) VALUES ($1, now())", [tender.id])
             }
+            else await connection.query("UPDATE dates_requests SET date = $2 WHERE id =  $1", [dateRequest.id, dateRequest.date])
         }
     }
 
     async getAll(): Promise<Tender[]> {
-        const tenders_rows = (await connection.query('SELECT * FROM tenders')).rows;
+        const tenders_rows = (await connection.query('SELECT *, CAST(date1_start AS VARCHAR), CAST(date1_finish AS VARCHAR), CAST(date2_finish AS VARCHAR) FROM tenders')).rows;
         return tenders_rows.map(tender => Tender.fromQueryRow(tender))
     }
     async getById(id: number): Promise<Tender> {
-        const tenders_row = (await connection.query('SELECT * FROM tenders WHERE id = $1', [id])).rows
+        const tenders_row = (await connection.query('SELECT *, CAST(date1_start AS VARCHAR), CAST(date1_finish AS VARCHAR), CAST(date2_finish AS VARCHAR) FROM tenders WHERE id = $1', [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         for (let i = 0; i < 6; i++) {
             const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
             tender.stagedFileNames[i] = stage_files
         }
-        let datesRequests = (await connection.query('SELECT * FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
+        let datesRequests = (await connection.query('SELECT *, CAST(date AS VARCHAR) FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
         datesRequests = await Promise.all(datesRequests.map(async dateRequest => {
             dateRequest.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id = $2 AND stage = 1', [id, dateRequest.id])).rows
             return dateRequest

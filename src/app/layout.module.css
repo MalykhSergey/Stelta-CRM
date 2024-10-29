@@ -1,5 +1,5 @@
 .main{
-    padding-left: 60px;
+    /* padding-left: 60px; */
 }
 .sidebar {
     position: fixed;
@@ -55,7 +55,7 @@
     margin-left: 250px;
 }
 
-.overlay {
+/* .overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -69,4 +69,4 @@
 
 .sidebar:hover~.overlay {
     background-color: rgba(0, 0, 0, 0.5);
-}
+} */

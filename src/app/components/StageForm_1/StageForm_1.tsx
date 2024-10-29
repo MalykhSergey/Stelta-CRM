@@ -1,7 +1,7 @@
 import { DateRequest } from '@/app/models/DateRequest';
 import FileName from '@/app/models/FileName';
 import { addDateRequest } from '@/app/models/TenderService';
-import { faCaretUp, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
@@ -17,11 +17,10 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
         toggle() { this.isTrue = !this.isTrue }
     }));
     const handleClick = async () => {
-        tender.datesRequests.push(makeAutoObservable(new DateRequest(await addDateRequest(tender.id), '', [])))
+        tender.datesRequests.push(makeAutoObservable(new DateRequest(await addDateRequest(tender.id), new Date(Date.now()).toISOString().slice(0, 10), [])))
     }
     const datesRequests: any = []
     tender.datesRequests.forEach((dateRequest, index) => {
-        console.log(dateRequest)
         datesRequests.push(
             <div key={index} className={styles.dateRequest}>
                 <DocumentsForm tenderId={tender.id} stage={1}
@@ -29,10 +28,10 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
                     removeFile={(fileName: FileName) => dateRequest.removeFile(fileName)}
                     specialPlaceName='dateRequestId'
                     specialPlaceId={dateRequest.id}
-                    fileNames={dateRequest.fileNames} title={`Дозапрос ${index + 1} этапа`} isEditable={true} ></DocumentsForm >
+                    fileNames={dateRequest.fileNames} title={`Дозапрос документов ${index + 1}`} isEditable={true} ></DocumentsForm >
                 <div>
                     <label htmlFor={`dateRequest${index}`}>Дата предоставления ответа</label>
-                    <input id={`dateRequest${index}`} type="date" />
+                    <input id={`dateRequest${index}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required />
                 </div>
             </div>
         )
@@ -42,7 +41,6 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
             <div className='cardHeader'>
                 <h3>Этап 1</h3>
                 <button className={`iconButton ${styles.toggler}`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? styles.rotated : ''}`} /></button>
-                <button className={`iconButton closeButton`}><FontAwesomeIcon icon={faXmark} className={``} /></button>
             </div>
             <div className='hiddenContent'>
                 <DocumentsForm tenderId={tender.id} stage={1}

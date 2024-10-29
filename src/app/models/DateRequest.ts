@@ -6,6 +6,9 @@ export class DateRequest {
         public date: string,
         public fileNames: FileName[] = []
     ) { }
+    setDate(date: string) {
+        this.date = date
+    }
     addFile(fileName: FileName) {
         this.fileNames.push(new FileName(0, fileName.name))
     }

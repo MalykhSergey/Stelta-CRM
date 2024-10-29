@@ -119,6 +119,7 @@ export class Tender {
     return { ok: true, value: '' }
   }
   static fromQueryRow(row: any) {
+    console.log(row)
     const tender = new Tender()
     tender.id = row.id
     tender.status = row.status
@@ -131,9 +132,9 @@ export class Tender {
     tender.contactPerson = row.contact_person
     tender.phoneNumber = row.phone_number
     tender.email = row.email
-    tender.date1_start = row.date1_start.toISOString().slice(0, 16)
-    tender.date1_finish = row.date1_finish.toISOString().slice(0, 16)
-    tender.date2_finish = row.date2_finish.toISOString().slice(0, 16)
+    tender.date1_start = row.date1_start
+    tender.date1_finish = row.date1_finish
+    tender.date2_finish = row.date2_finish
     for (let i = 0; i < 6; i++) {
       if (row[`comment${i}`] != null)
         tender.comments[i] = row[`comment${i}`]

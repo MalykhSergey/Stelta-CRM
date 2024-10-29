@@ -1,35 +1,50 @@
-.container {
-  padding: 0 2rem;
-}
-
-.main {
-  padding: 5rem 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.title {
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  text-align: center;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
+  gap: 20px;
   width: 100%;
-  max-width: 1200px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #f7f7f7;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.columnHeader {
+  padding: 10px;
+  height: 40px;
+  margin-bottom: 20px;
+  text-align: center;
+  align-content: center;
+}
+
+.first {
+  background-color: rgba(231, 231, 231);
+  color: rgb(84, 85, 85);
+}
+
+.second {
+  background-color: rgb(182, 207, 245);
+  color: rgb(23, 61, 122)
+}
+
+.third {
+  background-color: rgb(152, 215, 228);
+  color: rgb(14, 59, 68);
+}
+
+.forth {
+  background-color: rgb(227, 215, 255);
+  color: rgb(61, 24, 142);
+}
+
+.fifth {
+  background-color: rgb(209, 239, 194);
+  color: rgb(105, 202, 55);
+}
+
+.sixth {
+  background-color: rgb(251, 251, 96);
+  color: rgb(243, 156, 11);
 }

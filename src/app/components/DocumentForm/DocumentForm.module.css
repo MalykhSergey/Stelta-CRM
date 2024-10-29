@@ -9,3 +9,8 @@
 .rotated {
     transform: rotate(180deg);
 }
+.fileItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

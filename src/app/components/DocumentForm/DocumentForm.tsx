@@ -1,5 +1,5 @@
 import FileName from '@/app/models/FileName';
-import { faCaretUp, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import styles from './DocumentForm.module.css';
@@ -36,10 +36,15 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
     }
     const files = []
     for (const fileName of fileNames) {
-        files.push(<p key={fileName.name + files.length}><a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name}</a><button onClick={() => {
-            removeFile(fileName)
-            deleteHandler(tenderId, fileName.id)
-        }}>Delete</button></p>)
+        files.push(
+            <div className={styles.fileItem} key={fileName.name + files.length}>
+                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name}</a>
+                <button onClick={() => {
+                    removeFile(fileName)
+                    deleteHandler(tenderId, fileName.id)
+                }}
+                    className='iconButton closeButton'
+                ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></div>)
     }
     return (
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
