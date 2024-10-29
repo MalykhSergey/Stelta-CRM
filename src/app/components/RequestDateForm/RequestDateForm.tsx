@@ -7,12 +7,12 @@ import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
-import styles from './StageForm_1.module.css';
-interface StageForm_1Props {
+import styles from './RequestDateForm.module.css';
+interface RequestDateFormProps {
     tender: Tender,
     isDone: boolean,
 }
-const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
+const RequestDateForm: React.FC<RequestDateFormProps> = observer(({ tender }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -54,4 +54,4 @@ const StageForm_1: React.FC<StageForm_1Props> = observer(({ tender }) => {
         </div>
     )
 });
-export default StageForm_1
+export default RequestDateForm

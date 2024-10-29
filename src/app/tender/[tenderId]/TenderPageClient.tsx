@@ -2,7 +2,7 @@
 
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
-import StageForm_1 from '@/app/components/StageForm_1/StageForm_1';
+import RequestDateForm from '@/app/components/RequestDateForm/RequestDateForm';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
@@ -34,8 +34,8 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                         pushFile={(fileName: FileName) => tender.addToStagedComments(fileName, 0)}
                         removeFile={(fileName: FileName) => tender.removeFileFromStagedComments(fileName, 0)}
                         title='Документы тендера' isEditable={true} />
-                    {tender.status == 1 && <StageForm_1 tender={tender} isDone={false} />}
-                    {tender.status > 1 && <StageForm_1 tender={tender} isDone={true} />}
+                    {tender.status == 1 && <RequestDateForm tender={tender} isDone={false} />}
+                    {tender.status > 1 && <RequestDateForm tender={tender} isDone={true} />}
                     <CommentsForm tender={tender} />
                     <button onClick={() => {
                         updateTenderById(JSON.stringify(tender))
