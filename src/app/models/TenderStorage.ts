@@ -5,12 +5,11 @@ class TenderStorage {
     constructor() {
         console.log('Created Tender storage')
     }
-    // add(tender: Tender) {
-    //     // this.allTenders.push(tender)
-    // }
+
     async create() {
         return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
     }
+
     async update(tender: Tender) {
         await connection.query(`
             UPDATE tenders 
@@ -75,12 +74,17 @@ class TenderStorage {
             const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
             tender.stagedFileNames[i] = stage_files
         }
-        let datesRequests = (await connection.query('SELECT *, CAST(date AS VARCHAR) FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
-        datesRequests = await Promise.all(datesRequests.map(async dateRequest => {
-            dateRequest.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id = $2 AND stage = 1', [id, dateRequest.id])).rows
+        const datesRequests = (await connection.query('SELECT *, CAST(date AS VARCHAR) FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
+        tender.datesRequests = (await Promise.all(datesRequests.map(async dateRequest => {
+            dateRequest.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND date_request_id = $2', [id, dateRequest.id])).rows
             return dateRequest
-        }))
-        tender.datesRequests = datesRequests
+        })))
+        const rebiddingPrices = (await connection.query('SELECT * FROM rebidding_prices WHERE tender_id = $1', [id])).rows
+        tender.rebiddingPrices = (await Promise.all(rebiddingPrices.map(async rebiddingPrice => {
+            rebiddingPrice.price = rebiddingPrice.price.slice(0,-2)
+            rebiddingPrice.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id =$2', [id, rebiddingPrice.id])).rows
+            return rebiddingPrice
+        })))
         return tender
     }
     async addFile(tenderId: number, fileName: string, stage: number, dateRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
@@ -97,6 +101,9 @@ class TenderStorage {
 
     async addDateRequest(tenderId: number) {
         return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+    }
+    async addRebiddingPrice(tenderId: number) {
+        return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
     }
 
 }

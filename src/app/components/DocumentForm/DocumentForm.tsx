@@ -1,5 +1,5 @@
 import FileName from '@/app/models/FileName';
-import { faCaretUp, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faDownload, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import styles from './DocumentForm.module.css';
@@ -38,7 +38,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
     for (const fileName of fileNames) {
         files.push(
             <div className={styles.fileItem} key={fileName.name + files.length}>
-                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name}</a>
+                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name} <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
                 <button onClick={() => {
                     removeFile(fileName)
                     deleteHandler(tenderId, fileName.id)

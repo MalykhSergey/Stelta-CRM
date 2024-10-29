@@ -119,7 +119,6 @@ export class Tender {
     return { ok: true, value: '' }
   }
   static fromQueryRow(row: any) {
-    console.log(row)
     const tender = new Tender()
     tender.id = row.id
     tender.status = row.status
@@ -141,12 +140,12 @@ export class Tender {
     }
     return tender
   }
-  public removeFileFromStagedComments(fileName: FileName, arrayIndex: number): void {
+  public removeFileFromStagedFileNames(fileName: FileName, arrayIndex: number): void {
     const index = this.stagedFileNames[arrayIndex].findIndex(item => item.name === fileName.name);
     if (index > -1)
       this.stagedFileNames[arrayIndex].splice(index, 1);
   }
-  public addToStagedComments(fileName: FileName, arrayIndex: number): void {
+  public addToStagedFileNames(fileName: FileName, arrayIndex: number): void {
     this.stagedFileNames[arrayIndex].push(new FileName(0, fileName.name));
   }
   static toJSON(tender: Tender) {
@@ -171,7 +170,7 @@ export class Tender {
     tender.email = obj.email
     tender.comments = obj.comments
     tender.stagedFileNames = obj.stagedFileNames
-    tender.rebiddingPrices = obj.rebiddingPrices.map((value: { id: number; price: number; fileNames: FileName[] }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
+    tender.rebiddingPrices = obj.rebiddingPrices.map((value: { id: number; price: string; fileNames: FileName[] }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
     tender.datesRequests = obj.datesRequests.map((value: { id: number; date: string; fileNames: FileName[] }) => makeAutoObservable(new DateRequest(value.id, value.date, value.fileNames)))
     return makeAutoObservable(tender)
   }

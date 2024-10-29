@@ -1,7 +1,7 @@
+import Status from '@/app/models/Status'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { observer, useLocalObservable } from 'mobx-react-lite'
-import { Status } from '../../models/Status'
 import { Tender } from '../../models/Tender'
 import styles from './TenderForm.module.css'
 
@@ -51,12 +51,16 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
             <label className={styles.label}>Статус:</label>
             <div className={styles.formGroup}>
                 <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}>
-                    <option value="0">{Status.STAGE_CREATED}</option>
-                    <option value="1">{Status.STAGE_1_START}</option>
-                    <option value="2">{Status.STAGE_1_FINISH}</option>
-                    <option value="3">{Status.STAGE_2_START}</option>
-                    <option value="4">{Status.STAGE_2_FINISH}</option>
-                    <option value="5">{Status.STAGE_FINISH}</option>
+                    {tender.status < 0 &&
+                        <>
+                            <option value="-1">{Status.get(-1)}</option>
+                        </>
+                    }
+                    <option value="0">{Status.get(0)}</option>
+                    <option value="1">{Status.get(1)}</option>
+                    <option value="2">{Status.get(2)}</option>
+                    <option value="3">{Status.get(3)}</option>
+                    <option value="4">{Status.get(4)}</option>
                 </select>
             </div>
             {company}

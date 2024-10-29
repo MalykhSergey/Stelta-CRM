@@ -1,8 +1,10 @@
-export enum Status{
-    STAGE_CREATED = "Новый тендер",
-    STAGE_1_START = "Подготовка заявки 1 Этап",
-    STAGE_1_FINISH = "Заявка подана 1 этап",
-    STAGE_2_START = "Подготовка заявки 2 Этап",
-    STAGE_2_FINISH = "Заявка подана 2 этап",
-    STAGE_FINISH = "Контракт заключён"
-}
+const Status = new Map()
+Status.set(-1,"Не участвуем")
+Status.set(0,"Новый тендер")
+Status.set(1,"Подготовка заявки 1 Этап")
+Status.set(2,"Заявка подана 1 этап")
+Status.set(3,"Подготовка заявки 2 Этап")
+Status.set(4,"Заявка подана 2 этап")
+Status.set(5,"Контракт заключён")
+
+export default Status

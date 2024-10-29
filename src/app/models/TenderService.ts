@@ -12,6 +12,9 @@ export async function getTenderById(id: number): Promise<string> {
 export async function addDateRequest(tenderId:number) {
     return tenderStorage.addDateRequest(tenderId)
 }
+export async function addRebiddingPrice(tenderId:number) {
+    return tenderStorage.addRebiddingPrice(tenderId)
+}
 export async function updateTenderById(tender_string: string) {
     const tender = JSON.parse(tender_string)
     await tenderStorage.update(tender);
