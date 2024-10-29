@@ -1,4 +1,4 @@
-import Status from '@/app/models/Status'
+import { default as getStatusName, default as Status } from '@/app/models/Status'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { observer, useLocalObservable } from 'mobx-react-lite'
@@ -53,14 +53,16 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
                 <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}>
                     {tender.status < 0 &&
                         <>
-                            <option value="-1">{Status.get(-1)}</option>
+                            <option value="-1">{getStatusName(-1)}</option>
                         </>
                     }
-                    <option value="0">{Status.get(0)}</option>
-                    <option value="1">{Status.get(1)}</option>
-                    <option value="2">{Status.get(2)}</option>
-                    <option value="3">{Status.get(3)}</option>
-                    <option value="4">{Status.get(4)}</option>
+                    <option value="0">{getStatusName(0)}</option>
+                    <option value="1">{getStatusName(1)}</option>
+                    <option value="2">{getStatusName(2)}</option>
+                    <option value="3">{getStatusName(3)}</option>
+                    <option value="4">{getStatusName(4)}</option>
+                    <option value="5">{getStatusName(5)}</option>
+                    <option value="6">{getStatusName(6)}</option>
                 </select>
             </div>
             {company}

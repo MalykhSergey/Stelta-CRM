@@ -11,10 +11,10 @@ export default async function HomePage() {
     <div className={`${styles.grid} inherit`}>
       <div className={` ${styles.column}`}>
         <h3 className={`${styles.first} card ${styles.columnHeader}`}>Заявка создана</h3>
+        <Link style={{width:'20px'}} href='./tender/create'><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Link>
         {tenders.filter(tender => tender.status == 0).map((tender, index) => (
           <TenderCard key={index} tender={tender} />
         ))}
-          <Link style={{width:'20px'}} href='./tender/create'><FontAwesomeIcon icon={faPlus}></FontAwesomeIcon></Link>
       </div>
       <div className={`${styles.column}`}>
         <h3 className={`${styles.second} card ${styles.columnHeader}`}>Подготовка 1 Этап</h3>

@@ -48,32 +48,29 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
         updateTenderById(JSON.stringify(tender))
     }
     return (
-        <div>
-            <h1>Форма для тендера</h1>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '100px' }}>
-                <div style={{}}>
-                    <TenderForm tender={tender} isEditable={isEditable} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '50px', width: '800px' }}>
-                    <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
-                        pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
-                        removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                        title='Документы тендера' isEditable={true} />
-                    {tender.status == 1 && <RequestDateForm tender={tender} isDone={false} />}
-                    {tender.status > 1 && <RequestDateForm tender={tender} isDone={true} />}
-                    {tender.status == 3 && <RebiddingPriceForm tender={tender} isDone={false} />}
-                    {tender.status > 3 && <RebiddingPriceForm tender={tender} isDone={true} />}
-                    <CommentsForm tender={tender} />
-                    <div className={styles.buttonRow}>
-                        <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
-                        {tender.status >= 0 &&
-                            <>
-                                <button onClick={() => nextStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>
-                                {(tender.status & 1) == 0 && <button onClick={() => nextStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
-                                <button onClick={() => nextStageHandler(-1)}>Не участвуем</button>
-                            </>
-                        }
-                    </div>
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '100px' }}>
+            <div style={{}}>
+                <TenderForm tender={tender} isEditable={isEditable} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px', width: '800px' }}>
+                <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
+                    pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
+                    removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
+                    title='Документы тендера' isEditable={true} />
+                {tender.status == 1 && <RequestDateForm tender={tender} isDone={false} />}
+                {tender.status > 1 && <RequestDateForm tender={tender} isDone={true} />}
+                {tender.status == 3 && <RebiddingPriceForm tender={tender} isDone={false} />}
+                {tender.status > 3 && <RebiddingPriceForm tender={tender} isDone={true} />}
+                <CommentsForm tender={tender} />
+                <div className={styles.buttonRow}>
+                    <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
+                    {tender.status >= 0 &&
+                        <>
+                            {tender.status < 6 && <button onClick={() => nextStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
+                            {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button onClick={() => nextStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
+                            {tender.status < 6 && <button onClick={() => nextStageHandler(-1)}>Не участвуем</button>}
+                        </>
+                    }
                 </div>
             </div>
         </div>

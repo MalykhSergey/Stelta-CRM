@@ -1,10 +1,13 @@
-const Status = new Map()
-Status.set(-1,"Не участвуем")
-Status.set(0,"Новый тендер")
-Status.set(1,"Подготовка заявки 1 Этап")
-Status.set(2,"Заявка подана 1 этап")
-Status.set(3,"Подготовка заявки 2 Этап")
-Status.set(4,"Заявка подана 2 этап")
-Status.set(5,"Контракт заключён")
-
-export default Status
+function getStatusName(status: number) {
+    switch (status) {
+        case -1: return "Не участвуем"
+        case 0: return "Новый тендер"
+        case 1: return "Подготовка заявки 1 Этап"
+        case 2: return "Заявка подана 1 этап"
+        case 3: return "Подготовка заявки 2 Этап"
+        case 4: return "Заявка подана 2 этап"
+        case 5: return "Заключение договора"
+        case 6: return "Договор заключен"
+    }
+}
+export default getStatusName

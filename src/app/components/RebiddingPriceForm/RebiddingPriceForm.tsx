@@ -35,8 +35,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceFormProps> = observer(({ tender
                     <label htmlFor={`rebiddingPrice${index}`}>Сумма</label>
                     <input id={`rebiddingPrice${index}`} type="text" value={rebiddingPrice.price + " ₽"}
                         onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*\d{2})/g, '')
-                            // e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
+                            e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
                             const cursorPosition = e.target.selectionStart;
                             requestAnimationFrame(() => {
                                 e.target.selectionStart = cursorPosition;
