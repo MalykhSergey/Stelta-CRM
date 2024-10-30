@@ -10,7 +10,7 @@ export class DateRequest {
         this.date = date
     }
     addFile(fileName: FileName) {
-        this.fileNames.push(new FileName(0, fileName.name))
+        this.fileNames.push(fileName)
     }
     removeFile(fileName: FileName) {
         const index = this.fileNames.findIndex(item => item.name === fileName.name);
