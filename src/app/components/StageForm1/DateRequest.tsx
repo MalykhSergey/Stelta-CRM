@@ -16,7 +16,10 @@ const DateRequestForm: React.FC<DateRequestFormProps> = observer(({ tenderId, da
                 removeFile={(fileName: FileName) => dateRequest.removeFile(fileName)}
                 specialPlaceName='dateRequestId'
                 specialPlaceId={dateRequest.id}
-                fileNames={dateRequest.fileNames} title={`Дозапрос документов ${orderNumber}`} isEditable={true} ></DocumentsForm >
+                fileNames={dateRequest.fileNames} title={`Дозапрос документов ${orderNumber}`}
+                isEditable={true}
+                className='card'
+                independent={true} />
             <div>
                 <label htmlFor={`dateRequest${dateRequest.id}`}>Дата предоставления ответа</label>
                 <input id={`dateRequest${dateRequest.id}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required />
