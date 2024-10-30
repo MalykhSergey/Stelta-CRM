@@ -15,8 +15,9 @@ interface DocumentsFormProps {
     removeFile: (fileName: FileName) => void,
     title: string,
     isEditable: boolean,
+    className?: string
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable }) => {
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -55,7 +56,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                 ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></div>)
     }
     return (
-        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
+        <div className={`${className} dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>{title}</h3>
                 <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>

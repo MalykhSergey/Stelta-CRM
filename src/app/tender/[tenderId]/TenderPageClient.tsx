@@ -3,7 +3,7 @@
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
 import RebiddingPriceForm from '@/app/components/RebiddingPriceForm/RebiddingPriceForm';
-import RequestDateForm from '@/app/components/RequestDateForm/RequestDateForm';
+import StageForm1 from '@/app/components/StageForm1/StageForm1';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
@@ -56,9 +56,9 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                    title='Документы тендера' isEditable={true} />
-                {tender.status == 1 && <RequestDateForm tender={tender} isDone={false} />}
-                {tender.status > 1 && <RequestDateForm tender={tender} isDone={true} />}
+                    title='Документы тендера' isEditable={true} className='card'/>
+                {tender.status == 1 && <StageForm1 tender={tender} isDone={false} />}
+                {tender.status > 1 && <StageForm1 tender={tender} isDone={true} />}
                 {tender.status == 3 && <RebiddingPriceForm tender={tender} isDone={false} />}
                 {tender.status > 3 && <RebiddingPriceForm tender={tender} isDone={true} />}
                 <CommentsForm tender={tender} />

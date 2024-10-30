@@ -6,14 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
-import ConfirmDialog from '../Dialog/ConfirmDialog';
 import DocumentsForm from '../DocumentForm/DocumentForm';
-import styles from './RequestDateForm.module.css';
-interface RequestDateFormProps {
+import DateRequestForm from './DateRequest';
+import styles from './RequestDate.module.css';
+interface StageFormProps {
     tender: Tender,
     isDone: boolean,
 }
-const RequestDateForm: React.FC<RequestDateFormProps> = observer(({ tender }) => {
+const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -24,18 +24,19 @@ const RequestDateForm: React.FC<RequestDateFormProps> = observer(({ tender }) =>
     const datesRequests: any = []
     tender.datesRequests.forEach((dateRequest, index) => {
         datesRequests.push(
-            <div key={index} className={styles.dateRequest}>
-                <DocumentsForm tenderId={tender.id} stage={1}
-                    pushFile={(fileName: FileName) => dateRequest.addFile(fileName)}
-                    removeFile={(fileName: FileName) => dateRequest.removeFile(fileName)}
-                    specialPlaceName='dateRequestId'
-                    specialPlaceId={dateRequest.id}
-                    fileNames={dateRequest.fileNames} title={`Дозапрос документов ${index + 1}`} isEditable={true} ></DocumentsForm >
-                <div>
-                    <label htmlFor={`dateRequest${index}`}>Дата предоставления ответа</label>
-                    <input id={`dateRequest${index}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required />
-                </div>
-            </div>
+            // <div key={index} className={styles.dateRequest}>
+            //     <DocumentsForm tenderId={tender.id} stage={1}
+            //         pushFile={(fileName: FileName) => dateRequest.addFile(fileName)}
+            //         removeFile={(fileName: FileName) => dateRequest.removeFile(fileName)}
+            //         specialPlaceName='dateRequestId'
+            //         specialPlaceId={dateRequest.id}
+            //         fileNames={dateRequest.fileNames} title={`Дозапрос документов ${index + 1}`} isEditable={true} ></DocumentsForm >
+            //     <div>
+            //         <label htmlFor={`dateRequest${index}`}>Дата предоставления ответа</label>
+            //         <input id={`dateRequest${index}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required />
+            //     </div>
+            // </div>
+            <DateRequestForm dateRequest={dateRequest} tenderId={tender.id} orderNumber={index+1} key={index}></DateRequestForm>
         )
     })
     return (
@@ -55,4 +56,4 @@ const RequestDateForm: React.FC<RequestDateFormProps> = observer(({ tender }) =>
         </div>
     )
 });
-export default RequestDateForm
+export default StageForm1
