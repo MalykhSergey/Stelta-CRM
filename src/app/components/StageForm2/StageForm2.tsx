@@ -8,7 +8,7 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
-import styles from './RebiddingPriceForm.module.css';
+import styles from './StageForm2.module.css';
 interface StageForm2Props {
     tender: Tender,
     isDone: boolean,
@@ -34,15 +34,15 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                 <h3>Этап 2</h3>
                 <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
             </div>
-            <div className='hiddenContent'>
+            <div className={`hiddenContent ${styles.stageForm}`}>
                 <DocumentsForm tenderId={tender.id} stage={2}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}
-                    fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={true}></DocumentsForm>
+                    fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={true} independent={true} className='card'/>
                 <DocumentsForm tenderId={tender.id} stage={3}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 3)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 3)}
-                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={true} independent={true}></DocumentsForm>
+                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={true} independent={true} className='card'/>
                 {rebiddingPrices}
                 <button onClick={handleClick}>Переторжка</button>
             </div>

@@ -18,7 +18,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, 
                 removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
                 specialPlaceName='rebiddingPriceId'
                 specialPlaceId={rebiddingPrice.id}
-                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`} isEditable={true} ></DocumentsForm >
+                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`} isEditable={true} independent={true} className="card"></DocumentsForm >
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Сумма</label>
                 <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price + " ₽"}

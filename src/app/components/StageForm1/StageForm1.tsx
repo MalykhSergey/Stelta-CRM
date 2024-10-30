@@ -8,7 +8,7 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import DateRequestForm from './DateRequest';
-import styles from './RequestDate.module.css';
+import styles from './StageForm1.module.css';
 interface StageFormProps {
     tender: Tender,
     isDone: boolean,
@@ -33,7 +33,7 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
                 <h3>Этап 1</h3>
                 <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
             </div>
-            <div className='hiddenContent'>
+            <div className={`hiddenContent ${styles.stageForm}`}>
                 <DocumentsForm
                     title='Формы 1 этапа'
                     tenderId={tender.id}

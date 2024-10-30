@@ -19,7 +19,7 @@ interface DocumentsFormProps {
     className?: string,
     independent?: boolean
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className, independent }) => {
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className='', independent }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
