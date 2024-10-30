@@ -145,6 +145,11 @@ export class Tender {
     if (index > -1)
       this.stagedFileNames[arrayIndex].splice(index, 1);
   }
+  public deleteDateRequest(dateRequest: DateRequest): void {
+    const index = this.datesRequests.findIndex(item => item.id == dateRequest.id);
+    if (index > -1)
+      this.datesRequests.splice(index, 1);
+  }
   public addToStagedFileNames(fileName: FileName, arrayIndex: number): void {
     this.stagedFileNames[arrayIndex].push(fileName);
   }

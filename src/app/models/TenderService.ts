@@ -14,10 +14,10 @@ export async function addDateRequest(tenderId: number) {
 export async function addRebiddingPrice(tenderId: number) {
     return tenderStorage.addRebiddingPrice(tenderId)
 }
-export async function deleteDateRequest(tenderId: number, rebiddingPriceId: number) {
-    return tenderStorage.deleteDateRequest(tenderId, rebiddingPriceId)
+export async function deleteDateRequestById(tenderId: number, dateRequestId: number) {
+    return tenderStorage.deleteDateRequest(tenderId, dateRequestId)
 }
-export async function deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
+export async function deleteRebiddingPriceById(tenderId: number, rebiddingPriceId: number) {
     return tenderStorage.deleteRebiddingPrice(tenderId, rebiddingPriceId)
 }
 export async function updateTenderById(tender_string: string) {

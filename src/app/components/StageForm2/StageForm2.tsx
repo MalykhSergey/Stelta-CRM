@@ -38,11 +38,11 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={2}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}
-                    fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={true} independent={true} className='card'/>
+                    fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={true} independent={false} className='card'/>
                 <DocumentsForm tenderId={tender.id} stage={3}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 3)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 3)}
-                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={true} independent={true} className='card'/>
+                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={true} independent={false} className='card'/>
                 {rebiddingPrices}
                 <button onClick={handleClick}>Переторжка</button>
             </div>

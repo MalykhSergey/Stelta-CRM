@@ -1,5 +1,5 @@
 import FileName from '@/app/models/FileName';
-import { faCaretUp, faDownload, faPaperclip, faTrash, faUpload, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faDownload, faPaperclip, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useRef } from 'react';
@@ -17,9 +17,10 @@ interface DocumentsFormProps {
     title: string,
     isEditable: boolean,
     className?: string,
-    independent?: boolean
+    independent?: boolean,
+    onDelete?: () => void
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className='', independent }) => {
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className = '', independent, onDelete = () => { } }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -63,24 +64,27 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
         <div className={`${className} dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>{title}</h3>
-                {independent && <>
-                    <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
-                    <button className={`iconButton redButton`}><FontAwesomeIcon icon={faXmark} className={``} /></button>
-                </>
-                }
+                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+                {independent && <button className={`iconButton redButton`} onClick={() => {
+                    showConfirmDialog(
+                        {
+                            message: `Вы действительно хотите удалить?`,
+                            onConfirm: onDelete
+                        })
+                }}><FontAwesomeIcon icon={faXmark} /></button>}
             </div>
             <div className='hiddenContent'>
                 {files}
                 {
                     isEditable &&
                     <div >
-                        <button 
-                        onClick={() => {
-                            if (fileInput.current)
-                                fileInput.current.click()
-                        }}
-                        className='iconButton'
-                        ><FontAwesomeIcon icon={faPaperclip}/></button>
+                        <button
+                            onClick={() => {
+                                if (fileInput.current)
+                                    fileInput.current.click()
+                            }}
+                            className='iconButton'
+                        ><FontAwesomeIcon icon={faPaperclip} /></button>
                         <input ref={fileInput} onChange={handleChange} type="file" name="file" multiple hidden />
                         <input type="hidden" name="tenderId" value={tenderId} />
                     </div>
