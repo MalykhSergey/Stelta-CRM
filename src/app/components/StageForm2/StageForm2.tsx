@@ -7,12 +7,13 @@ import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
+import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from './RebiddingPriceForm.module.css';
-interface RebiddingPriceFormProps {
+interface StageForm2Props {
     tender: Tender,
     isDone: boolean,
 }
-const RebiddingPriceForm: React.FC<RebiddingPriceFormProps> = observer(({ tender }) => {
+const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
     const errors: { [key: string]: string } = useLocalObservable(() => ({}))
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
@@ -24,32 +25,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceFormProps> = observer(({ tender
     const rebiddingPrices: any = []
     tender.rebiddingPrices.forEach((rebiddingPrice, index) => {
         rebiddingPrices.push(
-            <div key={index} className={styles.rebiddingPrice}>
-                <DocumentsForm tenderId={tender.id} stage={1}
-                    pushFile={(fileName: FileName) => rebiddingPrice.addFile(fileName)}
-                    removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
-                    specialPlaceName='rebiddingPriceId'
-                    specialPlaceId={rebiddingPrice.id}
-                    fileNames={rebiddingPrice.fileNames} title={`Переторжка ${index + 1}`} isEditable={true} ></DocumentsForm >
-                <div>
-                    <label htmlFor={`rebiddingPrice${index}`}>Сумма</label>
-                    <input id={`rebiddingPrice${index}`} type="text" value={rebiddingPrice.price + " ₽"}
-                        onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                            const cursorPosition = e.target.selectionStart;
-                            requestAnimationFrame(() => {
-                                e.target.selectionStart = cursorPosition;
-                                e.target.selectionEnd = cursorPosition;
-                            });
-                            const result = rebiddingPrice.setPrice(e.target.value)
-                            if (!result.ok)
-                                errors[rebiddingPrice.id] = result.error
-                            else
-                                delete errors[rebiddingPrice.id]
-                        }} required />
-                    {errors[rebiddingPrice.id] && <span className={styles.error}>{errors[rebiddingPrice.id]}</span>}
-                </div>
-            </div>
+            <RebiddingPriceForm key={index} tenderId={tender.id} rebiddingPrice={rebiddingPrice} orderNumber={index + 1} />
         )
     })
     return (
@@ -73,4 +49,4 @@ const RebiddingPriceForm: React.FC<RebiddingPriceFormProps> = observer(({ tender
         </div>
     )
 });
-export default RebiddingPriceForm
+export default StageForm2

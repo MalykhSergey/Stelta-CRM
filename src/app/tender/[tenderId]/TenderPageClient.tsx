@@ -2,7 +2,7 @@
 
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
-import RebiddingPriceForm from '@/app/components/RebiddingPriceForm/RebiddingPriceForm';
+import RebiddingPriceForm from '@/app/components/StageForm2/RebiddingPriceForm';
 import StageForm1 from '@/app/components/StageForm1/StageForm1';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
@@ -10,6 +10,7 @@ import { Tender } from '@/app/models/Tender';
 import { updateTenderById } from '@/app/models/TenderService';
 import { observer } from 'mobx-react-lite';
 import styles from "./TenderPageClient.module.css";
+import StageForm2 from '@/app/components/StageForm2/StageForm2';
 
 const getNextStageButtonText = (status: number) => {
     switch (status) {
@@ -59,8 +60,8 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                     title='Документы тендера' isEditable={true} className='card'/>
                 {tender.status == 1 && <StageForm1 tender={tender} isDone={false} />}
                 {tender.status > 1 && <StageForm1 tender={tender} isDone={true} />}
-                {tender.status == 3 && <RebiddingPriceForm tender={tender} isDone={false} />}
-                {tender.status > 3 && <RebiddingPriceForm tender={tender} isDone={true} />}
+                {tender.status == 3 && <StageForm2 tender={tender} isDone={false} />}
+                {tender.status > 3 && <StageForm2 tender={tender} isDone={true} />}
                 <CommentsForm tender={tender} />
                 <div className={styles.buttonRow}>
                     <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
