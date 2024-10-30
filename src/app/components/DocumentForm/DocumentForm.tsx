@@ -1,7 +1,8 @@
 import FileName from '@/app/models/FileName';
-import { faCaretUp, faDownload, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCaretUp, faDownload, faPaperclip, faTrash, faUpload, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useRef } from 'react';
 import { useConfirmDialog } from '../Dialog/ConfirmDialogContext';
 import styles from './DocumentForm.module.css';
 import { deleteHandler, uploadHandler } from './Handler';
@@ -24,12 +25,14 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
         toggle() { this.isTrue = !this.isTrue }
     }));
     const { showConfirmDialog } = useConfirmDialog();
-    const handleChange = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    const fileInput = useRef<HTMLInputElement>(null)
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
-        for (const file of e.target.files) {
-            const file_name = encodeURI(file.name)
-            formData.append('file', file, file_name);
-        }
+        if (e.target.files)
+            for (let i = 0; i < e.target.files.length; i++) {
+                const file_name = encodeURI(e.target.files[i].name)
+                formData.append('file', e.target.files[i], file_name);
+            }
         formData.append('stage', stage.toString());
         formData.append('tenderId', tenderId.toString());
         formData.append(specialPlaceName, specialPlaceId.toString());
@@ -70,10 +73,17 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                 {files}
                 {
                     isEditable &&
-                    <form onChange={handleChange}>
-                        <input type="file" name="file" multiple />
+                    <div >
+                        <button 
+                        onClick={() => {
+                            if (fileInput.current)
+                                fileInput.current.click()
+                        }}
+                        className='iconButton'
+                        ><FontAwesomeIcon icon={faPaperclip}/></button>
+                        <input ref={fileInput} onChange={handleChange} type="file" name="file" multiple hidden />
                         <input type="hidden" name="tenderId" value={tenderId} />
-                    </form>
+                    </div>
                 }
             </div>
         </div >
