@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
+import ConfirmDialog from '../Dialog/ConfirmDialog';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import styles from './RequestDateForm.module.css';
 interface RequestDateFormProps {

@@ -2,6 +2,7 @@ import FileName from '@/app/models/FileName';
 import { faCaretUp, faDownload, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
+import { useConfirmDialog } from '../Dialog/ConfirmDialogContext';
 import styles from './DocumentForm.module.css';
 import { deleteHandler, uploadHandler } from './Handler';
 interface DocumentsFormProps {
@@ -20,6 +21,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
     }));
+    const { showConfirmDialog } = useConfirmDialog();
     const handleChange = async (e: React.ChangeEvent<HTMLFormElement>) => {
         const formData = new FormData();
         for (const file of e.target.files) {
@@ -40,8 +42,14 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
             <div className={styles.fileItem} key={fileName.name + files.length}>
                 <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name} <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
                 <button onClick={() => {
-                    removeFile(fileName)
-                    deleteHandler(tenderId, fileName.id)
+                    showConfirmDialog(
+                        {
+                            message: `Вы действительно хотите удалить ${fileName.name}?`,
+                            onConfirm: () => {
+                                removeFile(fileName)
+                                deleteHandler(tenderId, fileName.id)
+                            }
+                        })
                 }}
                     className='iconButton redButton'
                 ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></div>)

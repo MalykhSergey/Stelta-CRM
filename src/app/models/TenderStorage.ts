@@ -1,3 +1,4 @@
+import fs from 'fs/promises';
 import connection from "./Database";
 import { Tender } from "./Tender";
 
@@ -104,6 +105,21 @@ class TenderStorage {
     }
     async addRebiddingPrice(tenderId: number) {
         return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+
+    }
+    async deleteDateRequest(tenderId: number, dateRequestId: number) {
+        const filesId = (await connection.query('DELETE FROM file_names WHERE date_request_id = $1 returning id', [dateRequestId])).rows
+        await connection.query('DELETE FROM dates_requests WHERE id = $1', [dateRequestId])
+        filesId.forEach(async row => {
+            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
+        })
+    }
+    async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
+        const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
+        await connection.query('DELETE FROM rebidding_price_id WHERE id = $1', [rebiddingPriceId])
+        filesId.forEach(async row => {
+            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
+        })
     }
 
 }
