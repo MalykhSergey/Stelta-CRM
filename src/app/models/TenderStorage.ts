@@ -27,13 +27,15 @@ class TenderStorage {
                 date1_start = $11,
                 date1_finish = $12,
                 date2_finish = $13,
-                comment0 = $14,
-                comment1 = $15,
-                comment2 = $16,
-                comment3 = $17,
-                comment4 = $18,
-                comment5 = $19
-            WHERE id = $20
+                contract_number = $14,
+                contract_date = $15,
+                comment0 = $16,
+                comment1 = $17,
+                comment2 = $18,
+                comment3 = $19,
+                comment4 = $20,
+                comment5 = $21
+            WHERE id = $22
             `, [
             tender.status,
             tender.company,
@@ -48,6 +50,8 @@ class TenderStorage {
             tender.date1_start,
             tender.date1_finish,
             tender.date2_finish,
+            tender.contractNumber,
+            tender.contractDate,
             tender.comments[0],
             tender.comments[1],
             tender.comments[2],
@@ -65,11 +69,11 @@ class TenderStorage {
     }
 
     async getAll(): Promise<Tender[]> {
-        const tenders_rows = (await connection.query('SELECT *, CAST(date1_start AS VARCHAR), CAST(date1_finish AS VARCHAR), CAST(date2_finish AS VARCHAR) FROM tenders')).rows;
+        const tenders_rows = (await connection.query('SELECT *, CAST(date1_start AS VARCHAR), CAST(date1_finish AS VARCHAR), CAST(date2_finish AS VARCHAR), CAST(contract_date AS VARCHAR) FROM tenders')).rows;
         return tenders_rows.map(tender => Tender.fromQueryRow(tender))
     }
     async getById(id: number): Promise<Tender> {
-        const tenders_row = (await connection.query('SELECT *, CAST(date1_start AS VARCHAR), CAST(date1_finish AS VARCHAR), CAST(date2_finish AS VARCHAR) FROM tenders WHERE id = $1', [id])).rows
+        const tenders_row = (await connection.query('SELECT *, CAST(date1_start AS VARCHAR), CAST(date1_finish AS VARCHAR), CAST(date2_finish AS VARCHAR), CAST(contract_date AS VARCHAR) FROM tenders WHERE id = $1', [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         for (let i = 0; i < 6; i++) {
             const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows

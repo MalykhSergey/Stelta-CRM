@@ -16,6 +16,8 @@ export class Tender {
   public date1_start = ''
   public date1_finish = ''
   public date2_finish = ''
+  public contractDate = ''
+  public contractNumber = ''
   public contactPerson: string = ''
   public phoneNumber: string = ''
   public email: string = ''
@@ -118,6 +120,20 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
+  setContractNumber(value: string): Result<string, string> {
+    this.contractNumber = value
+    if (value == "") {
+      return { ok: false, error: 'Поле не должно быть пустым!' }
+    }
+    return { ok: true, value: '' }
+  }
+  setContractDate(value: string): Result<string, string> {
+    this.contractDate = value
+    if (value == "") {
+      return { ok: false, error: 'Поле не должно быть пустым!' }
+    }
+    return { ok: true, value: '' }
+  }
   static fromQueryRow(row: any) {
     const tender = new Tender()
     tender.id = row.id
@@ -132,6 +148,8 @@ export class Tender {
     tender.phoneNumber = row.phone_number
     tender.email = row.email
     tender.date1_start = row.date1_start
+    tender.contractNumber = row.contract_number
+    tender.contractDate = row.contract_date
     tender.date1_finish = row.date1_finish
     tender.date2_finish = row.date2_finish
     for (let i = 0; i < 6; i++) {
@@ -170,6 +188,8 @@ export class Tender {
     tender.date1_start = obj.date1_start
     tender.date1_finish = obj.date1_finish
     tender.date2_finish = obj.date2_finish
+    tender.contractNumber = obj.contractNumber
+    tender.contractDate = obj.contractDate
     tender.contactPerson = obj.contactPerson
     tender.phoneNumber = obj.phoneNumber
     tender.email = obj.email
