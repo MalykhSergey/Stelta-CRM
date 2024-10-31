@@ -57,7 +57,7 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                    title='Документы тендера' isEditable={true} className='card' />
+                    title='Документы тендера' isEditable={tender.status==0} className='card' />
                 {tender.status >= 1 && <StageForm1 tender={tender}/>}
                 {tender.status >= 3 && <StageForm2 tender={tender}/>}
                 {tender.status >= 5 && <StageForm3 tender={tender}/>}
