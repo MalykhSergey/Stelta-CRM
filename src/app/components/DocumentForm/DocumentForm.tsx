@@ -65,7 +65,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
             <div className='cardHeader'>
                 <h3>{title}</h3>
                 <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
-                {independent && <button className={`iconButton redButton`} onClick={() => {
+                {independent && isEditable && <button className={`iconButton redButton`} onClick={() => {
                     showConfirmDialog(
                         {
                             message: `Вы действительно хотите удалить?`,

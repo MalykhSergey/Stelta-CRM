@@ -1,5 +1,7 @@
-.inputRow {
+.inputGroup {
+    display: grid;
+    grid-template-columns: 25% 50%;
     align-items: center;
-    display: flex;
-    flex-direction: row;
+    text-align: end;
+    gap: 10px;
 }

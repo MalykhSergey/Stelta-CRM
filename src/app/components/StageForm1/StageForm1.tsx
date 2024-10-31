@@ -9,10 +9,11 @@ import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import DateRequestForm from './DateRequest';
 interface StageFormProps {
-    tender: Tender,
-    isDone: boolean,
+    tender: Tender
 }
 const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
+    const isEditable = tender.status == 1;
+    const isCompleted = tender.status <= 2;
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -23,7 +24,7 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
     const datesRequests: any = []
     tender.datesRequests.forEach((dateRequest, index) => {
         datesRequests.push(
-            <DateRequestForm dateRequest={dateRequest} deleteDateRequest={() => { tender.deleteDateRequest(dateRequest) }} tenderId={tender.id} orderNumber={index + 1} isLast={index + 1 == tender.datesRequests.length} key={index}></DateRequestForm>
+            <DateRequestForm dateRequest={dateRequest} deleteDateRequest={() => { tender.deleteDateRequest(dateRequest) }} tenderId={tender.id} orderNumber={index + 1} isEditable={(index + 1 == tender.datesRequests.length) && isEditable} key={index}></DateRequestForm>
         )
     })
     return (
@@ -40,9 +41,9 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 1)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 1)}
                     fileNames={tender.stagedFileNames[1]}
-                    isEditable={true} className='card' />
+                    isEditable={isEditable} className='card' />
                 {datesRequests}
-                <button onClick={handleClick}>Дозапрос документов</button>
+                {isCompleted && <button onClick={handleClick}>Дозапрос документов</button>}
             </div>
         </div>
     )

@@ -9,6 +9,7 @@ interface StageForm3Props {
     tender: Tender
 }
 const StageForm3: React.FC<StageForm3Props> = observer(({ tender }) => {
+    const isEditable = tender.status == 5;
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -23,14 +24,12 @@ const StageForm3: React.FC<StageForm3Props> = observer(({ tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={5}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 5)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 5)}
-                    fileNames={tender.stagedFileNames[5]} title='Документы договора' isEditable={true} independent={false} className='card' />
-                <div className={styles.inputRow}>
-                    <label htmlFor={`contractDate${tender.id}`}>Дата заключения договора</label>
-                    <input id={`contractDate${tender.id}`} value={tender.contractDate} onChange={(e) => tender.setContractDate(e.currentTarget.value)} type="date" />
-                </div>
-                <div className={styles.inputRow}>
-                    <label htmlFor={`contractNumber${tender.id}`}>Номер заключения договора</label>
-                    <input id={`contractNumber${tender.id}`} value={tender.contractNumber} onChange={(e) => tender.setContractNumber(e.currentTarget.value)} type="text" />
+                    fileNames={tender.stagedFileNames[5]} title='Документы договора' isEditable={isEditable} independent={false} className='card' />
+                <div className={styles.inputGroup}>
+                    <label htmlFor={`contractDate${tender.id}`}>Дата заключения договора:</label>
+                    <input id={`contractDate${tender.id}`} value={tender.contractDate} onChange={(e) => tender.setContractDate(e.currentTarget.value)} type="date" disabled={!isEditable} />
+                    <label htmlFor={`contractNumber${tender.id}`}>Номер заключения договора:</label>
+                    <input id={`contractNumber${tender.id}`} value={tender.contractNumber} onChange={(e) => tender.setContractNumber(e.currentTarget.value)} type="text" disabled={!isEditable} />
                 </div>
             </div>
         </div>

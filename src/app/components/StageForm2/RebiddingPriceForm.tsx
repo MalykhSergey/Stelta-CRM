@@ -8,9 +8,11 @@ interface RebiddingPriceProps {
     tenderId: number,
     rebiddingPrice: RebiddingPrice,
     orderNumber: number,
+    isEditable: boolean
 }
-const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, rebiddingPrice, orderNumber }) => {
+const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, rebiddingPrice, orderNumber, isEditable }) => {
     const [error, setError] = useState('')
+    console.log(isEditable)
     return (
         <div className={styles.rebiddingPrice}>
             <DocumentsForm tenderId={tenderId} stage={1}
@@ -18,7 +20,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, 
                 removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
                 specialPlaceName='rebiddingPriceId'
                 specialPlaceId={rebiddingPrice.id}
-                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`} isEditable={true} independent={true} className="card"></DocumentsForm >
+                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`} isEditable={isEditable} independent={isEditable} className="card"></DocumentsForm >
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Сумма</label>
                 <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price + " ₽"}

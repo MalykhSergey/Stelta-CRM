@@ -8,10 +8,10 @@ interface DateRequestFormProps {
     tenderId: number,
     dateRequest: DateRequest,
     orderNumber: number,
-    isLast: boolean,
+    isEditable: boolean,
     deleteDateRequest: () => void,
 }
-const DateRequestForm: React.FC<DateRequestFormProps> = observer(({ tenderId, dateRequest, orderNumber, isLast, deleteDateRequest }) => {
+const DateRequestForm: React.FC<DateRequestFormProps> = observer(({ tenderId, dateRequest, orderNumber, isEditable, deleteDateRequest }) => {
     return (
         <div className={styles.dateRequest}>
             <DocumentsForm tenderId={tenderId} stage={1}
@@ -20,9 +20,9 @@ const DateRequestForm: React.FC<DateRequestFormProps> = observer(({ tenderId, da
                 specialPlaceName='dateRequestId'
                 specialPlaceId={dateRequest.id}
                 fileNames={dateRequest.fileNames} title={`Дозапрос документов ${orderNumber}`}
-                isEditable={true}
+                isEditable={isEditable}
                 className='card'
-                independent={isLast}
+                independent={isEditable}
                 onDelete={() => {
                     deleteDateRequest()
                     deleteDateRequestById(tenderId, dateRequest.id)

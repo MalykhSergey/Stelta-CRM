@@ -2,15 +2,15 @@
 
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
-import RebiddingPriceForm from '@/app/components/StageForm2/RebiddingPriceForm';
 import StageForm1 from '@/app/components/StageForm1/StageForm1';
+import StageForm2 from '@/app/components/StageForm2/StageForm2';
+import StageForm3 from '@/app/components/StageForm3/StageForm3';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
 import { updateTenderById } from '@/app/models/TenderService';
 import { observer } from 'mobx-react-lite';
 import styles from "./TenderPageClient.module.css";
-import StageForm2 from '@/app/components/StageForm2/StageForm2';
 
 const getNextStageButtonText = (status: number) => {
     switch (status) {
@@ -57,11 +57,10 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                    title='Документы тендера' isEditable={true} className='card'/>
-                {tender.status == 1 && <StageForm1 tender={tender} isDone={false} />}
-                {tender.status > 1 && <StageForm1 tender={tender} isDone={true} />}
-                {tender.status == 3 && <StageForm2 tender={tender} isDone={false} />}
-                {tender.status > 3 && <StageForm2 tender={tender} isDone={true} />}
+                    title='Документы тендера' isEditable={true} className='card' />
+                {tender.status >= 1 && <StageForm1 tender={tender}/>}
+                {tender.status >= 3 && <StageForm2 tender={tender}/>}
+                {tender.status >= 5 && <StageForm3 tender={tender}/>}
                 <CommentsForm tender={tender} />
                 <div className={styles.buttonRow}>
                     <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>

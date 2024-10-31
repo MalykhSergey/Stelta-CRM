@@ -9,11 +9,11 @@ import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 interface StageForm2Props {
-    tender: Tender,
-    isDone: boolean,
+    tender: Tender
 }
 const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
-    const errors: { [key: string]: string } = useLocalObservable(() => ({}))
+    const isEditable = tender.status == 3;
+    const isCompleted = tender.status <= 4;
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -24,7 +24,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
     const rebiddingPrices: any = []
     tender.rebiddingPrices.forEach((rebiddingPrice, index) => {
         rebiddingPrices.push(
-            <RebiddingPriceForm key={index} tenderId={tender.id} rebiddingPrice={rebiddingPrice} orderNumber={index + 1} />
+            <RebiddingPriceForm key={index} tenderId={tender.id} rebiddingPrice={rebiddingPrice} orderNumber={index + 1} isEditable={(index + 1 == tender.rebiddingPrices.length) && isEditable} />
         )
     })
     return (
@@ -37,13 +37,13 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={2}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}
-                    fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={true} independent={false} className='card'/>
+                    fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={isEditable} independent={false} className='card' />
                 <DocumentsForm tenderId={tender.id} stage={3}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 3)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 3)}
-                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={true} independent={false} className='card'/>
+                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={isEditable} independent={false} className='card' />
                 {rebiddingPrices}
-                <button onClick={handleClick}>Переторжка</button>
+                {isCompleted && <button onClick={handleClick}>Переторжка</button>}
             </div>
         </div>
     )
