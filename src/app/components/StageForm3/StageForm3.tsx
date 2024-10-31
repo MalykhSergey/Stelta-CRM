@@ -18,7 +18,7 @@ const StageForm3: React.FC<StageForm3Props> = observer(({ tender }) => {
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>Договор</h3>
-                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+                <button className={`iconButton toggler rightPanel`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
             </div>
             <div className='hiddenContent stageForm'>
                 <DocumentsForm tenderId={tender.id} stage={5}

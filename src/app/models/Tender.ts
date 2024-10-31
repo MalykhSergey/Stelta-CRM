@@ -168,6 +168,11 @@ export class Tender {
     if (index > -1)
       this.datesRequests.splice(index, 1);
   }
+  public deleteRebiddingPrice(rebiddingPrice: RebiddingPrice): void {
+    const index = this.rebiddingPrices.findIndex(item => item.id == rebiddingPrice.id);
+    if (index > -1)
+      this.rebiddingPrices.splice(index, 1);
+  }
   public addToStagedFileNames(fileName: FileName, arrayIndex: number): void {
     this.stagedFileNames[arrayIndex].push(fileName);
   }

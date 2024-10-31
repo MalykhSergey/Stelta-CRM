@@ -120,7 +120,7 @@ class TenderStorage {
     }
     async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
         const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
-        await connection.query('DELETE FROM rebidding_price_id WHERE id = $1', [rebiddingPriceId])
+        await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
         filesId.forEach(async row => {
             await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
         })

@@ -1,5 +1,6 @@
 import FileName from "@/app/models/FileName";
 import { RebiddingPrice } from "@/app/models/RebiddingPrice";
+import { deleteRebiddingPriceById } from "@/app/models/TenderService";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import DocumentsForm from "../DocumentForm/DocumentForm";
@@ -8,11 +9,11 @@ interface RebiddingPriceProps {
     tenderId: number,
     rebiddingPrice: RebiddingPrice,
     orderNumber: number,
-    isEditable: boolean
+    isEditable: boolean,
+    deleteRebiddingPrice: () => void
 }
-const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, rebiddingPrice, orderNumber, isEditable }) => {
+const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, rebiddingPrice, orderNumber, isEditable, deleteRebiddingPrice }) => {
     const [error, setError] = useState('')
-    console.log(isEditable)
     return (
         <div className={styles.rebiddingPrice}>
             <DocumentsForm tenderId={tenderId} stage={1}
@@ -20,9 +21,14 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, 
                 removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
                 specialPlaceName='rebiddingPriceId'
                 specialPlaceId={rebiddingPrice.id}
-                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`} isEditable={isEditable} independent={isEditable} className="card"></DocumentsForm >
+                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`}
+                onDelete={() => {
+                    deleteRebiddingPrice()
+                    deleteRebiddingPriceById(tenderId, rebiddingPrice.id)
+                }}
+                isEditable={isEditable} independent={isEditable} className="card" />
             <div>
-                <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Сумма</label>
+                <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
                 <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price + " ₽"}
                     onChange={(e) => {
                         e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')

@@ -18,17 +18,20 @@ interface DocumentsFormProps {
     isEditable: boolean,
     className?: string,
     independent?: boolean,
+    isOpened?: boolean,
     onDelete?: () => void
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className = '', independent, onDelete = () => { } }) => {
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className = '', independent, onDelete = () => { } }, isOpened = false) => {
     const collapsed = useLocalObservable(() => ({
-        isTrue: true,
+        isTrue: false,
         toggle() { this.isTrue = !this.isTrue }
     }));
     const { showConfirmDialog } = useConfirmDialog();
     const fileInput = useRef<HTMLInputElement>(null)
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
+        if(!collapsed.isTrue)
+            collapsed.toggle()
         if (e.target.files)
             for (let i = 0; i < e.target.files.length; i++) {
                 const file_name = encodeURI(e.target.files[i].name)
@@ -64,17 +67,6 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
         <div className={`${className} dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>{title}</h3>
-                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
-                {independent && isEditable && <button className={`iconButton redButton`} onClick={() => {
-                    showConfirmDialog(
-                        {
-                            message: `Вы действительно хотите удалить?`,
-                            onConfirm: onDelete
-                        })
-                }}><FontAwesomeIcon icon={faXmark} /></button>}
-            </div>
-            <div className='hiddenContent'>
-                {files}
                 {
                     isEditable &&
                     <div >
@@ -89,6 +81,19 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                         <input type="hidden" name="tenderId" value={tenderId} />
                     </div>
                 }
+                <div className='rightPanel'>
+                    {fileNames.length > 0 && <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>}
+                    {independent && isEditable && <button className={`iconButton redButton`} onClick={() => {
+                        showConfirmDialog(
+                            {
+                                message: `Вы действительно хотите удалить?`,
+                                onConfirm: onDelete
+                            })
+                    }}><FontAwesomeIcon icon={faXmark} /></button>}
+                </div>
+            </div>
+            <div className='hiddenContent'>
+                {files}
             </div>
         </div >
     )
