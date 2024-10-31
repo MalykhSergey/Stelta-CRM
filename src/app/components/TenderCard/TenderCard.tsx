@@ -30,7 +30,7 @@ export default function TenderCard(props: { tender: Tender }) {
       break
   }
   return (
-    <Link href={`/tender/${props.tender.id}`} className={`fullWidth`}>
+    <Link href={`/tender/${props.tender.id}`} className={`fullWidth`} target='_blank'>
       <div className={`card inherit ${styles.hoverCard}`}>
         <div className={styles.title}>{props.tender.name}</div>
         <label className={styles.label}>Рег. №: </label>
