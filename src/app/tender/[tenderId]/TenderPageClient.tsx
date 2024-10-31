@@ -32,18 +32,39 @@ const getPreviousStageButtonText = (status: number) => {
 };
 
 const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
-    const isEditable = {
-        company: true,
-        name: true,
-        regNumber: true,
-        lotNumber: true,
-        initialMaxPrice: true,
-        price: true,
-        dates: true,
-        contactPerson: true,
-        phoneNumber: true,
-        email: true,
+    let isEditable = {
+        company: false,
+        name: false,
+        regNumber: false,
+        lotNumber: false,
+        initialMaxPrice: false,
+        price: false,
+        date1_start: false,
+        date1_finish: false,
+        date2_finish: false,
+        contactPerson: false,
+        phoneNumber: false,
+        email: false,
     };
+    if (tender.status == 0)
+        isEditable = {
+            company: true,
+            name: true,
+            regNumber: true,
+            lotNumber: true,
+            initialMaxPrice: true,
+            price: true,
+            date1_start: true,
+            date1_finish: true,
+            date2_finish: true,
+            contactPerson: true,
+            phoneNumber: true,
+            email: true,
+        };
+    else {
+        isEditable.date1_finish = true
+        isEditable.date2_finish = true
+    }
     const nextStageHandler = (stage: number) => {
         tender.status = stage;
         updateTenderById(JSON.stringify(tender))
@@ -57,10 +78,10 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                    title='Документы тендера' isEditable={tender.status==0} className='card' />
-                {tender.status >= 1 && <StageForm1 tender={tender}/>}
-                {tender.status >= 3 && <StageForm2 tender={tender}/>}
-                {tender.status >= 5 && <StageForm3 tender={tender}/>}
+                    title='Документы тендера' isEditable={tender.status == 0} className='card' />
+                {tender.status >= 1 && <StageForm1 tender={tender} />}
+                {tender.status >= 3 && <StageForm2 tender={tender} />}
+                {tender.status >= 5 && <StageForm3 tender={tender} />}
                 <CommentsForm tender={tender} />
                 <div className={styles.buttonRow}>
                     <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>

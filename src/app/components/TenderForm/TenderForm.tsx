@@ -14,7 +14,9 @@ interface TenderFormProps {
         lotNumber: boolean,
         initialMaxPrice: boolean,
         price: boolean,
-        dates: boolean,
+        date1_start: boolean,
+        date1_finish: boolean,
+        date2_finish: boolean,
         contactPerson: boolean,
         phoneNumber: boolean,
         email: boolean
@@ -43,9 +45,9 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
-    const date1_start = renderField("Date1_start", tender.date1_start, 'Дата и время начала подачи 1 этапа:', isEditable.price, errors, handleChange)
-    const date1_finish = renderField("Date1_finish", tender.date1_finish, 'Дата и время окончания подачи 1 этапа:', isEditable.price, errors, handleChange)
-    const date2_finish = renderField("Date2_finish", tender.date2_finish, 'Дата и время окончания подачи 2 этапа:', isEditable.price, errors, handleChange)
+    const date1_start = renderField("Date1_start", tender.date1_start, 'Дата и время начала подачи 1 этапа:', isEditable.date1_start, errors, handleChange)
+    const date1_finish = renderField("Date1_finish", tender.date1_finish, 'Дата и время окончания подачи 1 этапа:', isEditable.date1_finish, errors, handleChange)
+    const date2_finish = renderField("Date2_finish", tender.date2_finish, 'Дата и время окончания подачи 2 этапа:', isEditable.date2_finish, errors, handleChange)
     return (
         <div className={`${styles.form} card`} >
             <label className={styles.label}>Статус:</label>
