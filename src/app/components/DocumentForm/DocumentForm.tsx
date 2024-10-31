@@ -23,14 +23,14 @@ interface DocumentsFormProps {
 }
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className = '', independent, onDelete = () => { } }, isOpened = false) => {
     const collapsed = useLocalObservable(() => ({
-        isTrue: false,
+        isTrue: isOpened,
         toggle() { this.isTrue = !this.isTrue }
     }));
     const { showConfirmDialog } = useConfirmDialog();
     const fileInput = useRef<HTMLInputElement>(null)
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
-        if(!collapsed.isTrue)
+        if (!collapsed.isTrue)
             collapsed.toggle()
         if (e.target.files)
             for (let i = 0; i < e.target.files.length; i++) {

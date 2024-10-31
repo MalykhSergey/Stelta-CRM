@@ -13,7 +13,7 @@ export async function uploadHandler(formData: FormData) {
         for (const file of files) {
             const fileName = decodeURI(file.name)
             const fileId = await tenderStorage.addFile(Number.parseInt(tenderId), fileName, Number.parseInt(stage), dateRequestId, rebiddingPriceId)
-            let folderPath = `${process.env.FILE_UPLOAD_PATH}/${tenderId}/${fileId}`
+            const folderPath = `${process.env.FILE_UPLOAD_PATH}/${tenderId}/${fileId}`
             await fs.mkdir(folderPath, { recursive: true })
             await fs.writeFile(`${folderPath}/${fileName}`, Buffer.from(await file.arrayBuffer()));
             fileNames.push(new FileName(fileId, fileName))

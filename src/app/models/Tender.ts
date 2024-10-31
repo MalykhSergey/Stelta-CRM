@@ -134,6 +134,7 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromQueryRow(row: any) {
     const tender = new Tender()
     tender.id = row.id

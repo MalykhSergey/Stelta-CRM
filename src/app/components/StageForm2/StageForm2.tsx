@@ -8,7 +8,6 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
-import styles from './StageForm2.module.css';
 interface StageForm2Props {
     tender: Tender
 }
@@ -26,7 +25,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
     const handleClick = async () => {
         tender.rebiddingPrices.push(makeAutoObservable(new RebiddingPrice(await addRebiddingPrice(tender.id), '0', [])))
     }
-    const rebiddingPrices: any = []
+    const rebiddingPrices: JSX.Element[] = []
     tender.rebiddingPrices.forEach((rebiddingPrice, index) => {
         rebiddingPrices.push(
             <RebiddingPriceForm key={index} tenderId={tender.id} deleteRebiddingPrice={() => { tender.deleteRebiddingPrice(rebiddingPrice) }} rebiddingPrice={rebiddingPrice} orderNumber={index + 1} isEditable={(index + 1 == tender.rebiddingPrices.length) && isEditable} />
@@ -50,7 +49,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                         fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={isEditable} independent={false} className='card' />
                     <div>
                         <label htmlFor={`Stage2FormPrice${tender.id}`}>Наша цена:</label>
-                        <input id={`Stage2FormPrice${tender.id}`} type="text" value={tender.price +  " ₽"} onChange={
+                        <input id={`Stage2FormPrice${tender.id}`} type="text" value={tender.price + " ₽"} onChange={
                             (e) => {
                                 e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
                                 const cursorPosition = e.target.selectionStart;

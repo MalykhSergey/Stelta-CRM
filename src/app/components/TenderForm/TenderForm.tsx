@@ -1,4 +1,4 @@
-import { default as getStatusName, default as Status } from '@/app/models/Status'
+import { default as getStatusName } from '@/app/models/Status'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { observer, useLocalObservable } from 'mobx-react-lite'

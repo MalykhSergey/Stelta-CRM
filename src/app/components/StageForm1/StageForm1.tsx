@@ -21,7 +21,7 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
     const handleClick = async () => {
         tender.datesRequests.push(makeAutoObservable(new DateRequest(await addDateRequest(tender.id), new Date(Date.now()).toISOString().slice(0, 10), [])))
     }
-    const datesRequests: any = []
+    const datesRequests: JSX.Element[] = []
     tender.datesRequests.forEach((dateRequest, index) => {
         datesRequests.push(
             <DateRequestForm dateRequest={dateRequest} deleteDateRequest={() => { tender.deleteDateRequest(dateRequest) }} tenderId={tender.id} orderNumber={index + 1} isEditable={(index + 1 == tender.datesRequests.length) && isEditable} key={index}></DateRequestForm>
