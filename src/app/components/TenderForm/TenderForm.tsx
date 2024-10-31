@@ -47,7 +47,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
     const date1_finish = renderField("Date1_finish", tender.date1_finish, 'Дата и время окончания подачи 1 этапа:', isEditable.price, errors, handleChange)
     const date2_finish = renderField("Date2_finish", tender.date2_finish, 'Дата и время окончания подачи 2 этапа:', isEditable.price, errors, handleChange)
     return (
-        <form className={`${styles.form} card`} >
+        <div className={`${styles.form} card`} >
             <label className={styles.label}>Статус:</label>
             <div className={styles.formGroup}>
                 <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}>
@@ -77,7 +77,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
             {contactPerson}
             {phoneNumber}
             {email}
-        </form >
+        </div >
     )
 })
 

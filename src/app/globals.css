@@ -19,37 +19,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-button {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 8px;
-}
-
-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-.dynamicSizeForm>.hiddenContent {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  margin-top: 0px;
-  opacity: 0;
-  max-height: 0px;
-  transition: all 0.5s ease;
-}
-
-.dynamicSizeForm.expanded>.hiddenContent {
-  overflow: visible;
-  margin-top: 20px;
-  max-height: 100%;
-  opacity: 1;
-}
-
 .card {
   width: 100%;
   padding: 24px;
@@ -63,39 +32,6 @@ button:active {
   display: flex;
   flex-direction: row;
   gap: 10px;
-}
-
-.iconButton {
-  min-height: fit-content;
-  background-color: rgba(0, 0, 0, 0);
-  border: 0px;
-  box-shadow: none;
-  transition: all 0.3s ease;
-  transform: scale(1.2);
-}
-
-input:disabled,
-select:disabled {
-  border: 0px;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 4px;
-  font-size: 16px;
-  color: black;
-  border: 1px solid var(--border);
-  background-color: rgba(0, 0, 0, 0);
-  transition: border-color 0.3s;
-}
-
-input:hover,
-input:focus,
-select:focus,
-select:hover {
-  background-color: rgba(255, 255, 255, 1);
 }
 
 * {
@@ -114,26 +50,4 @@ a {
 
 .fullWidth {
   width: 100%;
-}
-
-
-.redButton {
-  font-size: 18px;
-  transition: color 0.3s ease;
-}
-
-.redButton:hover {
-  color: #ff4d4d;
-}
-
-.icon {
-  transition: transform 0.3s ease;
-}
-
-.toggler {
-  margin-left: auto;
-}
-
-.rotated {
-  transform: rotate(180deg);
 }

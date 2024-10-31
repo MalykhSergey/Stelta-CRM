@@ -8,7 +8,6 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import DateRequestForm from './DateRequest';
-import styles from './StageForm1.module.css';
 interface StageFormProps {
     tender: Tender,
     isDone: boolean,
@@ -31,9 +30,9 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>Этап 1</h3>
-                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
             </div>
-            <div className={`hiddenContent ${styles.stageForm}`}>
+            <div className='hiddenContent stageForm'>
                 <DocumentsForm
                     title='Формы 1 этапа'
                     tenderId={tender.id}

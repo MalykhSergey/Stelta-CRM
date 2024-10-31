@@ -64,7 +64,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
         <div className={`${className} dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>{title}</h3>
-                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
                 {independent && <button className={`iconButton redButton`} onClick={() => {
                     showConfirmDialog(
                         {

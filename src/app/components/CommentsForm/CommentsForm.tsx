@@ -28,7 +28,7 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({ tender }) => {
     comments.push(<textarea key='textarea' className={styles.input} onChange={handleChange} value={tender.comments[tender.status]}></textarea>)
     return (
         <div className={`card ${styles.form} ${collapsed.isTrue ? styles.expanded : ''}`}>
-            <h3>Комментарии <button className='toggler iconButton' onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button></h3>
+            <h3>Комментарии <button className='toggler iconButton' onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button></h3>
             {comments}
         </div>
     )

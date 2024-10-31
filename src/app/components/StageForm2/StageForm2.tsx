@@ -8,7 +8,6 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../DocumentForm/DocumentForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
-import styles from './StageForm2.module.css';
 interface StageForm2Props {
     tender: Tender,
     isDone: boolean,
@@ -32,9 +31,9 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>
                 <h3>Этап 2</h3>
-                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={`${styles.icon} ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+                <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
             </div>
-            <div className={`hiddenContent ${styles.stageForm}`}>
+            <div className='hiddenContent stageForm'>
                 <DocumentsForm tenderId={tender.id} stage={2}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}

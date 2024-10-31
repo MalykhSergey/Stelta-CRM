@@ -1,0 +1,68 @@
+.iconButton {
+    min-height: fit-content;
+    background-color: rgba(0, 0, 0, 0);
+    border: 0px;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    transform: scale(1.2);
+}
+
+input:disabled,
+select:disabled {
+    border: 0px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    color: black;
+    border: 1px solid var(--border);
+    background-color: rgba(0, 0, 0, 0);
+    transition: border-color 0.3s;
+}
+
+input:hover,
+input:focus,
+select:focus,
+select:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.redButton {
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.redButton:hover {
+    color: #ff4d4d;
+}
+
+.icon {
+    transition: transform 0.3s ease;
+}
+
+.toggler {
+    margin-left: auto;
+}
+
+.rotated {
+    transform: rotate(180deg);
+}
+
+
+button {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+    transform: scale(0.95);
+}
