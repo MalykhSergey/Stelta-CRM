@@ -11,7 +11,7 @@ interface CommentsFormProps {
 
 const CommentsForm: React.FC<CommentsFormProps> = observer(({ tender }) => {
     const collapsed = useLocalObservable(() => ({
-        isTrue: true,
+        isTrue: false,
         toggle() { this.isTrue = !this.isTrue }
     }));
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -27,9 +27,14 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({ tender }) => {
     comments.push(<label key={`label_${tender.status}`} className={styles.label}>{getStatusName(tender.status)}</label>)
     comments.push(<textarea key='textarea' className={styles.input} onChange={handleChange} value={tender.comments[tender.status]}></textarea>)
     return (
-        <div className={`card ${styles.form} ${collapsed.isTrue ? styles.expanded : ''}`}>
-            <h3>Комментарии <button className='toggler iconButton' onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button></h3>
-            {comments}
+        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
+            <div className='cardHeader'>
+                <h3>Комментарии</h3>
+                <button className={`iconButton toggler rightPanel`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>
+            </div>
+            <div className='hiddenContent' style={{ marginTop: '0px' }}>
+                {comments}
+            </div>
         </div>
     )
 });

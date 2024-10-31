@@ -14,7 +14,7 @@
 
 .dynamicSizeForm.expanded>.hiddenContent {
     overflow: visible;
-    margin-top: 20px;
+    margin-top: 10px;
     max-height: 100%;
     opacity: 1;
 }
