@@ -38,7 +38,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
     }
     const company = renderField("Company", tender.company, 'Организация:', isEditable.company, errors, handleChange)
     const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
-    const regNumber = renderField("RegNumber", tender.regNumber, 'Рег. №:', isEditable.regNumber, errors, handleChange)
+    const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
     const initialMaxPrice = renderField("InitialMaxPrice", tender.initialMaxPrice, 'НМЦК:', isEditable.initialMaxPrice, errors, handleChange)
     const price = renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange)

@@ -6,14 +6,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
-import DocumentsForm from '../DocumentForm/DocumentForm';
+import DocumentsForm from '../DocumentForm/DocumentsForm';
 import DateRequestForm from './DateRequest';
 interface StageFormProps {
     tender: Tender
 }
 const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
     const isEditable = tender.status == 1;
-    const isCompleted = tender.status <= 2;
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -43,7 +42,7 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
                     fileNames={tender.stagedFileNames[1]}
                     isEditable={isEditable} className='card' />
                 {datesRequests}
-                {isCompleted && <button onClick={handleClick}>Дозапрос документов</button>}
+                {isEditable && <button onClick={handleClick}>Дозапрос документов</button>}
             </div>
         </div>
     )

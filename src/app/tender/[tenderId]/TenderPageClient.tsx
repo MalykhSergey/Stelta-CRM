@@ -1,7 +1,7 @@
 'use client';
 
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
-import DocumentsForm from '@/app/components/DocumentForm/DocumentForm';
+import DocumentsForm from '@/app/components/DocumentForm/DocumentsForm';
 import StageForm1 from '@/app/components/StageForm1/StageForm1';
 import StageForm2 from '@/app/components/StageForm2/StageForm2';
 import StageForm3 from '@/app/components/StageForm3/StageForm3';
@@ -28,6 +28,12 @@ const getPreviousStageButtonText = (status: number) => {
         case 2: return 'Дозапрос';
         case 4: return 'Переторжка';
         default: return '';
+    }
+};
+const getLooseButtonText = (status: number) => {
+    switch (status) {
+        case 4: return 'Проиграли';
+        default: return 'Не участвуем';
     }
 };
 
@@ -61,11 +67,11 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
             phoneNumber: true,
             email: true,
         };
-    else {
+    if (tender.status <= 2)
         isEditable.date1_finish = true
+    else if (tender.status <= 3)
         isEditable.date2_finish = true
-    }
-    const nextStageHandler = (stage: number) => {
+    const updateStageHandler = (stage: number) => {
         tender.status = stage;
         updateTenderById(JSON.stringify(tender))
     }
@@ -74,7 +80,7 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
             <div style={{}}>
                 <TenderForm tender={tender} isEditable={isEditable} />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px', width: '800px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '800px' }}>
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
@@ -87,9 +93,9 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                     <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
                     {tender.status >= 0 &&
                         <>
-                            {tender.status < 6 && <button onClick={() => nextStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
-                            {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button onClick={() => nextStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
-                            {tender.status < 6 && <button onClick={() => nextStageHandler(-1)}>Не участвуем</button>}
+                            {tender.status < 6 && <button onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
+                            {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
+                            {tender.status < 6 && <button onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
                         </>
                     }
                 </div>

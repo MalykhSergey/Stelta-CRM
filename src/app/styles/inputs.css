@@ -7,6 +7,15 @@
     transform: scale(1.2);
 }
 
+label{
+    color: rgb(58, 69, 81);
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.2;
+}
+
 input:disabled,
 select:disabled {
     border: 0px;
@@ -44,7 +53,7 @@ select:hover {
     transition: transform 0.3s ease;
 }
 
-.rightPanel{
+.rightPanel {
     margin-left: auto;
 }
 

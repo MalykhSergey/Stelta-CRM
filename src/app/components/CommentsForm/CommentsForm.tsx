@@ -21,7 +21,7 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({ tender }) => {
     for (let i = 0; i < tender.status; i++) {
         if (tender.comments.length > i && tender.comments[i] != '') {
             comments.push(<label key={`label_${i}`} className={styles.label}>{getStatusName(i)}</label>)
-            comments.push(<p key={`p_${i}`}>{tender.comments[i]}</p>)
+            comments.push(<p key={`p_${i}`} className={styles.comment}>{tender.comments[i]}</p>)
         }
     }
     comments.push(<label key={`label_${tender.status}`} className={styles.label}>{getStatusName(tender.status)}</label>)

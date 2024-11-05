@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
-import DocumentsForm from '../DocumentForm/DocumentForm';
+import DocumentsForm from '../DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 interface StageForm2Props {
     tender: Tender
@@ -17,7 +17,6 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
         setError(value: string) { this.value = value }
     }));
     const isEditable = tender.status == 3;
-    const isCompleted = tender.status <= 4;
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() { this.isTrue = !this.isTrue }
@@ -69,7 +68,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                     </div>
                 </div>
                 {rebiddingPrices}
-                {isCompleted && <button onClick={handleClick}>Переторжка</button>}
+                {isEditable && <button onClick={handleClick}>Переторжка</button>}
             </div>
         </div>
     )

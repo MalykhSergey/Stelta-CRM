@@ -9,6 +9,7 @@ function convertDate(value: string) {
     </>)
 }
 export default function TenderCard(props: { tender: Tender }) {
+  let dateLabel
   let dateField
 
   switch (props.tender.status) {
@@ -17,31 +18,33 @@ export default function TenderCard(props: { tender: Tender }) {
       break
     case 1:
       dateField = convertDate(props.tender.date1_start)
+      dateLabel = <label className={styles.label}>Начало подачи: </label>
       break
     case 2:
       dateField = convertDate(props.tender.date1_finish)
+      dateLabel = <label className={styles.label}>Окончание подачи: </label>
       break
     case 3:
       dateField = convertDate(props.tender.date2_finish)
+      dateLabel = <label className={styles.label}>Окончание подачи: </label>
       break
     case 4:
+      dateField = convertDate(props.tender.date2_finish)
+      dateLabel = <label className={styles.label}>Окончание подачи: </label>
       break
     case 5:
       break
   }
   return (
-    <Link href={`/tender/${props.tender.id}`} className={`fullWidth`} target='_blank'>
-      <div className={`card inherit ${styles.hoverCard}`}>
+    <Link className={`card inherit fullWidth ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}target='_blank'>
+      <div>
+        <label className={styles.label}>{props.tender.company}</label>
         <div className={styles.title}>{props.tender.name}</div>
-        <label className={styles.label}>Реестровый номер: </label>
-        <div className={styles.info}>{props.tender.regNumber}</div>
-        <label className={styles.label}>Организация: </label>
-        <div className={styles.info}>{props.tender.company}</div>
-        <label className={styles.label}>Контактное лицо: </label>
-        <div className={styles.info}>{props.tender.contactPerson}</div>
-        {props.tender.status > 0 && props.tender.status < 4 &&
+        <label className={styles.label}>НМЦК: </label>
+        <div className={styles.info}>{props.tender.initialMaxPrice+" ₽"}</div>
+        {props.tender.status > 0 && props.tender.status < 5 &&
           <>
-            <label className={styles.label}>Конец этапа: </label>
+            {dateLabel}
             {dateField}
           </>
         }

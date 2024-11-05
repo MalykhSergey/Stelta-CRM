@@ -1,3 +1,42 @@
+.content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.createTender {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(116,156,204);
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.createTender:hover{
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 200px;
+  gap: 20px;
+  height: 70vh;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -8,7 +47,6 @@
 .column {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 20px;
 }
 
@@ -16,34 +54,35 @@
   padding: 10px;
   text-align: center;
   align-content: center;
+  height: 60px;
 }
 
 .first {
   background-color: rgba(231, 231, 231);
-  color: rgb(84, 85, 85);
+  /* color: rgb(84, 85, 85); */
 }
 
 .second {
-  background-color: rgb(182, 207, 245);
-  color: rgb(23, 61, 122)
+  background-color: rgb(229, 217, 188);
+  /* color: rgb(23, 61, 122) */
 }
 
 .third {
-  background-color: rgb(152, 215, 228);
-  color: rgb(14, 59, 68);
+  background-color: rgb(219, 227, 181);
+  /* color: rgb(14, 59, 68); */
 }
 
 .forth {
-  background-color: rgb(227, 215, 255);
-  color: rgb(61, 24, 142);
+  background-color: rgb(215, 227, 240);
+  /* color: rgb(61, 24, 142); */
 }
 
 .fifth {
-  background-color: rgb(209, 239, 194);
-  color: rgb(105, 202, 55);
+  background-color: rgb(233, 207, 240);
+  /* color: rgb(55, 92, 202); */
 }
 
 .sixth {
-  background-color: rgb(251, 251, 96);
-  color: rgb(243, 156, 11);
+  background-color: rgb(244, 205, 208);
+  /* color: rgb(243, 156, 11); */
 }

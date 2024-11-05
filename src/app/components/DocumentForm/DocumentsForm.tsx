@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { useRef } from 'react';
 import { useConfirmDialog } from '../Dialog/ConfirmDialogContext';
-import styles from './DocumentForm.module.css';
+import styles from './DocumentsForm.module.css';
 import { deleteHandler, uploadHandler } from './Handler';
 interface DocumentsFormProps {
     tenderId: number,
@@ -50,7 +50,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
         files.push(
             <div className={styles.fileItem} key={fileName.name + files.length}>
                 <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name} <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
-                <button onClick={() => {
+                {isEditable && <button onClick={() => {
                     showConfirmDialog(
                         {
                             message: `Вы действительно хотите удалить ${fileName.name}?`,
@@ -61,7 +61,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                         })
                 }}
                     className='iconButton redButton'
-                ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button></div>)
+                ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}</div>)
     }
     return (
         <div className={`${className} dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>

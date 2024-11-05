@@ -3,7 +3,7 @@ import { RebiddingPrice } from "@/app/models/RebiddingPrice";
 import { deleteRebiddingPriceById } from "@/app/models/TenderService";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
-import DocumentsForm from "../DocumentForm/DocumentForm";
+import DocumentsForm from "../DocumentForm/DocumentsForm";
 import styles from './RebiddingPriceForm.module.css';
 interface RebiddingPriceProps {
     tenderId: number,
