@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import Image from 'next/image';
 import Link from "next/link";
+import { ErrorProvider } from "./components/Error/Error";
 import "./globals.css";
 import SteltaLogo from './images/logo.png';
 import styles from "./layout.module.css";
@@ -30,9 +31,11 @@ export default function RootLayout({
             <Link href="#settings" className={styles.navLink}>Аналитика</Link>
           </div>
         </header>
-        <div className={styles.content}>
-          {children}
-        </div>
+        <ErrorProvider>
+          <div className={styles.content}>
+            {children}
+          </div>
+        </ErrorProvider>
       </body>
     </html>
   );

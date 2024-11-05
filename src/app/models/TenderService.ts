@@ -2,6 +2,13 @@
 
 import tenderStorage from "./TenderStorage";
 
+export async function createTender() {
+    return await tenderStorage.createTender()
+}
+
+export async function deleteTender(tenderId:number) {
+    await tenderStorage.deleteTender(tenderId)
+}
 export async function getAllTenders(): Promise<string> {
     return JSON.stringify(await tenderStorage.getAll());
 }

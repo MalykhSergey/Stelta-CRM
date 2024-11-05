@@ -14,16 +14,24 @@
   color: white;
   display: flex;
   flex-direction: row;
-  background-color: rgb(116,156,204);
+  background-color: rgb(116, 156, 204);
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
   align-items: center;
   justify-content: center;
   gap: 10px;
   transition: all 0.3s ease;
 }
 
-.createTender:hover{
+.createTender:hover {
   transform: scale(1.05);
+  background-color: rgb(96, 136, 184);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.createTender:active {
+  transform: scale(0.95);
 }
 
 .filter {

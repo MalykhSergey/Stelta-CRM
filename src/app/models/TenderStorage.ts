@@ -7,8 +7,21 @@ class TenderStorage {
         console.log('Created Tender storage')
     }
 
-    async create() {
-        return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
+    async createTender() {
+        try {
+            return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
+        }
+        catch (error) {
+            return { error: 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!' }
+        }
+    }
+    async deleteTender(tenderId: number) {
+        try {
+            await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
+        } 
+        catch (error) {
+            return { error: 'Ошибка удаления тендера!' }
+        }
     }
 
     async update(tender: Tender) {

@@ -9,7 +9,7 @@ function convertDate(value: string) {
     </>)
 }
 export default function TenderCard(props: { tender: Tender }) {
-  let dateLabel
+  let dateSpan
   let dateField
 
   switch (props.tender.status) {
@@ -18,19 +18,19 @@ export default function TenderCard(props: { tender: Tender }) {
       break
     case 1:
       dateField = convertDate(props.tender.date1_start)
-      dateLabel = <label className={styles.label}>Начало подачи: </label>
+      dateSpan = <span className={styles.label}>Начало подачи: </span>
       break
     case 2:
       dateField = convertDate(props.tender.date1_finish)
-      dateLabel = <label className={styles.label}>Окончание подачи: </label>
+      dateSpan = <span className={styles.label}>Окончание подачи: </span>
       break
     case 3:
       dateField = convertDate(props.tender.date2_finish)
-      dateLabel = <label className={styles.label}>Окончание подачи: </label>
+      dateSpan = <span className={styles.label}>Окончание подачи: </span>
       break
     case 4:
       dateField = convertDate(props.tender.date2_finish)
-      dateLabel = <label className={styles.label}>Окончание подачи: </label>
+      dateSpan = <span className={styles.label}>Окончание подачи: </span>
       break
     case 5:
       break
@@ -38,13 +38,13 @@ export default function TenderCard(props: { tender: Tender }) {
   return (
     <Link className={`card inherit fullWidth ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}target='_blank'>
       <div>
-        <label className={styles.label}>{props.tender.company}</label>
+        <span className={styles.label}>{props.tender.company}</span>
         <div className={styles.title}>{props.tender.name}</div>
-        <label className={styles.label}>НМЦК: </label>
+        <span className={styles.label}>НМЦК: </span>
         <div className={styles.info}>{props.tender.initialMaxPrice+" ₽"}</div>
         {props.tender.status > 0 && props.tender.status < 5 &&
           <>
-            {dateLabel}
+            {dateSpan}
             {dateField}
           </>
         }

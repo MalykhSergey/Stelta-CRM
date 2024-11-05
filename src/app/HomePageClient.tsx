@@ -1,33 +1,45 @@
 "use client"
 import { faFilter, faOutdent } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { useError } from './components/Error/Error';
 import TenderCard from './components/TenderCard/TenderCard';
 import getStatusName from './models/Status';
 import { Tender } from './models/Tender';
+import { createTender } from './models/TenderService';
 import styles from './page.module.css';
 export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
     const allTenders = JSON.parse(tendersJSON) as Tender[]
     const [tenders, setTenders] = useState(allTenders)
-    const status = useRef(null);
-    const regNumber = useRef(null);
-    const date = useRef(null);
+    const status = useRef<HTMLSelectElement | null>(null);
+    const regNumber = useRef<HTMLInputElement | null>(null);
+    const date = useRef<HTMLInputElement | null>(null);
+    const router = useRouter();
+    const { showError } = useError();
     const changeFilter = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setTenders(allTenders.filter(tender => {
             let filterFlag = true
-            if (status.current.value != '')
-                if (status.current.value != tender.status)
+            if (status.current && status.current.value != '')
+                if (status.current.value != tender.status.toString())
                     filterFlag = filterFlag && false
-            if (regNumber.current.value != '')
+            if (regNumber.current && regNumber.current.value != '')
                 if (tender.regNumber.includes(regNumber.current.value))
                     filterFlag = filterFlag && false
             return filterFlag
         }))
     }
+    const createHandler = async () => {
+        const id = await createTender()
+        if (id.error)
+            showError(id.error);
+        else
+            router.push(`/tender/${id}`)
+    }
     return (
         <main className={styles.content}>
             <div className={styles.leftPanel}>
-                <a className={`${styles.columnHeader} ${styles.createTender} card`} href='./tender/create' target='blank'><h3>Добавить</h3><FontAwesomeIcon icon={faOutdent} style={{ width: '20px' }}></FontAwesomeIcon></a>
+                <button className={`${styles.columnHeader} ${styles.createTender} card`} onClick={createHandler}><span>Добавить тендер</span><FontAwesomeIcon icon={faOutdent} style={{ height: '20px' }}></FontAwesomeIcon></button>
                 <div className={styles.filter}>
                     <div className='row' style={{ alignItems: 'center', gap: '20px' }}><FontAwesomeIcon icon={faFilter} className='icon' style={{ width: '20px' }}></FontAwesomeIcon><h3>Фильтр</h3></div>
                     <div className='column'>
