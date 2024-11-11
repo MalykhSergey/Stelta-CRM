@@ -1,3 +1,4 @@
+import Company from '@/app/models/Company'
 import { default as getStatusName } from '@/app/models/Status'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,6 +8,7 @@ import styles from './TenderForm.module.css'
 
 interface TenderFormProps {
     tender: Tender,
+    companies: Company[],
     isEditable: {
         company: boolean,
         name: boolean,
@@ -23,7 +25,7 @@ interface TenderFormProps {
     }
 }
 
-const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) => {
+const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isEditable }) => {
     const errors: { [key: string]: string } = useLocalObservable(() => ({}))
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target
@@ -68,6 +70,11 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, isEditable }) 
                 </select>
             </div>
             {company}
+            <datalist id='companies'>
+                {companies.map(company =>
+                    <option key={"option" + company.id} company-id={company.id} value={company.name}></option>
+                )}
+            </datalist>
             {name}
             {regNumber}
             {lotNumber}
@@ -116,6 +123,7 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                             handleChange(e)
 
                         }}
+                        list={fieldName == "company" ? '' : 'companies'}
                         className={styles.input}
                     />
                     {fieldType != 'datetime-local' && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />}

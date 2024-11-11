@@ -4,9 +4,10 @@ import { ConfirmDialogProvider } from '@/app/components/Dialog/ConfirmDialogCont
 import { Tender } from '@/app/models/Tender';
 import TenderPageClient from './TenderPageClient';
 
-function TenderPageClientWrapper({ tenderString }: { tenderString: string }) {
+function TenderPageClientWrapper({ tenderString, companiesString }: { tenderString: string, companiesString:string }) {
     const tender = Tender.fromJSON(tenderString)
-    return (<ConfirmDialogProvider><TenderPageClient tender={tender}></TenderPageClient></ConfirmDialogProvider>)
+    const companies = JSON.parse(companiesString)
+    return (<ConfirmDialogProvider><TenderPageClient tender={tender} companies={companies}></TenderPageClient></ConfirmDialogProvider>)
 };
 
 export default TenderPageClientWrapper;

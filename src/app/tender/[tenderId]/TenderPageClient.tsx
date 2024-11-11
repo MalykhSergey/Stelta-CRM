@@ -13,6 +13,7 @@ import StageForm3 from '@/app/tender/StageForm3/StageForm3';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
+import Company from '@/app/models/Company';
 
 const getNextStageButtonText = (status: number) => {
     switch (status) {
@@ -39,7 +40,7 @@ const getLooseButtonText = (status: number) => {
     }
 };
 
-const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
+const TenderPageClient = observer(({ tender, companies }: { tender: Tender, companies:Company[] }) => {
     const router = useRouter()
     let isEditable = {
         company: false,
@@ -92,7 +93,7 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
     return (
         <div style={{ display: 'flex', flexDirection: 'row', gap: '100px' }}>
             <div style={{}}>
-                <TenderForm tender={tender} isEditable={isEditable} />
+                <TenderForm tender={tender} companies={companies} isEditable={isEditable} />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '800px' }}>
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
