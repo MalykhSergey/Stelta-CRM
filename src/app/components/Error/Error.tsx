@@ -1,43 +1,23 @@
-"use client"
-import { createContext, useContext, useState } from "react";
-import styles from './Error.module.css'
-
-interface ErrorContextProps {
-    showError: (message: string) => void;
-}
-
-const ErrorContext = createContext<ErrorContextProps | undefined>(undefined);
-
-export const ErrorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [error, setError] = useState<string | null>(null);
-
-    const showError = (message: string) => {
-        setError(message);
-        setTimeout(() => setError(null), 5000);
-    };
-
-    return (
-        <ErrorContext.Provider value={{ showError }}>
-            {children}
-            {error && <ErrorMessage message={error} />}
-        </ErrorContext.Provider>
-    );
+import styles from "./Error.module.css";
+export const showError = (message: string) => {
+    const error = document.getElementById("error-message")
+    if (error) {
+        error.textContent = message
+        error.style.display = "block"
+        error.style.opacity = '1'
+        setTimeout(() => { error.style.opacity = '0' }, 4000);
+        setTimeout(() => { error.style.display = "none" }, 7000);
+    }
 };
 
-export const useError = (): ErrorContextProps => {
-    const context = useContext(ErrorContext);
-    if (!context) throw new Error('Попытка использования useError без ErrorProvider!');
-    return context;
-};
-
-interface ErrorMessageProps {
-    message: string;
+export const doWithErrorCheck = async (doFunc: ()=>any) => {
+    const result = await doFunc()
+    if(result.error)
+        showError(result.error)
+    else return result
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => (
-    <div className={styles.error}>
-        {message}
+export const ErrorMessage = () => (
+    <div className={styles.error} id="error-message">
     </div>
 );
-
-export default ErrorMessage;

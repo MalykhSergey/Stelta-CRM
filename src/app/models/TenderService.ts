@@ -7,7 +7,7 @@ export async function createTender() {
 }
 
 export async function deleteTender(tenderId:number) {
-    await tenderStorage.deleteTender(tenderId)
+    return await tenderStorage.deleteTender(tenderId)
 }
 export async function getAllTenders(): Promise<string> {
     return JSON.stringify(await tenderStorage.getAll());
@@ -29,5 +29,5 @@ export async function deleteRebiddingPriceById(tenderId: number, rebiddingPriceI
 }
 export async function updateTenderById(tender_string: string) {
     const tender = JSON.parse(tender_string)
-    await tenderStorage.update(tender);
+    return await tenderStorage.update(tender);
 }

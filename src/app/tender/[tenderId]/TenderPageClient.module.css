@@ -1,6 +1,10 @@
-.buttonRow{
+.buttonRow {
     display: flex;
     flex-direction: row;
     gap: 30px;
     justify-content: end;
+}
+
+.buttonRow * {
+    color: white;
 }

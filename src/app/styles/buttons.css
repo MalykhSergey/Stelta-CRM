@@ -1,0 +1,43 @@
+.StageFormButton {
+    background-color: rgb(253, 232, 54);
+}
+
+.StageFormButton:hover {
+    background-color: rgb(236, 214, 37);
+}
+
+.DeleteButton {
+    color: white;
+    background-color: rgb(230, 17, 38);
+}
+
+.DeleteButton:hover {
+    background-color: rgb(213, 0, 21);
+}
+
+.PreviousStageButton {
+    color: white;
+    background-color: rgb(243, 156, 17);
+}
+
+.PreviousStageButton:hover {
+    background-color: rgb(226, 139, 0);
+}
+
+.NextStageButton {
+    color: white;
+    background-color: rgb(17, 175, 80);
+}
+
+.NextStageButton:hover {
+    background-color: rgb(0, 158, 63);
+}
+
+.SaveButton {
+    color: white;
+    background-color: rgb(17, 141, 230);
+}
+
+.SaveButton:hover {
+    background-color: rgb(0, 124, 213);
+}

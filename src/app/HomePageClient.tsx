@@ -3,12 +3,12 @@ import { faFilter, faOutdent } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import { useError } from './components/Error/Error';
 import TenderCard from './components/TenderCard/TenderCard';
 import getStatusName from './models/Status';
 import { Tender } from './models/Tender';
 import { createTender } from './models/TenderService';
 import styles from './page.module.css';
+import { showError } from './components/Error/Error';
 export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
     const allTenders = JSON.parse(tendersJSON) as Tender[]
     const [tenders, setTenders] = useState(allTenders)
@@ -16,7 +16,6 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
     const regNumber = useRef<HTMLInputElement | null>(null);
     const date = useRef<HTMLInputElement | null>(null);
     const router = useRouter();
-    const { showError } = useError();
     const changeFilter = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setTenders(allTenders.filter(tender => {
             let filterFlag = true

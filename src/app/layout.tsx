@@ -1,12 +1,13 @@
 import localFont from "next/font/local";
 import Image from 'next/image';
 import Link from "next/link";
-import { ErrorProvider } from "./components/Error/Error";
 import "./globals.css";
 import SteltaLogo from './images/logo.png';
 import styles from "./layout.module.css";
 import "./styles/inputs.css";
+import "./styles/buttons.css";
 import "./styles/stageForm.css";
+import { ErrorMessage } from "./components/Error/Error";
 const firaSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -31,11 +32,10 @@ export default function RootLayout({
             <Link href="#settings" className={styles.navLink}>Аналитика</Link>
           </div>
         </header>
-        <ErrorProvider>
+        <ErrorMessage></ErrorMessage>
           <div className={styles.content}>
             {children}
-          </div>
-        </ErrorProvider>
+          </div>        
       </body>
     </html>
   );

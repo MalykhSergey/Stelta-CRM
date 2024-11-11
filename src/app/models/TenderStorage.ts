@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import connection from "./Database";
 import { Tender } from "./Tender";
+import UPDATE_TENDER_QUERY from './querries/UPDATE_TENDER';
 
 class TenderStorage {
     constructor() {
@@ -18,66 +19,47 @@ class TenderStorage {
     async deleteTender(tenderId: number) {
         try {
             await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
-        } 
+        }
         catch (error) {
             return { error: 'Ошибка удаления тендера!' }
         }
     }
 
     async update(tender: Tender) {
-        await connection.query(`
-            UPDATE tenders 
-            SET status = $1,
-                company = $2,
-                name = $3,
-                lot_number = $4,
-                register_number = $5,
-                initial_max_price = $6,
-                price = $7,
-                contact_person = $8,
-                phone_number = $9,
-                email = $10,
-                date1_start = $11,
-                date1_finish = $12,
-                date2_finish = $13,
-                contract_number = $14,
-                contract_date = $15,
-                comment0 = $16,
-                comment1 = $17,
-                comment2 = $18,
-                comment3 = $19,
-                comment4 = $20,
-                comment5 = $21
-            WHERE id = $22
-            `, [
-            tender.status,
-            tender.company,
-            tender.name,
-            tender.lotNumber,
-            tender.regNumber,
-            tender.initialMaxPrice,
-            tender.price,
-            tender.contactPerson,
-            tender.phoneNumber,
-            tender.email,
-            tender.date1_start,
-            tender.date1_finish,
-            tender.date2_finish,
-            tender.contractNumber,
-            tender.contractDate,
-            tender.comments[0],
-            tender.comments[1],
-            tender.comments[2],
-            tender.comments[3],
-            tender.comments[4],
-            tender.comments[5],
-            tender.id
-        ])
-        for (const dateRequest of tender.datesRequests) {
-            await connection.query("UPDATE dates_requests SET date = $2 WHERE id =  $1", [dateRequest.id, dateRequest.date])
+        try {
+            await connection.query(UPDATE_TENDER_QUERY, [
+                tender.status,
+                tender.company,
+                tender.name,
+                tender.lotNumber,
+                tender.regNumber,
+                tender.initialMaxPrice,
+                tender.price,
+                tender.contactPerson,
+                tender.phoneNumber,
+                tender.email,
+                tender.date1_start,
+                tender.date1_finish,
+                tender.date2_finish,
+                tender.contractNumber,
+                tender.contractDate,
+                tender.comments[0],
+                tender.comments[1],
+                tender.comments[2],
+                tender.comments[3],
+                tender.comments[4],
+                tender.comments[5],
+                tender.id
+            ])
+            for (const dateRequest of tender.datesRequests) {
+                await connection.query("UPDATE dates_requests SET date = $2 WHERE id =  $1", [dateRequest.id, dateRequest.date])
+            }
+            for (const rebiddingPrice of tender.rebiddingPrices) {
+                await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
+            }
         }
-        for (const rebiddingPrice of tender.rebiddingPrices) {
-            await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
+        catch (error) {
+            return { error: 'Ошибка удаления тендера' }
         }
     }
 
@@ -106,37 +88,67 @@ class TenderStorage {
         return tender
     }
     async addFile(tenderId: number, fileName: string, stage: number, dateRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
-        if (dateRequestId)
-            return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, date_request_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, dateRequestId])).rows[0].id;
-        else if (rebiddingPriceId)
-            return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, rebidding_price_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, rebiddingPriceId])).rows[0].id;
-        else
-            return (await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
+        try {
+            if (dateRequestId)
+                return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, date_request_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, dateRequestId])).rows[0].id;
+            else if (rebiddingPriceId)
+                return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, rebidding_price_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, rebiddingPriceId])).rows[0].id;
+            else
+                return (await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
+        }
+        catch (error) {
+            return { error: 'Ошибка добавления файла!' }
+        }
     }
     async deleteFile(id: number) {
-        await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
+        try {
+            await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
+        }
+        catch (error) {
+            return { error: 'Ошибка удаления файла!' }
+        }
     }
 
     async addDateRequest(tenderId: number) {
-        return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+        try {
+            return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+        }
+        catch (error) {
+            return { error: 'Ошибка создания дозапроса документов!' }
+        }
     }
     async addRebiddingPrice(tenderId: number) {
-        return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
-
+        try {
+            return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+        }
+        catch (error) {
+            return { error: 'Ошибка создания переторжки!' }
+        }
     }
     async deleteDateRequest(tenderId: number, dateRequestId: number) {
-        const filesId = (await connection.query('DELETE FROM file_names WHERE date_request_id = $1 returning id', [dateRequestId])).rows
-        await connection.query('DELETE FROM dates_requests WHERE id = $1', [dateRequestId])
-        filesId.forEach(async row => {
-            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
-        })
+        try {
+            const filesId = (await connection.query('DELETE FROM file_names WHERE date_request_id = $1 returning id', [dateRequestId])).rows
+            await connection.query('DELETE FROM dates_requests WHERE id = $1', [dateRequestId])
+            filesId.forEach(async row => {
+                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
+            })
+        }
+        catch (error) {
+            return { error: 'Ошибка удаления дозапроса документов!' }
+        }
     }
     async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
-        const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
-        await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
-        filesId.forEach(async row => {
-            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
-        })
+        try {
+
+            const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
+            await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
+            filesId.forEach(async row => {
+                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
+            })
+        }
+        catch (error) {
+            return { error: 'Ошибка удаления переторжки!' }
+        }
     }
 
 }

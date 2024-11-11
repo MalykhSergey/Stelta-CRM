@@ -2,6 +2,7 @@
 
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentsForm';
+import { showError } from '@/app/components/Error/Error';
 import StageForm1 from '@/app/components/StageForm1/StageForm1';
 import StageForm2 from '@/app/components/StageForm2/StageForm2';
 import StageForm3 from '@/app/components/StageForm3/StageForm3';
@@ -10,8 +11,8 @@ import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
 import { deleteTender, updateTenderById } from '@/app/models/TenderService';
 import { observer } from 'mobx-react-lite';
-import styles from "./TenderPageClient.module.css";
 import { useRouter } from 'next/navigation';
+import styles from "./TenderPageClient.module.css";
 
 const getNextStageButtonText = (status: number) => {
     switch (status) {
@@ -73,13 +74,19 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
         isEditable.date1_finish = true
     else if (tender.status <= 3)
         isEditable.date2_finish = true
-    const updateStageHandler = (stage: number) => {
-        tender.status = stage;
-        updateTenderById(JSON.stringify(tender))
+    const updateStageHandler = async (stage: number) => {
+        const result = await updateTenderById(JSON.stringify(tender))
+        if (result?.error)
+            showError(result.error)
+        else
+            tender.status = stage;
     }
-    const deleteHandler = () => {
-        deleteTender(tender.id)
-        router.push('/')
+    const deleteHandler = async () => {
+        const result = await deleteTender(tender.id)
+        if (result?.error)
+            showError(result.error)
+        else
+            router.push('/')
     }
 
     return (
@@ -97,13 +104,13 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                 {tender.status >= 5 && <StageForm3 tender={tender} />}
                 <CommentsForm tender={tender} />
                 <div className={styles.buttonRow}>
-                    <button onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
+                    <button className='SaveButton' onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
                     {tender.status >= 0 &&
                         <>
-                            {tender.status < 6 && <button onClick={() => deleteHandler()}>Удалить</button>}
-                            {tender.status > 0 && tender.status < 6 && <button onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
-                            {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
-                            {tender.status < 6 && <button onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
+                            {tender.status < 1 && <button className='DeleteButton' onClick={() => deleteHandler()}>Удалить</button>}
+                            {tender.status > 0 && tender.status < 6 && <button className='DeleteButton' onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
+                            {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button className='PreviousStageButton' onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
+                            {tender.status < 6 && <button className='NextStageButton' onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
                         </>
                     }
                 </div>
