@@ -26,8 +26,8 @@ export default function RootLayout({
         <header className={styles.header}>
           <Link href='/'><Image src={SteltaLogo} alt={"Stelta logo"} width={120} height={65}></Image></Link>
           <div className={styles.navPanel}>
-            <Link href="#documents" className={styles.navLink}>Торги</Link>
-            <Link href="#home" className={styles.navLink}>Поиск</Link>
+            <Link href="/" className={styles.navLink}>Торги</Link>
+            <Link href="/search" className={styles.navLink}>Поиск</Link>
             <Link href="#contacts" className={styles.navLink}>Организации</Link>
             <Link href="#settings" className={styles.navLink}>Аналитика</Link>
           </div>

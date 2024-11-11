@@ -3,7 +3,7 @@ import { Tender } from "@/app/models/Tender";
 import { faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import DocumentsForm from "../DocumentForm/DocumentsForm";
+import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
 import styles from "./StageForm3.module.css";
 interface StageForm3Props {
     tender: Tender

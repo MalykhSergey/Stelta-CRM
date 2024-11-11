@@ -3,12 +3,12 @@ import { faFilter, faOutdent } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { showError } from './components/Error/Error';
 import TenderCard from './components/TenderCard/TenderCard';
 import getStatusName from './models/Status';
 import { Tender } from './models/Tender';
 import { createTender } from './models/TenderService';
 import styles from './page.module.css';
-import { showError } from './components/Error/Error';
 export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
     const allTenders = JSON.parse(tendersJSON) as Tender[]
     const [tenders, setTenders] = useState(allTenders)
@@ -25,6 +25,9 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
             if (regNumber.current && regNumber.current.value != '')
                 if (tender.regNumber.includes(regNumber.current.value))
                     filterFlag = filterFlag && false
+            if (date.current && date.current.value != '')
+                if (tender.date1_start.slice(0, 10) != date.current.value && tender.date1_finish.slice(0, 10) != date.current.value || tender.date2_finish.slice(0, 10) != date.current.value)
+                    filterFlag = filterFlag && false
             return filterFlag
         }))
     }
@@ -40,7 +43,7 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
             <div className={styles.leftPanel}>
                 <button className={`${styles.columnHeader} ${styles.createTender} card`} onClick={createHandler}><span>Добавить тендер</span><FontAwesomeIcon icon={faOutdent} style={{ height: '20px' }}></FontAwesomeIcon></button>
                 <div className={styles.filter}>
-                    <div className='row' style={{ alignItems: 'center', gap: '20px' }}><FontAwesomeIcon icon={faFilter} className='icon' style={{ width: '20px' }}></FontAwesomeIcon><h3>Фильтр</h3></div>
+                    <div className='row' style={{ alignItems: 'center', gap: '20px' }}><FontAwesomeIcon icon={faFilter} className='icon' style={{ height: '20px' }}></FontAwesomeIcon><h3>Фильтр</h3></div>
                     <div className='column'>
                         <label className={styles.filterLabel}>Статус:</label>
                         <select ref={status} className='input' onChange={changeFilter}>
@@ -60,7 +63,7 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
                     </div>
                     <div className='column'>
                         <label className={styles.filterLabel}>Дата:</label>
-                        <input ref={date} type="date" className='input' />
+                        <input ref={date} type="date" className='input' onChange={changeFilter} />
                     </div>
                 </div>
             </div>

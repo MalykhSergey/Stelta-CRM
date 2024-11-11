@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { makeAutoObservable } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
-import DocumentsForm from '../DocumentForm/DocumentsForm';
+import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 interface StageForm2Props {
     tender: Tender
