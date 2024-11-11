@@ -8,6 +8,17 @@ class TenderStorage {
         console.log('Created Tender storage')
     }
 
+    async getCompanies() {
+        return (await connection.query(`SELECT * FROM companies`)).rows
+    }
+    async createCompany(name: string) {
+        try {
+            return (await connection.query(`INSERT INTO companies("name") values($1) RETURNING id`, [name])).rows[0].id
+        }
+        catch (error) {
+            return { error: "Ошибка создания организации. Возможно такая уже есть!" }
+        }
+    }
     async createTender() {
         try {
             return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id

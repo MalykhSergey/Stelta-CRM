@@ -14,6 +14,8 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
     const [tenders, setTenders] = useState(allTenders)
     const status = useRef<HTMLSelectElement | null>(null);
     const regNumber = useRef<HTMLInputElement | null>(null);
+    const fullName = useRef<HTMLInputElement | null>(null);
+    const company = useRef<HTMLInputElement | null>(null);
     const date = useRef<HTMLInputElement | null>(null);
     const changeFilter = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setTenders(allTenders.filter(tender => {
@@ -23,6 +25,12 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
                     filterFlag = filterFlag && false
             if (regNumber.current && regNumber.current.value != '')
                 if (!tender.regNumber.includes(regNumber.current.value))
+                    filterFlag = filterFlag && false
+            if (fullName.current && fullName.current.value != '')
+                if (!tender.name.toLowerCase().includes(fullName.current.value.toLowerCase()))
+                    filterFlag = filterFlag && false
+            if (company.current && company.current.value != '')
+                if (!tender.company.toLowerCase().includes(company.current.value.toLowerCase()))
                     filterFlag = filterFlag && false
             if (date.current && date.current.value != '')
                 if (tender.date1_start.slice(0, 10) != date.current.value && tender.date1_finish.slice(0, 10) != date.current.value || tender.date2_finish.slice(0, 10) != date.current.value)
@@ -47,6 +55,14 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
                         <option value="5">{getStatusName(5)}</option>
                         <option value="6">{getStatusName(6)}</option>
                     </select>
+                </div>
+                <div className='column'>
+                    <label className={styles.filterLabel}>Полное наименование:</label>
+                    <input ref={fullName} type="text" className={styles.filterInput} placeholder="Полное наименование" onChange={changeFilter} />
+                </div>
+                <div className='column'>
+                    <label className={styles.filterLabel}>Организация:</label>
+                    <input ref={company} type="text" className={styles.filterInput} placeholder="Название организации" onChange={changeFilter} />
                 </div>
                 <div className='column'>
                     <label className={styles.filterLabel}>Реестровый номер:</label>

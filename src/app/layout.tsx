@@ -28,7 +28,7 @@ export default function RootLayout({
           <div className={styles.navPanel}>
             <Link href="/" className={styles.navLink}>Торги</Link>
             <Link href="/search" className={styles.navLink}>Поиск</Link>
-            <Link href="#contacts" className={styles.navLink}>Организации</Link>
+            <Link href="/companies" className={styles.navLink}>Организации</Link>
             <Link href="#settings" className={styles.navLink}>Аналитика</Link>
           </div>
         </header>

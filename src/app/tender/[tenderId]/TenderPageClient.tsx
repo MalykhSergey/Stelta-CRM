@@ -3,13 +3,13 @@
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentsForm';
 import { showError } from '@/app/components/Error/Error';
-import StageForm1 from '@/app/tender/StageForm1/StageForm1';
-import StageForm2 from '@/app/tender/StageForm2/StageForm2';
-import StageForm3 from '@/app/tender/StageForm3/StageForm3';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
 import { deleteTender, updateTenderById } from '@/app/models/TenderService';
+import StageForm1 from '@/app/tender/StageForm1/StageForm1';
+import StageForm2 from '@/app/tender/StageForm2/StageForm2';
+import StageForm3 from '@/app/tender/StageForm3/StageForm3';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
@@ -104,15 +104,11 @@ const TenderPageClient = observer(({ tender }: { tender: Tender }) => {
                 {tender.status >= 5 && <StageForm3 tender={tender} />}
                 <CommentsForm tender={tender} />
                 <div className={styles.buttonRow}>
+                    {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button className='PreviousStageButton' onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
+                    {tender.status >= 0 && tender.status < 6 && <button className='NextStageButton' onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
                     <button className='SaveButton' onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
-                    {tender.status >= 0 &&
-                        <>
-                            {tender.status < 1 && <button className='DeleteButton' onClick={() => deleteHandler()}>Удалить</button>}
-                            {tender.status > 0 && tender.status < 6 && <button className='DeleteButton' onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
-                            {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button className='PreviousStageButton' onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
-                            {tender.status < 6 && <button className='NextStageButton' onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
-                        </>
-                    }
+                    {tender.status == 0 && <button className='DeleteButton' onClick={() => deleteHandler()}>Удалить</button>}
+                    {tender.status > 0 && tender.status < 6 && <button className='DeleteButton' onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
                 </div>
             </div>
         </div>
