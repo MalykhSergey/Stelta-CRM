@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useState } from "react"
-import { showError } from "../components/Error/Error"
+import { showMessage } from "../components/Alerts/Alert"
 import { createCompany } from "../models/TenderService"
 import styles from "./page.module.css"
 export default function ClientCompanies({ companiesProps }: { companiesProps: Array<{ id: number, name: string }> }) {
@@ -10,9 +10,10 @@ export default function ClientCompanies({ companiesProps }: { companiesProps: Ar
         if (company_name.current && company_name.current.value != '') {
             const result = await createCompany(company_name.current.value)
             if (result?.error)
-                showError(result.error)
+                showMessage(result.error)
             else {
                 setCompanies([...companies, { id: result, name: company_name.current.value }])
+                showMessage("Организация успешно добавлена!", "successful")
             }
         }
     }

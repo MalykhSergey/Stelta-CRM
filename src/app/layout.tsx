@@ -7,7 +7,7 @@ import styles from "./layout.module.css";
 import "./styles/inputs.css";
 import "./styles/buttons.css";
 import "./styles/stageForm.css";
-import { ErrorMessage } from "./components/Error/Error";
+import { AlertContainer } from "./components/Alerts/Alert";
 const firaSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -32,7 +32,7 @@ export default function RootLayout({
             <Link href="#settings" className={styles.navLink}>Аналитика</Link>
           </div>
         </header>
-        <ErrorMessage></ErrorMessage>
+        <AlertContainer></AlertContainer>
           <div className={styles.content}>
             {children}
           </div>        

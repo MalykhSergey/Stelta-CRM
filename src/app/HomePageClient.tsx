@@ -3,7 +3,7 @@ import { faFilter, faOutdent } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import { showError } from './components/Error/Error';
+import { showMessage } from './components/Alerts/Alert';
 import TenderCard from './components/TenderCard/TenderCard';
 import getStatusName from './models/Status';
 import { Tender } from './models/Tender';
@@ -34,7 +34,7 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
     const createHandler = async () => {
         const id = await createTender()
         if (id.error)
-            showError(id.error);
+            showMessage(id.error);
         else
             router.push(`/tender/${id}`)
     }

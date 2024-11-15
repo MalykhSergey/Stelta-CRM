@@ -2,7 +2,7 @@
 
 import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentsForm';
-import { showError } from '@/app/components/Error/Error';
+import { showMessage } from '@/app/components/Alerts/Alert';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/app/models/FileName';
 import { Tender } from '@/app/models/Tender';
@@ -75,17 +75,22 @@ const TenderPageClient = observer(({ tender, companies }: { tender: Tender, comp
         isEditable.date1_finish = true
     else if (tender.status <= 3)
         isEditable.date2_finish = true
-    const updateStageHandler = async (stage: number) => {
+    const saveHandler = async () => {
         const result = await updateTenderById(JSON.stringify(tender))
         if (result?.error)
-            showError(result.error)
-        else
-            tender.status = stage;
+            showMessage(result.error)
+        else{
+            showMessage("Данные успешно сохранены!", "successful")
+        }
+    }
+    const updateStageHandler = async (stage: number) => {
+        tender.status = stage;
+        saveHandler();
     }
     const deleteHandler = async () => {
         const result = await deleteTender(tender.id)
         if (result?.error)
-            showError(result.error)
+            showMessage(result.error)
         else
             router.push('/')
     }
@@ -107,7 +112,7 @@ const TenderPageClient = observer(({ tender, companies }: { tender: Tender, comp
                 <div className={styles.buttonRow}>
                     {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button className='PreviousStageButton' onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
                     {tender.status >= 0 && tender.status < 6 && <button className='NextStageButton' onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
-                    <button className='SaveButton' onClick={() => { updateTenderById(JSON.stringify(tender)) }}>Сохранить</button>
+                    <button className='SaveButton' onClick={saveHandler}>Сохранить</button>
                     {tender.status == 0 && <button className='DeleteButton' onClick={() => deleteHandler()}>Удалить</button>}
                     {tender.status > 0 && tender.status < 6 && <button className='DeleteButton' onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
                 </div>

@@ -1,0 +1,31 @@
+.container{
+    position: fixed;
+    z-index: 10;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.alert{
+    display: none;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    max-width: 400px;
+    transition: all 3s ease;
+}
+.error {
+    color: rgb(133, 33, 41);
+    background-color: rgb(245, 194, 199);
+    border-color: rgb(245, 194, 199);
+}
+
+.successful {
+    color: rgb(15, 81, 50);
+    background-color: rgb(209, 231, 221);
+    border-color: rgb(186, 219, 204);
+}
