@@ -38,7 +38,6 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
             delete errors[name]
         }
     }
-    const company = renderField("Company", tender.company, 'Организация:', isEditable.company, errors, handleChange)
     const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
     const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
@@ -68,6 +67,10 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
                     <option value="5">{getStatusName(5)}</option>
                     <option value="6">{getStatusName(6)}</option>
                 </select>
+            </div>
+            <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
+            <div className={styles.formGroup}>
+                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial} onClick={()=>tender.toggleIsSpecial()} />
             </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>

@@ -8,6 +8,7 @@ import Company from "./Company"
 export class Tender {
   public id: number = 0
   public status: number = 0
+  public isSpecial: boolean = false
   public company: Company = new Company(0,'');
   public name: string = ''
   public regNumber: string = ''
@@ -33,6 +34,9 @@ export class Tender {
       return { ok: false, error: 'Поле не должно быть пустым!' }
     }
     return { ok: true, value: '' }
+  }
+  toggleIsSpecial(){
+    this.isSpecial = !this.isSpecial
   }
   setCompany(value: number): Result<string, string> {
     this.company.id = value
@@ -137,6 +141,7 @@ export class Tender {
     const tender = new Tender()
     tender.id = row.id
     tender.status = row.status
+    tender.isSpecial = row.is_special
     tender.company.id = row.company_id
     tender.company.name = row.company_name
     tender.name = row.name
@@ -184,6 +189,7 @@ export class Tender {
     const tender = new Tender()
     tender.id = obj.id
     tender.status = obj.status
+    tender.isSpecial = obj.isSpecial
     tender.company = obj.company
     tender.name = obj.name
     tender.regNumber = obj.regNumber

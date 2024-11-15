@@ -40,6 +40,7 @@ class TenderStorage {
         try {
             await connection.query(UPDATE_TENDER_QUERY, [
                 tender.status,
+                tender.isSpecial,
                 tender.company.id,
                 tender.name,
                 tender.lotNumber,
