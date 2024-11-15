@@ -3,11 +3,12 @@ import { Result } from "../Result"
 import { DateRequest } from "./DateRequest"
 import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
+import Company from "./Company"
 
 export class Tender {
   public id: number = 0
   public status: number = 0
-  public company: string = ''
+  public company: Company = new Company(0,'');
   public name: string = ''
   public regNumber: string = ''
   public lotNumber: string = ''
@@ -33,11 +34,8 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
-  setCompany(value: string): Result<string, string> {
-    this.company = value
-    if (value == "") {
-      return { ok: false, error: 'Поле не должно быть пустым!' }
-    }
+  setCompany(value: number): Result<string, string> {
+    this.company.id = value
     return { ok: true, value: '' }
   }
   setName(value: string): Result<string, string> {
@@ -139,7 +137,8 @@ export class Tender {
     const tender = new Tender()
     tender.id = row.id
     tender.status = row.status
-    tender.company = row.company
+    tender.company.id = row.company_id
+    tender.company.name = row.company_name
     tender.name = row.name
     tender.lotNumber = row.lot_number
     tender.regNumber = row.register_number

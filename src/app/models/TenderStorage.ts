@@ -40,7 +40,7 @@ class TenderStorage {
         try {
             await connection.query(UPDATE_TENDER_QUERY, [
                 tender.status,
-                tender.company,
+                tender.company.id,
                 tender.name,
                 tender.lotNumber,
                 tender.regNumber,
@@ -75,11 +75,18 @@ class TenderStorage {
     }
 
     async getAll(): Promise<Tender[]> {
-        const tenders_rows = (await connection.query('SELECT *, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(contract_date AS CHAR(16)) FROM tenders')).rows;
+        const tenders_rows = (await connection.query(`
+            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
+            FROM tenders
+            JOIN  companies ON companies.id = company_id`)).rows;
         return tenders_rows.map(tender => Tender.fromQueryRow(tender))
     }
     async getById(id: number): Promise<Tender> {
-        const tenders_row = (await connection.query('SELECT *, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)) FROM tenders WHERE id = $1', [id])).rows
+        const tenders_row = (await connection.query(`
+            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
+            FROM tenders
+            JOIN  companies ON companies.id = company_id 
+            WHERE tenders.id =  $1`, [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         for (let i = 0; i < 6; i++) {
             const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows

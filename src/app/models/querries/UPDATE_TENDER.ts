@@ -1,7 +1,7 @@
 const UPDATE_TENDER_QUERY = `
             UPDATE tenders 
             SET status = $1,
-                company = $2,
+                company_id = $2,
                 name = $3,
                 lot_number = $4,
                 register_number = $5,

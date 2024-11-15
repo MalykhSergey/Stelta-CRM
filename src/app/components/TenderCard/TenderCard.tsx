@@ -38,7 +38,7 @@ export default function TenderCard(props: { tender: Tender }) {
   return (
     <Link className={`card inherit fullWidth ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}target='_blank'>
       <div>
-        <span className={styles.label}>{props.tender.company}</span>
+        <span className={styles.label}>{props.tender.company.name}</span>
         <div className={styles.title}>{props.tender.name}</div>
         <span className={styles.label}>НМЦК: </span>
         <div className={styles.info}>{props.tender.initialMaxPrice+" ₽"}</div>

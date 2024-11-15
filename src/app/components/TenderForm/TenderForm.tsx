@@ -69,12 +69,17 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
                     <option value="6">{getStatusName(6)}</option>
                 </select>
             </div>
-            {company}
-            <datalist id='companies'>
-                {companies.map(company =>
-                    <option key={"option" + company.id} company-id={company.id} value={company.name}></option>
-                )}
-            </datalist>
+            <label className={styles.label} htmlFor="Company">Организация:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <select name="Company" id="Company" onChange={handleChange}>
+                        {companies.map(company =>
+                            <option key={"option" + company.id} value={company.id}>{company.name}</option>
+                        )}
+                    </select>
+                </div>
+                {errors['Company'] && <span></span>} {errors['Company'] && <span className={styles.error}>{errors['Company']}</span>}
+            </div>
             {name}
             {regNumber}
             {lotNumber}
@@ -123,7 +128,6 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                             handleChange(e)
 
                         }}
-                        list={fieldName == "company" ? '' : 'companies'}
                         className={styles.input}
                     />
                     {fieldType != 'datetime-local' && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />}
