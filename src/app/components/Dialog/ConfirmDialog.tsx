@@ -9,10 +9,11 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ message, onConfirm, onCan
     return (
         <div className={styles.overlay}>
             <div className={styles.dialog}>
+                <h3>Подтверждение удаления</h3>
                 <p>{message}</p>
                 <div className={styles.buttons}>
-                    <button onClick={onCancel}>Нет</button>
-                    <button onClick={onConfirm}>Да</button>
+                    <button className='' onClick={onCancel}>Нет</button>
+                    <button className='SaveButton' onClick={onConfirm}>Да</button>
                 </div>
             </div>
         </div>
