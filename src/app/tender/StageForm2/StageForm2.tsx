@@ -8,6 +8,7 @@ import { observer, useLocalObservable } from 'mobx-react-lite';
 import { Tender } from '../../models/Tender';
 import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
+import styles from "./StageForm2.module.css"
 interface StageForm2Props {
     tender: Tender
 }
@@ -41,21 +42,16 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                     pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                     removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}
                     fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={isEditable} independent={false} className='card' />
-                <div style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}>
+                <div className={styles.secondForms}>
                     <DocumentsForm tenderId={tender.id} stage={3}
                         pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 3)}
                         removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 3)}
                         fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={isEditable} independent={false} className='card' />
                     <div>
                         <label htmlFor={`Stage2FormPrice${tender.id}`}>Наша цена:</label>
-                        <input id={`Stage2FormPrice${tender.id}`} type="text" value={tender.price + " ₽"} onChange={
+                        <input id={`Stage2FormPrice${tender.id}`} type="text" value={tender.price} onChange={
                             (e) => {
                                 e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                                const cursorPosition = e.target.selectionStart;
-                                requestAnimationFrame(() => {
-                                    e.target.selectionStart = cursorPosition;
-                                    e.target.selectionEnd = cursorPosition;
-                                });
                                 const result = tender.setPrice(e.target.value)
                                 if (!result.ok)
                                     error.setError(result.error)

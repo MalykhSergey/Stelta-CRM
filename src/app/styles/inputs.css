@@ -6,12 +6,13 @@
     transition: all 0.3s ease;
     transform: scale(1.2);
 }
+
 .iconButton:hover {
     filter: none;
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-label{
+label {
     color: rgb(58, 69, 81);
 }
 
@@ -77,5 +78,10 @@ button:hover {
 }
 
 button:active {
-    transform: scale(0.95);
+    /* transform: scale(0.95); */
+}
+
+.under-input-error {
+    color: #d32f2f;
+    font-size: 12px;
 }

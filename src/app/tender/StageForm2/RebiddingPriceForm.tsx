@@ -29,21 +29,16 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, 
                 isEditable={isEditable} independent={isEditable} className="card" />
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
-                <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price + " ₽"}
+                <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price}
                     onChange={(e) => {
                         e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                        const cursorPosition = e.target.selectionStart;
-                        requestAnimationFrame(() => {
-                            e.target.selectionStart = cursorPosition;
-                            e.target.selectionEnd = cursorPosition;
-                        });
                         const result = rebiddingPrice.setPrice(e.target.value)
                         if (!result.ok)
                             setError(result.error)
                         else
                             setError('')
-                    }} required />
-                {error != '' && <span className={styles.error}>{error}</span>}
+                    }} required  disabled={!isEditable}/>
+                {error != '' && <span className='under-input-error'>{error}</span>}
             </div>
         </div>
     )

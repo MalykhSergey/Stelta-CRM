@@ -43,7 +43,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
     const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
     const initialMaxPrice = renderField("InitialMaxPrice", tender.initialMaxPrice, 'НМЦК:', isEditable.initialMaxPrice, errors, handleChange)
-    const price = renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange)
+    const price = tender.rebiddingPrices.length == 0 ? renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange) : renderField("Price", tender.rebiddingPrices.at(-1)?.price, 'Наша цена:', false, errors, handleChange)
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
@@ -113,17 +113,12 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                         name={fieldName}
                         id={fieldName}
                         value={fieldName === "InitialMaxPrice" || fieldName === "Price"
-                            ? value + " ₽"
+                            ? value
                             : value
                         }
                         onChange={(e) => {
                             if (["InitialMaxPrice", "Price"].includes(fieldName)) {
                                 e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                                const cursorPosition = e.target.selectionStart;
-                                requestAnimationFrame(() => {
-                                    e.target.selectionStart = cursorPosition;
-                                    e.target.selectionEnd = cursorPosition;
-                                });
                             }
                             handleChange(e)
 
@@ -133,7 +128,7 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                     {fieldType != 'datetime-local' && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />}
                 </div>
             </div>
-            {errors[fieldName] && <span></span>} {errors[fieldName] && <span className={styles.error}>{errors[fieldName]}</span>}
+            {errors[fieldName] && <span></span>} {errors[fieldName] && <span className='under-input-error'>{errors[fieldName]}</span>}
         </>
     }
     return (

@@ -30,7 +30,7 @@ const DateRequestForm: React.FC<DateRequestFormProps> = observer(({ tenderId, da
             />
             <div>
                 <label htmlFor={`dateRequest${dateRequest.id}`}>Дата предоставления ответа</label>
-                <input id={`dateRequest${dateRequest.id}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required />
+                <input id={`dateRequest${dateRequest.id}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required disabled={!isEditable}/>
             </div>
         </div>
     )
