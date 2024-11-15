@@ -10,6 +10,7 @@ interface TenderFormProps {
     tender: Tender,
     companies: Company[],
     isEditable: {
+        isSpecial: boolean,
         company: boolean,
         name: boolean,
         regNumber: boolean,
@@ -19,6 +20,7 @@ interface TenderFormProps {
         date1_start: boolean,
         date1_finish: boolean,
         date2_finish: boolean,
+        date_finish: boolean,
         contactPerson: boolean,
         phoneNumber: boolean,
         email: boolean
@@ -46,9 +48,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
-    const date1_start = renderField("Date1_start", tender.date1_start, 'Дата и время начала подачи 1 этапа:', isEditable.date1_start, errors, handleChange)
-    const date1_finish = renderField("Date1_finish", tender.date1_finish, 'Дата и время окончания подачи 1 этапа:', isEditable.date1_finish, errors, handleChange)
-    const date2_finish = renderField("Date2_finish", tender.date2_finish, 'Дата и время окончания подачи 2 этапа:', isEditable.date2_finish, errors, handleChange)
+    let fieldName
     return (
         <div className={`${styles.form} card`} >
             <label className={styles.label}>Статус:</label>
@@ -70,7 +70,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
             </div>
             <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
             <div className={styles.formGroup}>
-                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial} onClick={()=>tender.toggleIsSpecial()} />
+                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial} onClick={() => tender.toggleIsSpecial()} disabled={!isEditable.isSpecial} />
             </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
@@ -88,9 +88,34 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
             {lotNumber}
             {initialMaxPrice}
             {price}
-            {date1_start}
-            {date1_finish}
-            {date2_finish}
+            <label className={styles.label} htmlFor='Date1_start'>Дата начала 1-го этапа:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <input type="datetime-local" name='Date1_start' id='Date1_start' value={tender.date1_start} onChange={handleChange} disabled={!isEditable.date1_start} />
+                </div>
+                {errors['Date1_start'] && <span></span>} {errors['Date1_start'] && <span className={styles.error}>{errors['Date1_start']}</span>}
+            </div>
+            <label className={styles.label} htmlFor='Date1_finish'>Дата окончания 1-го этапа:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <input type="datetime-local" name='Date1_finish' id='Date1_finish' value={tender.date1_finish} onChange={handleChange} disabled={!isEditable.date1_finish} />
+                </div>
+                {errors['Date1_finish'] && <span></span>} {errors['Date1_finish'] && <span className={styles.error}>{errors['Date1_finish']}</span>}
+            </div>
+            <label className={styles.label} htmlFor='Date2_finish'>Дата окончания 2-го этапа:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <input type="datetime-local" name='Date2_finish' id='Date2_finish' value={tender.date2_finish} onChange={handleChange} disabled={!isEditable.date2_finish} />
+                </div>
+                {errors['Date2_finish'] && <span></span>} {errors['Date2_finish'] && <span className={styles.error}>{errors['Date2_finish']}</span>}
+            </div>
+            <label className={styles.label} htmlFor='Date_finish'>Подведение итогов:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <input type="datetime-local" name='Date_finish' id='Date_finish' value={tender.date_finish} onChange={handleChange} disabled={!isEditable.date_finish} />
+                </div>
+                {errors['Date_finish'] && <span></span>} {errors['Date_finish'] && <span className={styles.error}>{errors['Date_finish']}</span>}
+            </div>
             {contactPerson}
             {phoneNumber}
             {email}
@@ -104,8 +129,6 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
     let elem = <input type="text" className={styles.input} disabled value={value} />
     if (isEditableField) {
         let fieldType = 'text'
-        if (fieldName.includes('Date'))
-            fieldType = 'datetime-local'
         if (fieldName == 'Email')
             fieldType = 'email'
         elem = <>
@@ -115,10 +138,7 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                         type={fieldType}
                         name={fieldName}
                         id={fieldName}
-                        value={fieldName === "InitialMaxPrice" || fieldName === "Price"
-                            ? value
-                            : value
-                        }
+                        value={value}
                         onChange={(e) => {
                             if (["InitialMaxPrice", "Price"].includes(fieldName)) {
                                 e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
@@ -128,7 +148,7 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                         }}
                         className={styles.input}
                     />
-                    {fieldType != 'datetime-local' && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />}
+                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />
                 </div>
             </div>
             {errors[fieldName] && <span></span>} {errors[fieldName] && <span className='under-input-error'>{errors[fieldName]}</span>}

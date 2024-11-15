@@ -43,6 +43,7 @@ const getLooseButtonText = (status: number) => {
 const TenderPageClient = observer(({ tender, companies }: { tender: Tender, companies:Company[] }) => {
     const router = useRouter()
     let isEditable = {
+        isSpecial: false,
         company: false,
         name: false,
         regNumber: false,
@@ -52,12 +53,14 @@ const TenderPageClient = observer(({ tender, companies }: { tender: Tender, comp
         date1_start: false,
         date1_finish: false,
         date2_finish: false,
+        date_finish: false,
         contactPerson: false,
         phoneNumber: false,
         email: false,
     };
     if (tender.status == 0)
         isEditable = {
+            isSpecial: true,
             company: true,
             name: true,
             regNumber: true,
@@ -67,14 +70,17 @@ const TenderPageClient = observer(({ tender, companies }: { tender: Tender, comp
             date1_start: true,
             date1_finish: true,
             date2_finish: true,
+            date_finish: true,
             contactPerson: true,
             phoneNumber: true,
             email: true,
         };
     if (tender.status <= 2)
         isEditable.date1_finish = true
-    else if (tender.status <= 3)
+    if (tender.status <= 3)
         isEditable.date2_finish = true
+    if (tender.status <= 4)
+        isEditable.date_finish = true
     const saveHandler = async () => {
         const result = await updateTenderById(JSON.stringify(tender))
         if (result?.error)

@@ -18,6 +18,7 @@ export class Tender {
   public date1_start = ''
   public date1_finish = ''
   public date2_finish = ''
+  public date_finish = ''
   public contractDate = ''
   public contractNumber = ''
   public contactPerson: string = ''
@@ -98,6 +99,13 @@ export class Tender {
     }
     return { ok: true, value: '' }
   }
+  setDate_finish(value: string) {
+    this.date_finish = value
+    if (value == "") {
+      return { ok: false, error: 'Поле не должно быть пустым!' }
+    }
+    return { ok: true, value: '' }
+  }
   setContactPerson(value: string): Result<string, string> {
     this.contactPerson = value
     if (value == "") {
@@ -157,6 +165,7 @@ export class Tender {
     tender.contractDate = row.contract_date
     tender.date1_finish = row.date1_finish
     tender.date2_finish = row.date2_finish
+    tender.date_finish = row.date_finish
     for (let i = 0; i < 6; i++) {
       if (row[`comment${i}`] != null)
         tender.comments[i] = row[`comment${i}`]
@@ -199,6 +208,7 @@ export class Tender {
     tender.date1_start = obj.date1_start
     tender.date1_finish = obj.date1_finish
     tender.date2_finish = obj.date2_finish
+    tender.date_finish = obj.date_finish
     tender.contractNumber = obj.contractNumber
     tender.contractDate = obj.contractDate
     tender.contactPerson = obj.contactPerson

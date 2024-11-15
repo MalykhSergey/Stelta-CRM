@@ -14,14 +14,15 @@ const UPDATE_TENDER_QUERY = `
                 date1_start = $12,
                 date1_finish = $13,
                 date2_finish = $14,
-                contract_number = $15,
-                contract_date = $16,
-                comment0 = $17,
-                comment1 = $18,
-                comment2 = $19,
-                comment3 = $20,
-                comment4 = $21,
-                comment5 = $22
-            WHERE id = $23
+                date_finish = $15,
+                contract_number = $16,
+                contract_date = $17,
+                comment0 = $18,
+                comment1 = $19,
+                comment2 = $20,
+                comment3 = $21,
+                comment4 = $22,
+                comment5 = $23
+            WHERE id = $24
             `;
 export default UPDATE_TENDER_QUERY

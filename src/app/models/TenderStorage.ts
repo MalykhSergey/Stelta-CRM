@@ -53,6 +53,7 @@ class TenderStorage {
                 tender.date1_start,
                 tender.date1_finish,
                 tender.date2_finish,
+                tender.date_finish,
                 tender.contractNumber,
                 tender.contractDate,
                 tender.comments[0],
@@ -77,14 +78,14 @@ class TenderStorage {
 
     async getAll(): Promise<Tender[]> {
         const tenders_rows = (await connection.query(`
-            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
+            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(date_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
             FROM tenders
             JOIN  companies ON companies.id = company_id`)).rows;
         return tenders_rows.map(tender => Tender.fromQueryRow(tender))
     }
     async getById(id: number): Promise<Tender> {
         const tenders_row = (await connection.query(`
-            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
+            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(date_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
             FROM tenders
             JOIN  companies ON companies.id = company_id 
             WHERE tenders.id =  $1`, [id])).rows

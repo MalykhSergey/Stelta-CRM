@@ -5,7 +5,7 @@ function convertDate(value: string) {
   const convertedDate = new Date(value).toLocaleString().split(',')
   return (
     <>
-      <div className={styles.info}>{convertedDate[1].slice(0, -3)} {convertedDate[0]}</div>
+      <div className={styles.info}>{convertedDate[0]} {convertedDate[1].slice(0, -3)}</div>
     </>)
 }
 export default function TenderCard(props: { tender: Tender }) {
@@ -33,6 +33,8 @@ export default function TenderCard(props: { tender: Tender }) {
       dateSpan = <span className={styles.label}>Окончание подачи: </span>
       break
     case 5:
+      dateField = convertDate(props.tender.date_finish)
+      dateSpan = <span className={styles.label}>Подведение итогов: </span>
       break
   }
   return (
@@ -42,7 +44,7 @@ export default function TenderCard(props: { tender: Tender }) {
         <div className={styles.title}>{props.tender.name}</div>
         <span className={styles.label}>НМЦК: </span>
         <div className={styles.info}>{props.tender.initialMaxPrice+" ₽"}</div>
-        {props.tender.status > 0 && props.tender.status < 5 &&
+        {props.tender.status > 0 && 
           <>
             {dateSpan}
             {dateField}
