@@ -31,9 +31,3 @@ export async function updateTenderById(tender_string: string) {
     const tender = JSON.parse(tender_string)
     return await tenderStorage.update(tender);
 }
-export async function getCompanies() {
-    return JSON.stringify(await tenderStorage.getCompanies());
-}
-export async function createCompany(name: string) {
-    return await tenderStorage.createCompany(name);
-}

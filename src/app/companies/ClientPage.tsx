@@ -1,8 +1,8 @@
 "use client"
 import { useRef, useState } from "react"
 import { showMessage } from "../components/Alerts/Alert"
-import { createCompany } from "../models/TenderService"
 import styles from "./page.module.css"
+import { createCompany } from "../models/CompanyService"
 export default function ClientCompanies({ companiesProps }: { companiesProps: Array<{ id: number, name: string }> }) {
     const [companies, setCompanies] = useState(companiesProps)
     const company_name = useRef<HTMLInputElement | null>(null)
