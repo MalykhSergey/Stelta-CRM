@@ -42,7 +42,7 @@ const StageForm1: React.FC<StageFormProps> = observer(({ tender }) => {
                     fileNames={tender.stagedFileNames[1]}
                     isEditable={isEditable} className='card' />
                 {datesRequests}
-                {isEditable && <button className='SaveButton' onClick={handleClick}>Дозапрос документов</button>}
+                {isEditable && <button className='BlueButton' onClick={handleClick}>Дозапрос документов</button>}
             </div>
         </div>
     )

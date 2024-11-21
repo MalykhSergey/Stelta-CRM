@@ -21,7 +21,7 @@ export default function ClientCompanies({ companiesProps }: { companiesProps: Ar
         <main className={styles.content}>
             <div className={`card row ${styles.input}`}>
                 <input ref={company_name} type="text" list="companies" name="company" />
-                <button className="SaveButton" onClick={createCompanyHandler}>Добавить</button>
+                <button className="BlueButton" onClick={createCompanyHandler}>Добавить</button>
                 <datalist id="companies">
                     {companies.map(row => <option key={'option' + row.id} company-id={row.id} value={row.name}></option>)}
                 </datalist>

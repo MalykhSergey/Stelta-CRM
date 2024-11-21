@@ -69,21 +69,6 @@ input[type="checkbox"]{
     transform: rotate(180deg);
 }
 
-
-button {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    padding: 8px;
-}
-
-button:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-button:active {
-    /* transform: scale(0.95); */
-}
-
 .under-input-error {
     color: #d32f2f;
     font-size: 12px;

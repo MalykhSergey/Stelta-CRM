@@ -64,7 +64,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({ tender }) => {
                     </div>
                 </div>
                 {rebiddingPrices}
-                {isEditable && <button className='SaveButton' onClick={handleClick}>Переторжка</button>}
+                {isEditable && <button className='BlueButton' onClick={handleClick}>Переторжка</button>}
             </div>
         </div>
     )

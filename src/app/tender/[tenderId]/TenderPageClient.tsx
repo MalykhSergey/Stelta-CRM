@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
 import Company from '@/app/models/Company';
 
-const getNextStageButtonText = (status: number) => {
+const getGreenButtonText = (status: number) => {
     switch (status) {
         case 0: return 'Участвовать';
         case 1: return 'Подать заявку';
@@ -26,7 +26,7 @@ const getNextStageButtonText = (status: number) => {
         default: return '';
     }
 };
-const getPreviousStageButtonText = (status: number) => {
+const getOrangeButtonText = (status: number) => {
     switch (status) {
         case 2: return 'Дозапрос';
         case 4: return 'Переторжка';
@@ -116,11 +116,11 @@ const TenderPageClient = observer(({ tender, companies }: { tender: Tender, comp
                 {tender.status >= 5 && <StageForm3 tender={tender} />}
                 <CommentsForm tender={tender} />
                 <div className={styles.buttonRow}>
-                    {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button className='PreviousStageButton' onClick={() => updateStageHandler(tender.status - 1)}>{getPreviousStageButtonText(tender.status)}</button>}
-                    {tender.status >= 0 && tender.status < 6 && <button className='NextStageButton' onClick={() => updateStageHandler(tender.status + 1)}>{getNextStageButtonText(tender.status)}</button>}
-                    <button className='SaveButton' onClick={saveHandler}>Сохранить</button>
-                    {tender.status == 0 && <button className='DeleteButton' onClick={() => deleteHandler()}>Удалить</button>}
-                    {tender.status > 0 && tender.status < 6 && <button className='DeleteButton' onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
+                    {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) && <button className='OrangeButton' onClick={() => updateStageHandler(tender.status - 1)}>{getOrangeButtonText(tender.status)}</button>}
+                    {tender.status >= 0 && tender.status < 6 && <button className='GreenButton' onClick={() => updateStageHandler(tender.status + 1)}>{getGreenButtonText(tender.status)}</button>}
+                    <button className='BlueButton' onClick={saveHandler}>Сохранить</button>
+                    {tender.status == 0 && <button className='RedButton' onClick={() => deleteHandler()}>Удалить</button>}
+                    {tender.status > 0 && tender.status < 6 && <button className='RedButton' onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
                 </div>
             </div>
         </div>

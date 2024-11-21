@@ -13,7 +13,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ message, onConfirm, onCan
                 <p>{message}</p>
                 <div className={styles.buttons}>
                     <button className='' onClick={onCancel}>Нет</button>
-                    <button className='SaveButton' onClick={onConfirm}>Да</button>
+                    <button className='BlueButton' onClick={onConfirm}>Да</button>
                 </div>
             </div>
         </div>
