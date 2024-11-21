@@ -30,7 +30,7 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
                 if (!tender.name.toLowerCase().includes(fullName.current.value.toLowerCase()))
                     filterFlag = filterFlag && false
             if (company.current && company.current.value != '')
-                if (!tender.company.toLowerCase().includes(company.current.value.toLowerCase()))
+                if (!tender.company.name.toLowerCase().includes(company.current.value.toLowerCase()))
                     filterFlag = filterFlag && false
             if (date.current && date.current.value != '')
                 if (tender.date1_start.slice(0, 10) != date.current.value && tender.date1_finish.slice(0, 10) != date.current.value || tender.date2_finish.slice(0, 10) != date.current.value)
