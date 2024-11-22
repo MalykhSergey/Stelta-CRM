@@ -1,12 +1,20 @@
-.content{
+.content {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
 }
-.content > *{
-    width: 500px;
+
+.content>* {
+    max-width: 50%;
 }
-.input{
+
+@media only screen and (max-width: 600px) {
+    .content>* {
+        max-width: none;
+    }
+}
+
+.input {
     gap: 20px;
 }

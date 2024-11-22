@@ -1,7 +1,7 @@
 import { faCheck, faExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./Alert.module.css";
-let timers: { [x: string]: (NodeJS.Timeout | number)[] } = {
+const timers: { [x: string]: (NodeJS.Timeout | number)[] } = {
     error: [0, 0],
     successful: [0, 0],
 };
@@ -19,13 +19,6 @@ export const showMessage = (message: string, type: string = 'error') => {
         timers[type][1] = setTimeout(() => { alert.style.display = "none" }, 7000);
     }
 };
-
-export const doWithErrorCheck = async (doFunc: () => any) => {
-    const result = await doFunc()
-    if (result.error)
-        showMessage(result.error)
-    else return result
-}
 
 export const AlertContainer = () => (
     <div className={styles.container}>

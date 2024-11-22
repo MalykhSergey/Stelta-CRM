@@ -65,32 +65,32 @@
   height: 60px;
 }
 
-.first {
+#first {
   background-color: rgba(231, 231, 231);
   /* color: rgb(84, 85, 85); */
 }
 
-.second {
+#second {
   background-color: rgb(229, 217, 188);
   /* color: rgb(23, 61, 122) */
 }
 
-.third {
+#third {
   background-color: rgb(219, 227, 181);
   /* color: rgb(14, 59, 68); */
 }
 
-.forth {
+#forth {
   background-color: rgb(215, 227, 240);
   /* color: rgb(61, 24, 142); */
 }
 
-.fifth {
+#fifth {
   background-color: rgb(233, 207, 240);
   /* color: rgb(55, 92, 202); */
 }
 
-.sixth {
+#sixth {
   background-color: rgb(244, 205, 208);
   /* color: rgb(243, 156, 11); */
 }

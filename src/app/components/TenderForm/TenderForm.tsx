@@ -48,7 +48,6 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
-    let fieldName
     return (
         <div className={`${styles.form} card`} >
             <label className={styles.label}>Статус:</label>

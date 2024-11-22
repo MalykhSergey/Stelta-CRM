@@ -17,7 +17,7 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
     const fullName = useRef<HTMLInputElement | null>(null);
     const company = useRef<HTMLInputElement | null>(null);
     const date = useRef<HTMLInputElement | null>(null);
-    const changeFilter = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const changeFilter = () => {
         setTenders(allTenders.filter(tender => {
             let filterFlag = true
             if (status.current && status.current.value != '')
@@ -74,7 +74,7 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
                 </div>
             </div>
             <div className={styles.tenders}>
-                {tenders.map(tender => <TenderCard tender={tender} />)}
+                {tenders.map(tender => <TenderCard tender={tender}  key={tender.id}/>)}
             </div>
         </main>
     )

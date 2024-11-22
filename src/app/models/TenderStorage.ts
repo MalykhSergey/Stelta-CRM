@@ -15,7 +15,7 @@ class TenderStorage {
         try {
             return (await connection.query(`INSERT INTO companies("name") values($1) RETURNING id`, [name])).rows[0].id
         }
-        catch (error) {
+        catch {
             return { error: "Ошибка создания организации. Возможно такая уже есть!" }
         }
     }
@@ -23,7 +23,7 @@ class TenderStorage {
         try {
             return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
         }
-        catch (error) {
+        catch {
             return { error: 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!' }
         }
     }
@@ -31,7 +31,7 @@ class TenderStorage {
         try {
             await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка удаления тендера!' }
         }
     }
@@ -71,7 +71,7 @@ class TenderStorage {
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка удаления тендера' }
         }
     }
@@ -116,7 +116,7 @@ class TenderStorage {
             else
                 return (await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка добавления файла!' }
         }
     }
@@ -124,7 +124,7 @@ class TenderStorage {
         try {
             await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка удаления файла!' }
         }
     }
@@ -133,7 +133,7 @@ class TenderStorage {
         try {
             return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка создания дозапроса документов!' }
         }
     }
@@ -141,7 +141,7 @@ class TenderStorage {
         try {
             return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка создания переторжки!' }
         }
     }
@@ -153,7 +153,7 @@ class TenderStorage {
                 await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
             })
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка удаления дозапроса документов!' }
         }
     }
@@ -166,7 +166,7 @@ class TenderStorage {
                 await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
             })
         }
-        catch (error) {
+        catch {
             return { error: 'Ошибка удаления переторжки!' }
         }
     }

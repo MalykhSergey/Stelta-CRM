@@ -1,6 +1,7 @@
 import Company from "../models/Company"
 import { getCompanies } from "../models/CompanyService"
 import ClientCompanies from "./ClientPage"
+export const dynamic = 'force-dynamic'
 export default async function ServerCompanies() {
     const companies = await getCompanies() as Company[]
     return (

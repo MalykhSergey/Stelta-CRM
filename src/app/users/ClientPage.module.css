@@ -1,0 +1,52 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.login {
+    width: 30%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.label {
+    font-size: 14px;
+}
+
+.header {
+    text-align: center;
+}
+
+.genSpan {
+    font-size: 14px;
+    margin-top: 5px;
+    margin-left: 10px;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    cursor: pointer;
+    color: rgb(58, 69, 81);
+}
+
+.submit {
+    font-size: 20px;
+    font-weight: 700;
+    align-self: center;
+    width: 40%;
+}
+
+.userList {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 20px;
+    width: 30%;
+}
+
+.userItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}

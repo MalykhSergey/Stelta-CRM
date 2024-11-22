@@ -1,0 +1,25 @@
+.login {
+    max-width: 30%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+@media only screen and (max-width: 600px) {
+    .login {
+      max-width: none;
+    }
+  }
+  
+.label{
+    font-size: 14px;
+}
+.header {
+    text-align: center;
+}
+.submit {
+    font-size: 20px;
+    font-weight: 700;
+    align-self: center;
+    width: 40%;
+}

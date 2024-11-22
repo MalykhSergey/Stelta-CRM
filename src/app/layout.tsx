@@ -1,41 +1,37 @@
 import localFont from "next/font/local";
-import Image from 'next/image';
-import Link from "next/link";
-import "./globals.css";
-import SteltaLogo from './images/logo.png';
-import styles from "./layout.module.css";
-import "./styles/inputs.css";
-import "./styles/buttons.css";
-import "./styles/stageForm.css";
+import { AuthProvider } from "./AuthContext";
 import { AlertContainer } from "./components/Alerts/Alert";
+import Header from "./components/Header/Header";
+import "./globals.css";
+import styles from "./layout.module.css";
+import { authAction } from "./models/UserService";
+import "./styles/buttons.css";
+import "./styles/inputs.css";
+import "./styles/stageForm.css";
 const firaSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user_result = await authAction(async (user) => user.name)
+  const auth_user = typeof user_result == 'string' ? user_result : null
   return (
     <html lang="en">
       <body className={`${firaSans.variable}`}>
         <div className='background'></div>
-        <header className={styles.header}>
-          <Link href='/'><Image src={SteltaLogo} alt={"Stelta logo"} width={120} height={65}></Image></Link>
-          <div className={styles.navPanel}>
-            <Link href="/" className={styles.navLink}>Торги</Link>
-            <Link href="/search" className={styles.navLink}>Поиск</Link>
-            <Link href="/companies" className={styles.navLink}>Организации</Link>
-            <Link href="#settings" className={styles.navLink}>Аналитика</Link>
-          </div>
-        </header>
         <AlertContainer></AlertContainer>
+        <AuthProvider initialAuth={auth_user}>
+          <Header></Header>
           <div className={styles.content}>
             {children}
-          </div>        
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
