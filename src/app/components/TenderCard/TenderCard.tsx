@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Tender } from '../../models/Tender';
 import styles from './TenderCard.module.css';
+import "./statuses.css";
 function convertDate(value: string) {
   const convertedDate = new Date(value).toLocaleString().split(',')
   return (
@@ -38,19 +39,19 @@ export default function TenderCard(props: { tender: Tender }) {
       break
   }
   return (
-    <Link className={`card inherit fullWidth ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}target='_blank'>
-      <div>
+    <Link className={`card inherit fullWidth ${styles.hoverCard}`} href={`/tender/${props.tender.id}`} target='_blank'>
+      <div className={'indicator status-' + props.tender.status}></div>
         <span className={styles.label}>{props.tender.company.name}</span>
+        <div className={styles.indicator}></div>
         <div className={styles.title}>{props.tender.name}</div>
         <span className={styles.label}>НМЦК: </span>
-        <div className={styles.info}>{props.tender.initialMaxPrice+" ₽"}</div>
-        {props.tender.status > 0 && 
+        <div className={styles.info}>{props.tender.initialMaxPrice + " ₽"}</div>
+        {props.tender.status > 0 &&
           <>
             {dateSpan}
             {dateField}
           </>
         }
-      </div>
     </Link>
   );
 }

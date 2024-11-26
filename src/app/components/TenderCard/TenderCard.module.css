@@ -9,12 +9,13 @@
     margin-left: 10px;
     margin-bottom: 10px;
 }
-.label{
+
+.label {
     color: #6E6E6E;
     font-size: 14px;
 }
-.hoverCard:hover{
-    /* margin-top: -20px; */
+
+.hoverCard:hover {
     transform: scale(1.15);
     transition: all 0.5s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
