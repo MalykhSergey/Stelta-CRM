@@ -26,12 +26,11 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Arra
                 <input ref={company_name} type="text" list="companies" name="company"/>
                 <button className="BlueButton" onClick={createCompanyHandler}>Добавить</button>
                 <datalist id="companies">
-                    {companies.map(row => <option key={'option' + row.id} company-id={row.id}
+                    {companies.map(row => <option key={'option' + row.id}
                                                   value={row.name}></option>)}
                 </datalist>
             </div>
-            {companies.map(row => <div key={'company' + row.id} className="card fullWidth"
-                                       company-id={row.id}>{row.name}</div>)}
+            {companies.map(row => <div key={'company' + row.id} className="card fullWidth">{row.name}</div>)}
         </main>
     )
 }

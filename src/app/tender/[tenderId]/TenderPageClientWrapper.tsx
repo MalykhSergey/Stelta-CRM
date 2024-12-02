@@ -9,6 +9,6 @@ function TenderPageClientWrapper({tenderString, companies}: { tenderString: stri
     const tender = Tender.fromJSON(tenderString)
     return (<ConfirmDialogProvider><TenderPageClient tender={tender}
                                                      companies={companies}></TenderPageClient></ConfirmDialogProvider>)
-};
+}
 
 export default TenderPageClientWrapper;

@@ -1,7 +1,7 @@
 .iconButton {
     min-height: fit-content;
     background-color: rgba(0, 0, 0, 0);
-    border: 0px;
+    border: 0;
     box-shadow: none;
     transition: all 0.3s ease;
     transform: scale(1.2);
@@ -23,7 +23,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 input:disabled,
 select:disabled {
-    border: 0px;
+    border: 0;
 }
 
 input,

@@ -91,8 +91,7 @@ class TenderStorage {
             WHERE tenders.id =  $1`, [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         for (let i = 0; i < 6; i++) {
-            const stage_files = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
-            tender.stagedFileNames[i] = stage_files
+            tender.stagedFileNames[i] = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
         }
         const datesRequests = (await connection.query('SELECT *, CAST(date AS CHAR(10)) FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
         tender.datesRequests = (await Promise.all(datesRequests.map(async dateRequest => {

@@ -117,4 +117,4 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
             </div>
         </main>
     );
-};
+}
