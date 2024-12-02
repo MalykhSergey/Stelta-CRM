@@ -8,35 +8,48 @@ import styles from '../page.module.css';
 
 export default function DateRangeAnalyticsClient(props: {
     initialData: StatusAnalytics,
-    startDate: string,
-    endDate: string
+    startDate: Date,
+    endDate: Date
 }) {
-    const [data, setData] = useState({
-        labels: Object.keys(props.initialData.statuses), datasets: [{
-            data: Object.values(props.initialData.statuses),
-        }]
+    const [chartData, setChartData] = useState({
+        title: `Тендеры за период: ${props.startDate.toLocaleDateString('ru-RU')} – ${props.endDate.toLocaleDateString('ru-RU')}`,
+        data: {
+            labels: Object.keys(props.initialData.statuses), datasets: [{
+                data: Object.values(props.initialData.statuses),
+            }]
+        }
     })
     const startDateInput = useRef<HTMLInputElement | null>(null)
     const endDateInput = useRef<HTMLInputElement | null>(null)
 
     async function loadData() {
+        if (!Date.parse(startDateInput.current!.value) || !Date.parse(endDateInput.current!.value))
+            return
         const analytics_data = await getStatusAnalyticsByDateRange(startDateInput.current!.value, endDateInput.current!.value) as StatusAnalytics
-        const data = {
-            labels: Object.keys(analytics_data.statuses),
-            datasets: [{
-                data: Object.values(analytics_data.statuses),
-            }]
-        };
-        setData(data)
+        setChartData({
+            title: `Тендеры за период:${new Date(startDateInput.current!.value).toLocaleDateString('ru-RU')}-${new Date(endDateInput.current!.value).toLocaleDateString('ru-RU')}`,
+            data: {
+                labels: Object.keys(analytics_data.statuses),
+                datasets: [{
+                    data: Object.values(analytics_data.statuses),
+                }]
+            }
+        })
     }
 
     return (
         <>
             <div id={styles.inputsContainer}>
-                <input ref={startDateInput} type="date" defaultValue={props.startDate} onChange={loadData}/>
-                <input ref={endDateInput} type="date" defaultValue={props.endDate} onChange={loadData}/>
+                <label htmlFor="startDateInput">От:</label>
+                <input id="startDateInput" ref={startDateInput} type="date"
+                       defaultValue={props.startDate.toLocaleDateString('en-CA')}
+                       onChange={loadData}/>
+                <label htmlFor="endDateInput">До:</label>
+                <input id="endDateInput" ref={endDateInput} type="date"
+                       defaultValue={props.endDate.toLocaleDateString('en-CA')}
+                       onChange={loadData}/>
             </div>
-            <DoughnutChart data={data}/>
+            <DoughnutChart data={chartData.data} title={chartData.title}/>
         </>
     )
 }

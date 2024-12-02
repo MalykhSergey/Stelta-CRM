@@ -17,7 +17,7 @@ export default async function CommonAnalytics() {
     };
     return (
         <>
-            <DoughnutChart data={data}/>
+            <DoughnutChart data={data} title="Общая аналитика"/>
         </>
     )
 }

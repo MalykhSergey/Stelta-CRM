@@ -7,10 +7,8 @@ export default async function DateRangeAnalyticsServer() {
     const startDate = new Date(currentYear, 0, 1);
     const endDate = new Date(currentYear, 11, 31);
 
-    const startDateString = startDate.toLocaleDateString('en-CA');
-    const endDateString = endDate.toLocaleDateString('en-CA');
-
-    const analytics_data = await getStatusAnalyticsByDateRange(startDateString, endDateString) as StatusAnalytics
+    const analytics_data = await getStatusAnalyticsByDateRange(
+        startDate.toLocaleDateString('en-CA'), endDate.toLocaleDateString('en-CA')) as StatusAnalytics
     return (
-        <DateRangeAnalyticsClient initialData={analytics_data} startDate={startDateString} endDate={endDateString}/>)
+        <DateRangeAnalyticsClient initialData={analytics_data} startDate={startDate} endDate={endDate}/>)
 }

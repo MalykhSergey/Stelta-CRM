@@ -3,24 +3,29 @@ import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
 import {getStatusAnalyticsByCompany} from "@/models/Analytics/AnalyticsService";
 import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
 import Company from "@/models/Company";
-import {useState} from "react";
+import React, {useState} from "react";
 import styles from '../page.module.css';
 
 export default function CompanyAnalyticsClient(props: { companies: Company[], initialData: StatusAnalytics }) {
-    const [data, setData] = useState({
-        labels: Object.keys(props.initialData.statuses), datasets: [{
-            data: Object.values(props.initialData.statuses),
-        }]
+    const [chartData, setChartData] = useState({
+        title: `Тендеры у организации: ${props.companies[0].name}`, data: {
+            labels: Object.keys(props.initialData.statuses), datasets: [{
+                data: Object.values(props.initialData.statuses),
+            }]
+        }
     })
 
     async function loadData(e: React.ChangeEvent<HTMLSelectElement>) {
-        const analytics_data = await getStatusAnalyticsByCompany(Number.parseInt(e.currentTarget.value)) as StatusAnalytics
-        setData({
-            labels: Object.keys(analytics_data.statuses),
-            datasets: [{
-                data: Object.values(analytics_data.statuses),
-            }]
-        });
+        const companyId = Number.parseInt(e.currentTarget.value);
+        const analytics_data = await getStatusAnalyticsByCompany(companyId) as StatusAnalytics
+        setChartData({
+            title: `Тендеры у организации: ${props.companies.find(company => company.id == companyId)!.name}`, data: {
+                labels: Object.keys(analytics_data.statuses),
+                datasets: [{
+                    data: Object.values(analytics_data.statuses),
+                }]
+            }
+        })
     }
 
     return (
@@ -33,7 +38,7 @@ export default function CompanyAnalyticsClient(props: { companies: Company[], in
                     )}
                 </select>
             </div>
-            <DoughnutChart data={data}/>
+            <DoughnutChart data={chartData.data} title={chartData.title}/>
         </>
     )
 }

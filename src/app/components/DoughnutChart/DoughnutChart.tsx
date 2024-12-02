@@ -2,9 +2,13 @@
 import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
 import {useEffect, useRef} from 'react';
 import "./DoughnutChart.css";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-export default function DoughnutChart(props: { data: ChartData<'doughnut', number[], string> }) {
+Chart.register(ChartDataLabels);
+
+export default function DoughnutChart(props: { data: ChartData<'doughnut', number[], string>, title: string }) {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
 
     useEffect(() => {
         if (chartRef.current) {
@@ -17,8 +21,29 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
+                            title: {
+                                display: true,
+                                text: props.title,
+                                font: {
+                                    size: 24
+                                },
+                                color: 'rgb(0,0,0)'
+                            },
                             legend: {
                                 position: 'right',
+                                labels: {
+                                    color: 'rgb(0,0,0)'
+                                }
+                            },
+                            datalabels: {
+                                formatter: (value, context) => {
+                                    return `${(props.data.datasets[0].data[context.dataIndex] / total * 100).toFixed(2)}%`
+                                },
+                                color: 'rgb(255,255,255)',
+                                font: {
+                                    size: 18,
+                                },
+                                anchor: 'center',
                             },
                         },
                         onClick: function (e, item) {

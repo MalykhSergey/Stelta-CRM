@@ -3,9 +3,7 @@ import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import styles from './layout.module.css';
 
-export default function LayoutPage({
-                                       children,
-                                   }: {
+export default function LayoutPage({children,}: {
     children: React.ReactNode
 }) {
     const pathname = usePathname()

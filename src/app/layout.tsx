@@ -4,13 +4,13 @@ import {AlertContainer} from "./components/Alerts/Alert";
 import Header from "./components/Header/Header";
 import "../static/styles/globals.css";
 import styles from "./layout.module.css";
-import {authAction} from "../models/UserService";
-import "../static/styles/buttons.css";
-import "../static/styles/inputs.css";
-import "../static/styles/stageForm.css";
+import {authAction} from "@/models/UserService";
+import "@/static/styles/buttons.css";
+import "@/static/styles/inputs.css";
+import "@/static/styles/stageForm.css";
 
 const firaSans = localFont({
-    src: "./fonts/GeistVF.woff",
+    src: "../static/fonts/GeistVF.woff",
     variable: "--font-geist-sans",
     weight: "100 900",
 });

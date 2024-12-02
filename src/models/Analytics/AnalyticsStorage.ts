@@ -2,16 +2,16 @@
 import connection from "../Database";
 
 export async function loadCommonAnalytics() {
-    return (await connection.query(`SELECT status, count(tenders.id), is_special FROM tenders GROUP BY status, is_special`)).rows
+    return (await connection.query(`SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special FROM tenders GROUP BY status, is_special`)).rows
 }
 
 export async function loadStatusAnalyticsByCompany(company_id: number) {
-    return (await connection.query(`SELECT status, count(tenders.id), is_special FROM tenders WHERE company_id = $1 GROUP BY status, is_special`, [company_id])).rows
+    return (await connection.query(`SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special FROM tenders WHERE company_id = $1 GROUP BY status, is_special`, [company_id])).rows
 }
 
 export async function loadStatusAnalyticsByDate(start_date: string, finish_date: string) {
     return (await connection.query(`
-        SELECT status, count(tenders.id), is_special 
+        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special 
         FROM tenders 
         WHERE 
             (date1_start >= $1::timestamp AND date1_start < $2::timestamp OR 
@@ -24,7 +24,7 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
 
 export async function loadCompanyAnalyticsByStatus(status: number) {
     return (await connection.query(`
-        SELECT companies.id, companies.name, count(tenders.id) FROM tenders 
+        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count FROM tenders 
         JOIN companies ON tenders.company_id = companies.id 
         WHERE status = $1
         GROUP BY companies.id, companies.name `, [status])).rows
