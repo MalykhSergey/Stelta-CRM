@@ -1,10 +1,11 @@
 import FileName from "@/app/models/FileName";
-import { RebiddingPrice } from "@/app/models/RebiddingPrice";
-import { deleteRebiddingPriceById } from "@/app/models/TenderService";
-import { observer } from "mobx-react-lite";
-import { useState } from "react";
+import {RebiddingPrice} from "@/app/models/RebiddingPrice";
+import {deleteRebiddingPriceById} from "@/app/models/TenderService";
+import {observer} from "mobx-react-lite";
+import {useState} from "react";
 import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
 import styles from './RebiddingPriceForm.module.css';
+
 interface RebiddingPriceProps {
     tenderId: number,
     rebiddingPrice: RebiddingPrice,
@@ -12,32 +13,39 @@ interface RebiddingPriceProps {
     isEditable: boolean,
     deleteRebiddingPrice: () => void
 }
-const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({ tenderId, rebiddingPrice, orderNumber, isEditable, deleteRebiddingPrice }) => {
+
+const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
+                                                                        tenderId,
+                                                                        rebiddingPrice,
+                                                                        orderNumber,
+                                                                        isEditable,
+                                                                        deleteRebiddingPrice
+                                                                    }) => {
     const [error, setError] = useState('')
     return (
         <div className={styles.rebiddingPrice}>
             <DocumentsForm tenderId={tenderId} stage={1}
-                pushFile={(fileName: FileName) => rebiddingPrice.addFile(fileName)}
-                removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
-                specialPlaceName='rebiddingPriceId'
-                specialPlaceId={rebiddingPrice.id}
-                fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`}
-                onDelete={() => {
-                    deleteRebiddingPrice()
-                    deleteRebiddingPriceById(tenderId, rebiddingPrice.id)
-                }}
-                isEditable={isEditable} independent={isEditable} className="card" />
+                           pushFile={(fileName: FileName) => rebiddingPrice.addFile(fileName)}
+                           removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
+                           specialPlaceName='rebiddingPriceId'
+                           specialPlaceId={rebiddingPrice.id}
+                           fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`}
+                           onDelete={() => {
+                               deleteRebiddingPrice()
+                               deleteRebiddingPriceById(tenderId, rebiddingPrice.id)
+                           }}
+                           isEditable={isEditable} independent={isEditable} className="card"/>
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
                 <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price}
-                    onChange={(e) => {
-                        e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                        const result = rebiddingPrice.setPrice(e.target.value)
-                        if (!result.ok)
-                            setError(result.error)
-                        else
-                            setError('')
-                    }} required  disabled={!isEditable}/>
+                       onChange={(e) => {
+                           e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
+                           const result = rebiddingPrice.setPrice(e.target.value)
+                           if (!result.ok)
+                               setError(result.error)
+                           else
+                               setError('')
+                       }} required disabled={!isEditable}/>
                 {error != '' && <span className='under-input-error'>{error}</span>}
             </div>
         </div>

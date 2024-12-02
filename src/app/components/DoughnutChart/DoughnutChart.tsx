@@ -1,6 +1,6 @@
 "use client"
-import { Chart, ChartData, ChartOptions } from 'chart.js/auto';
-import { useEffect, useRef } from 'react';
+import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
+import {useEffect, useRef} from 'react';
 import "./DoughnutChart.css";
 
 export default function DoughnutChart(props: { data: ChartData<'doughnut', number[], string> }) {
@@ -39,7 +39,7 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
 
     return (
         <div id="canvas-container">
-            <canvas ref={chartRef} />
+            <canvas ref={chartRef}/>
         </div>
     );
 }

@@ -1,9 +1,10 @@
-.secondForms{
+.secondForms {
     display: flex;
     flex-direction: row;
     gap: 20px;
 }
-.secondForms > :nth-child(1){
+
+.secondForms > :nth-child(1) {
     flex-basis: 70%;
     flex-shrink: 0;
 }

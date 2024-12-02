@@ -1,11 +1,12 @@
 import FileName from '@/app/models/FileName';
-import { faCaretUp, faDownload, faPaperclip, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { useRef } from 'react';
-import { useConfirmDialog } from '../Dialog/ConfirmDialogContext';
+import {faCaretUp, faDownload, faPaperclip, faTrash, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {observer, useLocalObservable} from 'mobx-react-lite';
+import {useRef} from 'react';
+import {useConfirmDialog} from '../Dialog/ConfirmDialogContext';
 import styles from './DocumentsForm.module.css';
-import { deleteHandler, uploadHandler } from './Handler';
+import {deleteHandler, uploadHandler} from './Handler';
+
 interface DocumentsFormProps {
     tenderId: number,
     stage: number,
@@ -21,12 +22,29 @@ interface DocumentsFormProps {
     isOpened?: boolean,
     onDelete?: () => void
 }
-const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage, specialPlaceName = 'default', specialPlaceId = 0, fileNames, pushFile, removeFile, title, isEditable, className = '', independent, onDelete = () => { } }, isOpened = false) => {
+
+const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
+                                                                  tenderId,
+                                                                  stage,
+                                                                  specialPlaceName = 'default',
+                                                                  specialPlaceId = 0,
+                                                                  fileNames,
+                                                                  pushFile,
+                                                                  removeFile,
+                                                                  title,
+                                                                  isEditable,
+                                                                  className = '',
+                                                                  independent,
+                                                                  onDelete = () => {
+                                                                  }
+                                                              }, isOpened = false) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: isOpened,
-        toggle() { this.isTrue = !this.isTrue }
+        toggle() {
+            this.isTrue = !this.isTrue
+        }
     }));
-    const { showConfirmDialog } = useConfirmDialog();
+    const {showConfirmDialog} = useConfirmDialog();
     const fileInput = useRef<HTMLInputElement>(null)
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
@@ -49,7 +67,8 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
     for (const fileName of fileNames) {
         files.push(
             <div className={styles.fileItem} key={fileName.name + files.length}>
-                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name} <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
+                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name}
+                    <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
                 {isEditable && <button onClick={() => {
                     showConfirmDialog(
                         {
@@ -60,7 +79,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                             }
                         })
                 }}
-                    className='iconButton redButton'
+                                       className='iconButton redButton'
                 ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}</div>)
     }
     return (
@@ -69,33 +88,35 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({ tenderId, stage,
                 <h3>{title}</h3>
                 {
                     isEditable &&
-                    <div >
+                    <div>
                         <button
                             onClick={() => {
                                 if (fileInput.current)
                                     fileInput.current.click()
                             }}
                             className='iconButton'
-                        ><FontAwesomeIcon icon={faPaperclip} /></button>
-                        <input ref={fileInput} onChange={handleChange} type="file" name="file" multiple hidden />
-                        <input type="hidden" name="tenderId" value={tenderId} />
+                        ><FontAwesomeIcon icon={faPaperclip}/></button>
+                        <input ref={fileInput} onChange={handleChange} type="file" name="file" multiple hidden/>
+                        <input type="hidden" name="tenderId" value={tenderId}/>
                     </div>
                 }
                 <div className='rightPanel'>
-                    {fileNames.length > 0 && <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`} /></button>}
+                    {fileNames.length > 0 &&
+                        <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon
+                            icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`}/></button>}
                     {independent && isEditable && <button className={`iconButton redButton`} onClick={() => {
                         showConfirmDialog(
                             {
                                 message: `Вы действительно хотите удалить?`,
                                 onConfirm: onDelete
                             })
-                    }}><FontAwesomeIcon icon={faXmark} /></button>}
+                    }}><FontAwesomeIcon icon={faXmark}/></button>}
                 </div>
             </div>
             <div className='hiddenContent'>
                 {files}
             </div>
-        </div >
+        </div>
     )
 });
 export default DocumentsForm

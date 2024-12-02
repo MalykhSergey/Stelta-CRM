@@ -5,12 +5,12 @@
     gap: 20px;
 }
 
-.content>* {
+.content > * {
     max-width: 50%;
 }
 
 @media only screen and (max-width: 600px) {
-    .content>* {
+    .content > * {
         max-width: none;
     }
 }

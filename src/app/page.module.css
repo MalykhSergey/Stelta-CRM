@@ -1,90 +1,90 @@
 .content {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }
 
 .leftPanel {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .createTender {
-  color: white;
-  display: flex;
-  flex-direction: row;
-  background-color: rgb(116, 156, 204);
-  border: none;
-  font-size: 18px;
-  font-weight: 600;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(116, 156, 204);
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
 }
 
 .createTender:hover {
-  transform: scale(1.05);
-  background-color: rgb(96, 136, 184);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+    background-color: rgb(96, 136, 184);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .createTender:active {
-  transform: scale(0.95);
+    transform: scale(0.95);
 }
 
 .filter {
-  display: flex;
-  flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 24px;
-  border-radius: 8px;
-  min-width: 275px;
-  gap: 20px;
-  height: 70vh;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 24px;
+    border-radius: 8px;
+    min-width: 275px;
+    gap: 20px;
+    height: 70vh;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
-  width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+    width: 100%;
 }
 
 .column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .columnHeader {
-  padding: 10px;
-  text-align: center;
-  align-content: center;
-  height: 60px;
+    padding: 10px;
+    text-align: center;
+    align-content: center;
+    height: 60px;
 }
 
 #first {
-  background-color: rgba(231, 231, 231);
+    background-color: rgba(231, 231, 231);
 }
 
 #second {
-  background-color: rgb(229, 217, 188);
+    background-color: rgb(229, 217, 188);
 }
 
 #third {
-  background-color: rgb(219, 227, 181);
+    background-color: rgb(219, 227, 181);
 }
 
 #forth {
-  background-color: rgb(215, 227, 240);
+    background-color: rgb(215, 227, 240);
 }
 
 #fifth {
-  background-color: rgb(233, 207, 240);
+    background-color: rgb(233, 207, 240);
 }
 
 #sixth {
-  background-color: rgb(244, 205, 208);
+    background-color: rgb(244, 205, 208);
 }

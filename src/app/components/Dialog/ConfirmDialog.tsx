@@ -5,7 +5,7 @@ type ConfirmDialogProps = {
     onConfirm: () => void;
     onCancel: () => void;
 };
-const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ message, onConfirm, onCancel }) => {
+const ConfirmDialog: React.FC<ConfirmDialogProps> = ({message, onConfirm, onCancel}) => {
     return (
         <div className={styles.overlay}>
             <div className={styles.dialog}>

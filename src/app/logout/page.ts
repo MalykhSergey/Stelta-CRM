@@ -1,9 +1,9 @@
 "use client"
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useAuth } from "../AuthContext";
-import { showMessage } from "../components/Alerts/Alert";
-import { logout } from "../models/UserService";
+import {useRouter} from "next/navigation";
+import {useEffect} from "react";
+import {useAuth} from "../AuthContext";
+import {showMessage} from "../components/Alerts/Alert";
+import {logout} from "../models/UserService";
 
 
 export default function LogOutPage() {

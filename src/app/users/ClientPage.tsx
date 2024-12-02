@@ -1,9 +1,9 @@
 "use client"
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FormEvent, useRef, useState } from "react";
-import { showMessage } from "../components/Alerts/Alert";
-import { register } from "../models/UserService";
+import {faUser} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {FormEvent, useRef, useState} from "react";
+import {showMessage} from "../components/Alerts/Alert";
+import {register} from "../models/UserService";
 import styles from "./ClientPage.module.css";
 
 function generatePassword(length: number) {
@@ -16,7 +16,7 @@ function generatePassword(length: number) {
     return password;
 }
 
-export function UsersPage({ userProps }: { userProps: { name: string }[] }) {
+export function UsersPage({userProps}: { userProps: { name: string }[] }) {
     const [users, setUsers] = useState(userProps)
     const password = useRef<HTMLInputElement | null>(null)
     const genClickHandler = () => {
@@ -28,10 +28,9 @@ export function UsersPage({ userProps }: { userProps: { name: string }[] }) {
         const registerForm = new FormData(e.currentTarget);
         const result = await register(registerForm)
         if (!result?.error) {
-            setUsers([...users, { name: registerForm.get('name') as string }])
+            setUsers([...users, {name: registerForm.get('name') as string}])
             showMessage("Пользователь успешно добавлен!", "successful")
-        }
-        else
+        } else
             showMessage(result.error)
     }
     return (
@@ -44,16 +43,18 @@ export function UsersPage({ userProps }: { userProps: { name: string }[] }) {
                 </div>
                 <div>
                     <label className={styles.label} htmlFor="name">Пароль:</label>
-                    <input ref={password} type="text" id="password" name="password" placeholder="Пароль" required minLength={8}/>
+                    <input ref={password} type="text" id="password" name="password" placeholder="Пароль" required
+                           minLength={8}/>
                     <div className={`${styles.genSpan}`} onClick={genClickHandler}>Сгенерировать пароль</div>
                 </div>
                 <button className={`${styles.submit} BlueButton`}>Добавить</button>
             </form>
             <div className={`${styles.userList}`}>
                 {users.map(user =>
-                    <div className={`${styles.userItem} card`} key={user.name}><FontAwesomeIcon icon={faUser} /><h2>{user.name}</h2></div>
+                    <div className={`${styles.userItem} card`} key={user.name}><FontAwesomeIcon icon={faUser}/>
+                        <h2>{user.name}</h2></div>
                 )}
             </div>
-        </main >
+        </main>
     )
 }

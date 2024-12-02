@@ -1,11 +1,14 @@
 "use server"
 import connection from "../Database";
+
 export async function loadCommonAnalytics() {
     return (await connection.query(`SELECT status, count(tenders.id), is_special FROM tenders GROUP BY status, is_special`)).rows
 }
+
 export async function loadStatusAnalyticsByCompany(company_id: number) {
     return (await connection.query(`SELECT status, count(tenders.id), is_special FROM tenders WHERE company_id = $1 GROUP BY status, is_special`, [company_id])).rows
 }
+
 export async function loadStatusAnalyticsByDate(start_date: string, finish_date: string) {
     return (await connection.query(`
         SELECT status, count(tenders.id), is_special 
@@ -18,6 +21,7 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
         GROUP BY status, is_special;
 `, [start_date, finish_date])).rows
 }
+
 export async function loadCompanyAnalyticsByStatus(status: number) {
     return (await connection.query(`
         SELECT companies.id, companies.name, count(tenders.id) FROM tenders 

@@ -1,15 +1,16 @@
 "use client"
-import { faFilter, faOutdent } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { showMessage } from './components/Alerts/Alert';
+import {faFilter, faOutdent} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {useRouter} from 'next/navigation';
+import {useRef, useState} from 'react';
+import {showMessage} from './components/Alerts/Alert';
 import TenderCard from './components/TenderCard/TenderCard';
 import getStatusName from './models/Status';
-import { Tender } from './models/Tender';
-import { createTender } from './models/TenderService';
+import {Tender} from './models/Tender';
+import {createTender} from './models/TenderService';
 import styles from './page.module.css';
-export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
+
+export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
     const allTenders = JSON.parse(tendersJSON) as Tender[]
     const [tenders, setTenders] = useState(allTenders)
     const status = useRef<HTMLSelectElement | null>(null);
@@ -41,9 +42,15 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
     return (
         <main className={styles.content}>
             <div className={styles.leftPanel}>
-                <button className={`${styles.columnHeader} ${styles.createTender}  rounded shadowed`} onClick={createHandler}><span>Добавить тендер</span><FontAwesomeIcon icon={faOutdent} style={{ height: '20px' }}></FontAwesomeIcon></button>
+                <button className={`${styles.columnHeader} ${styles.createTender}  rounded shadowed`}
+                        onClick={createHandler}><span>Добавить тендер</span><FontAwesomeIcon icon={faOutdent}
+                                                                                             style={{height: '20px'}}></FontAwesomeIcon>
+                </button>
                 <div className={styles.filter}>
-                    <div className='row' style={{ alignItems: 'center', gap: '20px' }}><FontAwesomeIcon icon={faFilter} className='icon' style={{ height: '20px' }}></FontAwesomeIcon><h3>Фильтр</h3></div>
+                    <div className='row' style={{alignItems: 'center', gap: '20px'}}><FontAwesomeIcon icon={faFilter}
+                                                                                                      className='icon'
+                                                                                                      style={{height: '20px'}}></FontAwesomeIcon>
+                        <h3>Фильтр</h3></div>
                     <div className='column'>
                         <label className={styles.filterLabel}>Статус:</label>
                         <select ref={status} className='input' onChange={changeFilter}>
@@ -59,11 +66,12 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
                     </div>
                     <div className='column'>
                         <label className={styles.filterLabel}>Реестровый номер:</label>
-                        <input ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..." onChange={changeFilter} />
+                        <input ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..."
+                               onChange={changeFilter}/>
                     </div>
                     <div className='column'>
                         <label className={styles.filterLabel}>Дата:</label>
-                        <input ref={date} type="date" className='input' onChange={changeFilter} />
+                        <input ref={date} type="date" className='input' onChange={changeFilter}/>
                     </div>
                 </div>
             </div>
@@ -72,37 +80,38 @@ export function HomePageClient({ tendersJSON }: { tendersJSON: string }) {
                     <div className={`${styles.columnHeader}  rounded shadowed`} id={styles.first}>
                         <h3>Новый тендер </h3></div>
                     {tenders.filter(tender => tender.status == 0).map((tender, index) => (
-                        <TenderCard key={index} tender={tender} />
+                        <TenderCard key={index} tender={tender}/>
                     ))}
                 </div>
                 <div className={`${styles.column}`}>
                     <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.second}>Подготовка 1 Этап</h3>
                     {tenders.filter(tender => tender.status == 1).map((tender, index) => (
-                        <TenderCard key={index} tender={tender} />
+                        <TenderCard key={index} tender={tender}/>
                     ))}
                 </div>
                 <div className={`${styles.column}`}>
                     <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.third}>Подана 1 Этап</h3>
                     {tenders.filter(tender => tender.status == 2).map((tender, index) => (
-                        <TenderCard key={index} tender={tender} />
+                        <TenderCard key={index} tender={tender}/>
                     ))}
                 </div>
                 <div className={`${styles.column}`}>
                     <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.forth}>Подготовка 2 Этап</h3>
                     {tenders.filter(tender => tender.status == 3).map((tender, index) => (
-                        <TenderCard key={index} tender={tender} />
+                        <TenderCard key={index} tender={tender}/>
                     ))}
                 </div>
                 <div className={`${styles.column}`}>
                     <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.fifth}>Подана 2 Этап</h3>
                     {tenders.filter(tender => tender.status == 4).map((tender, index) => (
-                        <TenderCard key={index} tender={tender} />
+                        <TenderCard key={index} tender={tender}/>
                     ))}
                 </div>
                 <div className={`${styles.column}`}>
-                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.sixth}>Заключение договора</h3>
+                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.sixth}>Заключение
+                        договора</h3>
                     {tenders.filter(tender => tender.status == 5).map((tender, index) => (
-                        <TenderCard key={index} tender={tender} />
+                        <TenderCard key={index} tender={tender}/>
                     ))}
                 </div>
             </div>

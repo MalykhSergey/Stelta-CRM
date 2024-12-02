@@ -1,15 +1,14 @@
 "use client"
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
+import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useRef, useState} from "react";
 import TenderCard from "../components/TenderCard/TenderCard";
 import getStatusName from "../models/Status";
-import { Tender } from "../models/Tender";
+import {Tender} from "../models/Tender";
 import styles from "./page.module.css";
 
 
-
-export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
+export default function SearchPage({tendersJSON}: { tendersJSON: string }) {
     const allTenders = JSON.parse(tendersJSON) as Tender[]
     const [tenders, setTenders] = useState(allTenders)
     const status = useRef<HTMLSelectElement | null>(null);
@@ -41,7 +40,9 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
     return (
         <main className={styles.content}>
             <div className={styles.filter}>
-                <div className='row' style={{ alignItems: 'center', gap: '20px' }}><FontAwesomeIcon icon={faMagnifyingGlass} className='icon' style={{ height: '20px' }}></FontAwesomeIcon><h3>Поиск</h3></div>
+                <div className='row' style={{alignItems: 'center', gap: '20px'}}><FontAwesomeIcon
+                    icon={faMagnifyingGlass} className='icon' style={{height: '20px'}}></FontAwesomeIcon><h3>Поиск</h3>
+                </div>
                 <div className='column'>
                     <label className={styles.filterLabel}>Статус:</label>
                     <select ref={status} className='input' onChange={changeFilter}>
@@ -58,23 +59,26 @@ export default function SearchPage({ tendersJSON }: { tendersJSON: string }) {
                 </div>
                 <div className='column'>
                     <label className={styles.filterLabel}>Полное наименование:</label>
-                    <input ref={fullName} type="text" className={styles.filterInput} placeholder="Полное наименование" onChange={changeFilter} />
+                    <input ref={fullName} type="text" className={styles.filterInput} placeholder="Полное наименование"
+                           onChange={changeFilter}/>
                 </div>
                 <div className='column'>
                     <label className={styles.filterLabel}>Организация:</label>
-                    <input ref={company} type="text" className={styles.filterInput} placeholder="Название организации" onChange={changeFilter} />
+                    <input ref={company} type="text" className={styles.filterInput} placeholder="Название организации"
+                           onChange={changeFilter}/>
                 </div>
                 <div className='column'>
                     <label className={styles.filterLabel}>Реестровый номер:</label>
-                    <input ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..." onChange={changeFilter} />
+                    <input ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..."
+                           onChange={changeFilter}/>
                 </div>
                 <div className='column'>
                     <label className={styles.filterLabel}>Дата:</label>
-                    <input ref={date} type="date" className='input' onChange={changeFilter} />
+                    <input ref={date} type="date" className='input' onChange={changeFilter}/>
                 </div>
             </div>
             <div className={styles.tenders}>
-                {tenders.map(tender => <TenderCard tender={tender}  key={tender.id}/>)}
+                {tenders.map(tender => <TenderCard tender={tender} key={tender.id}/>)}
             </div>
         </main>
     )

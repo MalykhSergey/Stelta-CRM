@@ -1,9 +1,9 @@
 "use client"
-import { useRouter } from "next/navigation"
-import { FormEvent, useEffect } from "react"
-import { useAuth } from "../AuthContext"
-import { showMessage } from "../components/Alerts/Alert"
-import { login } from "../models/UserService"
+import {useRouter} from "next/navigation"
+import {FormEvent, useEffect} from "react"
+import {useAuth} from "../AuthContext"
+import {showMessage} from "../components/Alerts/Alert"
+import {login} from "../models/UserService"
 import styles from "./page.module.css"
 
 export default function LoginPage() {
@@ -24,8 +24,7 @@ export default function LoginPage() {
             showMessage(`Добро пожаловать ${name}!`, "successful")
             authContext.setUserName(name)
             router.push('/')
-        }
-        else {
+        } else {
             showMessage(result.error, "error");
         }
     }
@@ -34,11 +33,11 @@ export default function LoginPage() {
             <h1 className={`${styles.header}`}>Вход в систему</h1>
             <div>
                 <label className={styles.label} htmlFor="name">Имя пользователя:</label>
-                <input type="text" id="name" name="name" placeholder="Имя пользователя" required />
+                <input type="text" id="name" name="name" placeholder="Имя пользователя" required/>
             </div>
             <div>
                 <label className={styles.label} htmlFor="name">Пароль:</label>
-                <input type="password" id="password" name="password" placeholder="Пароль" required />
+                <input type="password" id="password" name="password" placeholder="Пароль" required/>
             </div>
             <button className={`${styles.submit} BlueButton`}>Войти</button>
         </form>

@@ -1,10 +1,15 @@
 "use server"
 import Company from "../Company"
 import getStatusName from "../Status"
-import { loadCommonAnalytics, loadCompanyAnalyticsByStatus, loadStatusAnalyticsByCompany, loadStatusAnalyticsByDate } from "./AnalyticsStorage"
-import { CommonAnalytics } from "./CommonAnalytics"
-import { CompanyAnalytics } from "./CompanyAnalytics"
-import { StatusAnalytics } from "./StatusAnalytics"
+import {
+    loadCommonAnalytics,
+    loadCompanyAnalyticsByStatus,
+    loadStatusAnalyticsByCompany,
+    loadStatusAnalyticsByDate
+} from "./AnalyticsStorage"
+import {CommonAnalytics} from "./CommonAnalytics"
+import {CompanyAnalytics} from "./CompanyAnalytics"
+import {StatusAnalytics} from "./StatusAnalytics"
 
 export async function getCommonAnalytics() {
     const result = await loadCommonAnalytics()
@@ -28,8 +33,7 @@ export async function getStatusAnalyticsByCompany(company_id: number) {
     for (const row of result) {
         if (row.is_special) {
             analytics.special_count += row.count
-        }
-        else {
+        } else {
             const statusName = getStatusName(row.status)
             analytics.statuses[statusName] = (analytics.statuses[statusName] || 0) + row.count
         }
@@ -55,7 +59,7 @@ export async function getCompanyAnalyticsByStatus(status: number) {
     const result = await loadCompanyAnalyticsByStatus(status)
     const analytics_list = []
     for (const row of result) {
-        analytics_list.push({... new CompanyAnalytics({... new Company(row.id, row.name)}, row.count)})
+        analytics_list.push({...new CompanyAnalytics({...new Company(row.id, row.name)}, row.count)})
     }
     return analytics_list
 }

@@ -1,9 +1,10 @@
-import { DateRequest } from "@/app/models/DateRequest";
+import {DateRequest} from "@/app/models/DateRequest";
 import FileName from "@/app/models/FileName";
-import { deleteDateRequestById } from "@/app/models/TenderService";
-import { observer } from "mobx-react-lite";
+import {deleteDateRequestById} from "@/app/models/TenderService";
+import {observer} from "mobx-react-lite";
 import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
 import styles from './RequestDate.module.css';
+
 interface DateRequestFormProps {
     tenderId: number,
     dateRequest: DateRequest,
@@ -11,26 +12,34 @@ interface DateRequestFormProps {
     isEditable: boolean,
     deleteDateRequest: () => void,
 }
-const DateRequestForm: React.FC<DateRequestFormProps> = observer(({ tenderId, dateRequest, orderNumber, isEditable, deleteDateRequest }) => {
+
+const DateRequestForm: React.FC<DateRequestFormProps> = observer(({
+                                                                      tenderId,
+                                                                      dateRequest,
+                                                                      orderNumber,
+                                                                      isEditable,
+                                                                      deleteDateRequest
+                                                                  }) => {
     return (
         <div className={styles.dateRequest}>
             <DocumentsForm tenderId={tenderId} stage={1}
-                pushFile={(fileName: FileName) => dateRequest.addFile(fileName)}
-                removeFile={(fileName: FileName) => dateRequest.removeFile(fileName)}
-                specialPlaceName='dateRequestId'
-                specialPlaceId={dateRequest.id}
-                fileNames={dateRequest.fileNames} title={`Дозапрос документов ${orderNumber}`}
-                isEditable={isEditable}
-                className='card'
-                independent={isEditable}
-                onDelete={() => {
-                    deleteDateRequest()
-                    deleteDateRequestById(tenderId, dateRequest.id)
-                }}
+                           pushFile={(fileName: FileName) => dateRequest.addFile(fileName)}
+                           removeFile={(fileName: FileName) => dateRequest.removeFile(fileName)}
+                           specialPlaceName='dateRequestId'
+                           specialPlaceId={dateRequest.id}
+                           fileNames={dateRequest.fileNames} title={`Дозапрос документов ${orderNumber}`}
+                           isEditable={isEditable}
+                           className='card'
+                           independent={isEditable}
+                           onDelete={() => {
+                               deleteDateRequest()
+                               deleteDateRequestById(tenderId, dateRequest.id)
+                           }}
             />
             <div>
                 <label htmlFor={`dateRequest${dateRequest.id}`}>Дата предоставления ответа</label>
-                <input id={`dateRequest${dateRequest.id}`} type="date" value={dateRequest.date} onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required disabled={!isEditable}/>
+                <input id={`dateRequest${dateRequest.id}`} type="date" value={dateRequest.date}
+                       onChange={(e) => dateRequest.setDate(e.currentTarget.value)} required disabled={!isEditable}/>
             </div>
         </div>
     )

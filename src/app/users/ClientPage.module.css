@@ -1,8 +1,9 @@
-.main{
+.main {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
+
 .login {
     width: 30%;
     margin: auto;

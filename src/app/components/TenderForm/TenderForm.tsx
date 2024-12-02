@@ -1,9 +1,9 @@
 import Company from '@/app/models/Company'
-import { default as getStatusName } from '@/app/models/Status'
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { observer, useLocalObservable } from 'mobx-react-lite'
-import { Tender } from '../../models/Tender'
+import {default as getStatusName} from '@/app/models/Status'
+import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {observer, useLocalObservable} from 'mobx-react-lite'
+import {Tender} from '../../models/Tender'
 import styles from './TenderForm.module.css'
 
 interface TenderFormProps {
@@ -27,16 +27,15 @@ interface TenderFormProps {
     }
 }
 
-const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isEditable }) => {
+const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEditable}) => {
     const errors: { [key: string]: string } = useLocalObservable(() => ({}))
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target
+        const {name, value} = e.target
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = (tender as any)["set" + name](value)
         if (!result.ok) {
             errors[name] = result.error
-        }
-        else {
+        } else {
             delete errors[name]
         }
     }
@@ -49,7 +48,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
     return (
-        <div className={`${styles.form} card`} >
+        <div className={`${styles.form} card`}>
             <label className={styles.label}>Статус:</label>
             <div className={styles.formGroup}>
                 <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}>
@@ -69,7 +68,8 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
             </div>
             <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
             <div className={styles.formGroup}>
-                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial} onClick={() => tender.toggleIsSpecial()} disabled={!isEditable.isSpecial} />
+                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial}
+                       onClick={() => tender.toggleIsSpecial()} disabled={!isEditable.isSpecial}/>
             </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
@@ -80,7 +80,8 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
                         )}
                     </select>
                 </div>
-                {errors['Company'] && <span></span>} {errors['Company'] && <span className={styles.error}>{errors['Company']}</span>}
+                {errors['Company'] && <span></span>} {errors['Company'] &&
+                <span className={styles.error}>{errors['Company']}</span>}
             </div>
             {name}
             {regNumber}
@@ -90,42 +91,52 @@ const TenderForm: React.FC<TenderFormProps> = observer(({ tender, companies, isE
             <label className={styles.label} htmlFor='Date1_start'>Дата начала 1-го этапа:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date1_start' id='Date1_start' value={tender.date1_start} onChange={handleChange} disabled={!isEditable.date1_start} />
+                    <input type="datetime-local" name='Date1_start' id='Date1_start' value={tender.date1_start}
+                           onChange={handleChange} disabled={!isEditable.date1_start}/>
                 </div>
-                {errors['Date1_start'] && <span></span>} {errors['Date1_start'] && <span className={styles.error}>{errors['Date1_start']}</span>}
+                {errors['Date1_start'] && <span></span>} {errors['Date1_start'] &&
+                <span className={styles.error}>{errors['Date1_start']}</span>}
             </div>
             <label className={styles.label} htmlFor='Date1_finish'>Дата окончания 1-го этапа:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date1_finish' id='Date1_finish' value={tender.date1_finish} onChange={handleChange} disabled={!isEditable.date1_finish} />
+                    <input type="datetime-local" name='Date1_finish' id='Date1_finish' value={tender.date1_finish}
+                           onChange={handleChange} disabled={!isEditable.date1_finish}/>
                 </div>
-                {errors['Date1_finish'] && <span></span>} {errors['Date1_finish'] && <span className={styles.error}>{errors['Date1_finish']}</span>}
+                {errors['Date1_finish'] && <span></span>} {errors['Date1_finish'] &&
+                <span className={styles.error}>{errors['Date1_finish']}</span>}
             </div>
             <label className={styles.label} htmlFor='Date2_finish'>Дата окончания 2-го этапа:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date2_finish' id='Date2_finish' value={tender.date2_finish} onChange={handleChange} disabled={!isEditable.date2_finish} />
+                    <input type="datetime-local" name='Date2_finish' id='Date2_finish' value={tender.date2_finish}
+                           onChange={handleChange} disabled={!isEditable.date2_finish}/>
                 </div>
-                {errors['Date2_finish'] && <span></span>} {errors['Date2_finish'] && <span className={styles.error}>{errors['Date2_finish']}</span>}
+                {errors['Date2_finish'] && <span></span>} {errors['Date2_finish'] &&
+                <span className={styles.error}>{errors['Date2_finish']}</span>}
             </div>
             <label className={styles.label} htmlFor='Date_finish'>Подведение итогов:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date_finish' id='Date_finish' value={tender.date_finish} onChange={handleChange} disabled={!isEditable.date_finish} />
+                    <input type="datetime-local" name='Date_finish' id='Date_finish' value={tender.date_finish}
+                           onChange={handleChange} disabled={!isEditable.date_finish}/>
                 </div>
-                {errors['Date_finish'] && <span></span>} {errors['Date_finish'] && <span className={styles.error}>{errors['Date_finish']}</span>}
+                {errors['Date_finish'] && <span></span>} {errors['Date_finish'] &&
+                <span className={styles.error}>{errors['Date_finish']}</span>}
             </div>
             {contactPerson}
             {phoneNumber}
             {email}
-        </div >
+        </div>
     )
 })
 
 export default TenderForm
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const renderField = (fieldName: string, value: any, labelTitle: string, isEditableField: boolean, errors: { [key: string]: string }, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
-    let elem = <input type="text" className={styles.input} disabled value={value} />
+const renderField = (fieldName: string, value: any, labelTitle: string, isEditableField: boolean, errors: {
+    [key: string]: string
+}, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
+    let elem = <input type="text" className={styles.input} disabled value={value}/>
     if (isEditableField) {
         let fieldType = 'text'
         if (fieldName == 'Email')
@@ -147,10 +158,11 @@ const renderField = (fieldName: string, value: any, labelTitle: string, isEditab
                         }}
                         className={styles.input}
                     />
-                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon} />
+                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
                 </div>
             </div>
-            {errors[fieldName] && <span></span>} {errors[fieldName] && <span className='under-input-error'>{errors[fieldName]}</span>}
+            {errors[fieldName] && <span></span>} {errors[fieldName] &&
+            <span className='under-input-error'>{errors[fieldName]}</span>}
         </>
     }
     return (

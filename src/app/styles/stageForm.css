@@ -2,7 +2,7 @@
     gap: 20px;
 }
 
-.dynamicSizeForm>.hiddenContent {
+.dynamicSizeForm > .hiddenContent {
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,7 @@
     transition: all 0.5s ease;
 }
 
-.dynamicSizeForm.expanded>.hiddenContent {
+.dynamicSizeForm.expanded > .hiddenContent {
     overflow: visible;
     margin-top: 10px;
     max-height: 100%;

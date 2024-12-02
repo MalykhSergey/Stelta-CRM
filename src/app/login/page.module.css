@@ -5,18 +5,21 @@
     flex-direction: column;
     gap: 20px;
 }
+
 @media only screen and (max-width: 600px) {
     .login {
-      max-width: none;
+        max-width: none;
     }
-  }
-  
-.label{
+}
+
+.label {
     font-size: 14px;
 }
+
 .header {
     text-align: center;
 }
+
 .submit {
     font-size: 20px;
     font-weight: 700;

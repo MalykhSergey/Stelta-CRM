@@ -45,9 +45,10 @@ select:hover {
     background-color: rgba(255, 255, 255, 1);
 }
 
-input[type="checkbox"]{
+input[type="checkbox"] {
     width: auto;
 }
+
 .redButton {
     font-size: 18px;
     transition: color 0.3s ease;

@@ -6,7 +6,10 @@ type AuthContextType = {
     setUserName: (name: string) => void
 }
 
-const AuthContext = createContext<AuthContextType>({userName: '', setUserName: () => {}})
+const AuthContext = createContext<AuthContextType>({
+    userName: '', setUserName: () => {
+    }
+})
 
 
 export function AuthProvider({children, initialAuth}: { children: React.ReactNode, initialAuth: string }) {

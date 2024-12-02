@@ -1,35 +1,36 @@
 .form {
-  display: grid;
-  grid-template-columns: 35% 65%;
-  column-gap: 10px;
-  row-gap: 10px;
-  max-width: 800px;
+    display: grid;
+    grid-template-columns: 35% 65%;
+    column-gap: 10px;
+    row-gap: 10px;
+    max-width: 800px;
 }
 
 .inputRow {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
 }
 
-.input:focus~.icon {
-  transform: scaleX(-1);
-  opacity: 0%;
+.input:focus ~ .icon {
+    transform: scaleX(-1);
+    opacity: 0%;
 }
 
 .icon {
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  margin-left: -20px;
-  pointer-events: none;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    margin-left: -20px;
+    pointer-events: none;
 }
 
 
-.formGroup {}
+.formGroup {
+}
 
 .label {
-  text-align: start;
-  align-self: center;
-  font-size: 16px;
+    text-align: start;
+    align-self: center;
+    font-size: 16px;
 }
 
 

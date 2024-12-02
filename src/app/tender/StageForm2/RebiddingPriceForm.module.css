@@ -1,11 +1,11 @@
-.rebiddingPrice{
+.rebiddingPrice {
     display: flex;
     flex-direction: row;
     align-items: start;
     gap: 20px;
 }
 
-.rebiddingPrice > :nth-child(1){
+.rebiddingPrice > :nth-child(1) {
     flex-basis: 70%;
     flex-shrink: 0;
 }

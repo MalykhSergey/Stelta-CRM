@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import connection from "./Database";
-import { User } from "./User";
+import {User} from "./User";
 
 
 export function generateSalt(length = 16) {
@@ -17,16 +17,18 @@ export async function createUser(name: string, password: string) {
     try {
         await connection.query("INSERT INTO users(name, password, salt) VALUES ($1,$2,$3)", [name, hashed_password, salt]);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch (error: any) {
         if (error.code === '23505')
-            return { error: 'Пользователь с таким именем уже есть!' };
-        return { error: 'Ошибка создания пользователя!' };
+            return {error: 'Пользователь с таким именем уже есть!'};
+        return {error: 'Ошибка создания пользователя!'};
     }
 }
+
 export async function getUserNames(): Promise<{ name: string }[]> {
     return (await connection.query("SELECT name FROM users")).rows;
 }
+
 export async function getUserByName(name: string): Promise<User | null> {
     return (await connection.query("SELECT * FROM users WHERE name = $1", [name])).rows[0];
 }

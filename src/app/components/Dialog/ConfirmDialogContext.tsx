@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {createContext, ReactNode, useContext, useState} from 'react';
 import ConfirmDialog from './ConfirmDialog';
 
 type ConfirmDialogOptions = {
@@ -22,7 +22,7 @@ export const useConfirmDialog = () => {
     return context;
 };
 
-export const ConfirmDialogProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ConfirmDialogProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [isVisible, setIsVisible] = useState(false);
     const [options, setOptions] = useState<ConfirmDialogOptions | null>(null);
 
@@ -36,7 +36,7 @@ export const ConfirmDialogProvider: React.FC<{ children: ReactNode }> = ({ child
     };
 
     return (
-        <ConfirmDialogContext.Provider value={{ showConfirmDialog, hideConfirmDialog }}>
+        <ConfirmDialogContext.Provider value={{showConfirmDialog, hideConfirmDialog}}>
             {children}
             {isVisible && options && (
                 <ConfirmDialog
