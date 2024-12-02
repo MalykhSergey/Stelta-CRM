@@ -114,11 +114,11 @@ const TenderPageClient = observer(({tender, companies}: { tender: Tender, compan
     }
 
     return (
-        <div style={{display: 'flex', flexDirection: 'row', gap: '100px'}}>
-            <div style={{}}>
+        <div id={styles.content}>
+            <div id={styles.leftPanel}>
                 <TenderForm tender={tender} companies={companies} isEditable={isEditable}/>
             </div>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '20px', width: '800px'}}>
+            <div id={styles.rightPanel}>
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}

@@ -38,7 +38,7 @@ export default function SearchPage({tendersJSON}: { tendersJSON: string }) {
         }))
     }
     return (
-        <main className={styles.content}>
+        <main className={styles.content + ' inherit'}>
             <div className={styles.filter}>
                 <div className='row' style={{alignItems: 'center', gap: '20px'}}><FontAwesomeIcon
                     icon={faMagnifyingGlass} className='icon' style={{height: '20px'}}></FontAwesomeIcon><h3>Поиск</h3>

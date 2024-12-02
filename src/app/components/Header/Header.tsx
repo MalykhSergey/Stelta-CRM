@@ -10,8 +10,8 @@ export default function Header() {
     const authContext = useAuth()
     const pathname = usePathname()
     return (
-        <header className={styles.header}>
-            <Link href='/'><Image src={SteltaLogo} alt={"Stelta logo"} width={120} height={65}></Image></Link>
+        <header id={styles.header}>
+            <Link href='/'><Image src={SteltaLogo} alt={"Stelta logo"} id={styles.logo}></Image></Link>
             <div className={styles.navPanel}>
                 <Link href="/" className={`${styles.navLink} ${pathname == '/' ? styles.active : ''}`}>Торги</Link>
                 <Link href="/search"

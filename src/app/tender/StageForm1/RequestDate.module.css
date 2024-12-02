@@ -4,3 +4,15 @@
     align-items: start;
     gap: 20px;
 }
+.dateRequest > :nth-child(1) {
+    flex-basis: 70%;
+    flex-shrink: 0;
+}
+@media only screen and (max-width: 600px) {
+    .dateRequest :nth-child(1) {
+        width: 100%;
+    }
+    .dateRequest {
+        flex-wrap: wrap;
+    }
+}

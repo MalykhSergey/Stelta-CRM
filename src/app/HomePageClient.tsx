@@ -24,7 +24,7 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
                 if (status.current.value != tender.status.toString())
                     filterFlag = filterFlag && false
             if (regNumber.current && regNumber.current.value != '')
-                if (tender.regNumber.includes(regNumber.current.value))
+                if (!tender.regNumber.includes(regNumber.current.value))
                     filterFlag = filterFlag && false
             if (date.current && date.current.value != '')
                 if (tender.date1_start.slice(0, 10) != date.current.value && tender.date1_finish.slice(0, 10) != date.current.value || tender.date2_finish.slice(0, 10) != date.current.value)
@@ -40,7 +40,7 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
             router.push(`/tender/${id}`)
     }
     return (
-        <main className={styles.content}>
+        <main className={`${styles.grid} inherit`}>
             <div className={styles.leftPanel}>
                 <button className={`${styles.columnHeader} ${styles.createTender}  rounded shadowed`}
                         onClick={createHandler}><span>Добавить тендер</span><FontAwesomeIcon icon={faOutdent}
@@ -75,7 +75,6 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
                     </div>
                 </div>
             </div>
-            <div className={`${styles.grid} inherit`}>
                 <div className={` ${styles.column}`}>
                     <div className={`${styles.columnHeader}  rounded shadowed`} id={styles.first}>
                         <h3>Новый тендер </h3></div>
@@ -113,7 +112,6 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
                     {tenders.filter(tender => tender.status == 5).map((tender, index) => (
                         <TenderCard key={index} tender={tender}/>
                     ))}
-                </div>
             </div>
         </main>
     );
