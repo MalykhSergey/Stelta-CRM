@@ -1,9 +1,9 @@
-import Company from '@/app/models/Company'
-import {default as getStatusName} from '@/app/models/Status'
+import Company from '@/models/Company'
+import {default as getStatusName} from '@/models/Status'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {observer, useLocalObservable} from 'mobx-react-lite'
-import {Tender} from '../../models/Tender'
+import {Tender} from '../../../models/Tender'
 import styles from './TenderForm.module.css'
 
 interface TenderFormProps {

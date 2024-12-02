@@ -1,6 +1,6 @@
-import {getStatusAnalyticsByDateRange} from "@/app/models/Analytics/AnalyticsService";
+import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
 import DateRangeAnalyticsClient from "./ClientPage";
-import {StatusAnalytics} from "@/app/models/Analytics/StatusAnalytics";
+import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
 
 export default async function DateRangeAnalyticsServer() {
     const currentYear = new Date().getFullYear();

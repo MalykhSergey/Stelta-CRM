@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {Tender} from '../../models/Tender';
+import {Tender} from '../../../models/Tender';
 import styles from './TenderCard.module.css';
 import "./statuses.css";
 

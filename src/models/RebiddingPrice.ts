@@ -1,4 +1,4 @@
-import {Result} from "../Result";
+import {Result} from "../app/Result";
 import FileName from "./FileName";
 
 export class RebiddingPrice {

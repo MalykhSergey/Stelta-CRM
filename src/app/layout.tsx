@@ -2,12 +2,12 @@ import localFont from "next/font/local";
 import {AuthProvider} from "./AuthContext";
 import {AlertContainer} from "./components/Alerts/Alert";
 import Header from "./components/Header/Header";
-import "./globals.css";
+import "../static/styles/globals.css";
 import styles from "./layout.module.css";
-import {authAction} from "./models/UserService";
-import "./styles/buttons.css";
-import "./styles/inputs.css";
-import "./styles/stageForm.css";
+import {authAction} from "../models/UserService";
+import "../static/styles/buttons.css";
+import "../static/styles/inputs.css";
+import "../static/styles/stageForm.css";
 
 const firaSans = localFont({
     src: "./fonts/GeistVF.woff",

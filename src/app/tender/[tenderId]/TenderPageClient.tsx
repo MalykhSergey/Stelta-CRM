@@ -4,16 +4,16 @@ import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/components/DocumentForm/DocumentsForm';
 import {showMessage} from '@/app/components/Alerts/Alert';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
-import FileName from '@/app/models/FileName';
-import {Tender} from '@/app/models/Tender';
-import {deleteTender, updateTenderById} from '@/app/models/TenderService';
+import FileName from '@/models/FileName';
+import {Tender} from '@/models/Tender';
+import {deleteTender, updateTenderById} from '@/models/TenderService';
 import StageForm1 from '@/app/tender/StageForm1/StageForm1';
 import StageForm2 from '@/app/tender/StageForm2/StageForm2';
 import StageForm3 from '@/app/tender/StageForm3/StageForm3';
 import {observer} from 'mobx-react-lite';
 import {useRouter} from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
-import Company from '@/app/models/Company';
+import Company from '@/models/Company';
 
 const getGreenButtonText = (status: number) => {
     switch (status) {

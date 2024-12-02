@@ -1,7 +1,7 @@
 "use client"
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {getStatusAnalyticsByDateRange} from "@/app/models/Analytics/AnalyticsService";
-import {StatusAnalytics} from "@/app/models/Analytics/StatusAnalytics";
+import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
+import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
 import {useRef, useState} from "react";
 import styles from '../page.module.css';
 

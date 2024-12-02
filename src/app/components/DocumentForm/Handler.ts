@@ -1,6 +1,6 @@
 "use server";
-import FileName from '@/app/models/FileName';
-import tenderStorage from '@/app/models/TenderStorage';
+import FileName from '@/models/FileName';
+import tenderStorage from '@/models/TenderStorage';
 import fs from 'fs/promises';
 
 export async function uploadHandler(formData: FormData) {

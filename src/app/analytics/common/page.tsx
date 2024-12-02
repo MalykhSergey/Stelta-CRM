@@ -1,5 +1,5 @@
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {getCommonAnalytics} from "@/app/models/Analytics/AnalyticsService";
+import {getCommonAnalytics} from "@/models/Analytics/AnalyticsService";
 
 
 export default async function CommonAnalytics() {

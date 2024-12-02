@@ -3,8 +3,8 @@ import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useRef, useState} from "react";
 import TenderCard from "../components/TenderCard/TenderCard";
-import getStatusName from "../models/Status";
-import {Tender} from "../models/Tender";
+import getStatusName from "../../models/Status";
+import {Tender} from "../../models/Tender";
 import styles from "./page.module.css";
 
 

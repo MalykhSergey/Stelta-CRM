@@ -1,5 +1,5 @@
-import FileName from "@/app/models/FileName";
-import {Tender} from "@/app/models/Tender";
+import FileName from "@/models/FileName";
+import {Tender} from "@/models/Tender";
 import {faCaretUp} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {observer, useLocalObservable} from "mobx-react-lite";

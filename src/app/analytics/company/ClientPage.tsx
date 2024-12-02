@@ -1,8 +1,8 @@
 "use client"
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {getStatusAnalyticsByCompany} from "@/app/models/Analytics/AnalyticsService";
-import {StatusAnalytics} from "@/app/models/Analytics/StatusAnalytics";
-import Company from "@/app/models/Company";
+import {getStatusAnalyticsByCompany} from "@/models/Analytics/AnalyticsService";
+import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
+import Company from "@/models/Company";
 import {useState} from "react";
 import styles from '../page.module.css';
 

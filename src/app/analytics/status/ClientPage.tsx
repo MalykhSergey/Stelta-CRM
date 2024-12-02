@@ -1,10 +1,10 @@
 "use client"
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
 import {useState} from "react";
-import {CompanyAnalytics} from "@/app/models/Analytics/CompanyAnalytics";
-import {getCompanyAnalyticsByStatus} from "@/app/models/Analytics/AnalyticsService";
+import {CompanyAnalytics} from "@/models/Analytics/CompanyAnalytics";
+import {getCompanyAnalyticsByStatus} from "@/models/Analytics/AnalyticsService";
 import styles from "@/app/components/TenderForm/TenderForm.module.css";
-import getStatusName from "@/app/models/Status";
+import getStatusName from "@/models/Status";
 
 
 export default function StatusAnalyticsClient(props: { initialData: CompanyAnalytics[] }) {

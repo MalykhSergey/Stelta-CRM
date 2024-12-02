@@ -5,9 +5,9 @@ import {useRouter} from 'next/navigation';
 import {useRef, useState} from 'react';
 import {showMessage} from './components/Alerts/Alert';
 import TenderCard from './components/TenderCard/TenderCard';
-import getStatusName from './models/Status';
-import {Tender} from './models/Tender';
-import {createTender} from './models/TenderService';
+import getStatusName from '../models/Status';
+import {Tender} from '../models/Tender';
+import {createTender} from '../models/TenderService';
 import styles from './page.module.css';
 
 export function HomePageClient({tendersJSON}: { tendersJSON: string }) {

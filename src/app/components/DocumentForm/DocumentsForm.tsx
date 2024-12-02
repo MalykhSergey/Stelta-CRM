@@ -1,4 +1,4 @@
-import FileName from '@/app/models/FileName';
+import FileName from '@/models/FileName';
 import {faCaretUp, faDownload, faPaperclip, faTrash, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';

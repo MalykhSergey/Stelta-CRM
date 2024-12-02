@@ -2,7 +2,7 @@
 import {useAuth} from '@/app/AuthContext';
 import Image from 'next/image';
 import Link from "next/link";
-import SteltaLogo from '../../images/logo.png';
+import SteltaLogo from '../../../static/images/logo.png';
 import styles from "./Header.module.css";
 import {usePathname} from 'next/navigation';
 

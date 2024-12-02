@@ -1,6 +1,6 @@
-import {getCompanyAnalyticsByStatus} from "@/app/models/Analytics/AnalyticsService";
+import {getCompanyAnalyticsByStatus} from "@/models/Analytics/AnalyticsService";
 import StatusAnalyticsClient from "@/app/analytics/status/ClientPage";
-import {CompanyAnalytics} from "@/app/models/Analytics/CompanyAnalytics";
+import {CompanyAnalytics} from "@/models/Analytics/CompanyAnalytics";
 
 
 export default async function StatusAnalyticsServer() {

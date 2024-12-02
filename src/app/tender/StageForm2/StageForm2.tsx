@@ -1,11 +1,11 @@
-import FileName from '@/app/models/FileName';
-import {RebiddingPrice} from '@/app/models/RebiddingPrice';
-import {addRebiddingPrice} from '@/app/models/TenderService';
+import FileName from '@/models/FileName';
+import {RebiddingPrice} from '@/models/RebiddingPrice';
+import {addRebiddingPrice} from '@/models/TenderService';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
-import {Tender} from '../../models/Tender';
+import {Tender} from '../../../models/Tender';
 import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from "./StageForm2.module.css"

@@ -3,7 +3,7 @@ import {useRouter} from "next/navigation"
 import {FormEvent, useEffect} from "react"
 import {useAuth} from "../AuthContext"
 import {showMessage} from "../components/Alerts/Alert"
-import {login} from "../models/UserService"
+import {login} from "../../models/UserService"
 import styles from "./page.module.css"
 
 export default function LoginPage() {

@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx"
-import {Result} from "../Result"
+import {Result} from "../app/Result"
 import {DateRequest} from "./DateRequest"
 import FileName from "./FileName"
 import {RebiddingPrice} from "./RebiddingPrice"

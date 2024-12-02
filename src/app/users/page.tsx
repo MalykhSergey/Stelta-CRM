@@ -1,4 +1,4 @@
-import {loadUserNames} from "../models/UserService";
+import {loadUserNames} from "../../models/UserService";
 import {UsersPage} from "./ClientPage";
 
 export const dynamic = 'force-dynamic'

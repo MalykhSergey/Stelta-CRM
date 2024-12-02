@@ -1,8 +1,8 @@
-import getStatusName from '@/app/models/Status';
+import getStatusName from '@/models/Status';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';
-import {Tender} from '../../models/Tender';
+import {Tender} from '../../../models/Tender';
 import styles from './CommentsForm.module.css';
 
 interface CommentsFormProps {

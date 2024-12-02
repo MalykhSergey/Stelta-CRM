@@ -1,6 +1,6 @@
-import {getTenderById} from '@/app/models/TenderService';
+import {getTenderById} from '@/models/TenderService';
 import TenderPageClientWrapper from './TenderPageClientWrapper';
-import {getCompanies} from '@/app/models/CompanyService';
+import {getCompanies} from '@/models/CompanyService';
 
 
 const TenderPageServer = async ({params}: { params: { tenderId: string } }) => {

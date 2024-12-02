@@ -2,7 +2,7 @@
 import {useRef, useState} from "react"
 import {showMessage} from "../components/Alerts/Alert"
 import styles from "./page.module.css"
-import {createCompany} from "../models/CompanyService"
+import {createCompany} from "../../models/CompanyService"
 
 export default function ClientCompanies({companiesProps}: { companiesProps: Array<{ id: number, name: string }> }) {
     const [companies, setCompanies] = useState(companiesProps)
