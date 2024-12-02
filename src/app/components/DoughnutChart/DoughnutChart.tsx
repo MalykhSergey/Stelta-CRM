@@ -37,7 +37,8 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                             },
                             datalabels: {
                                 formatter: (value, context) => {
-                                    return `${(props.data.datasets[0].data[context.dataIndex] / total * 100).toFixed(2)}%`
+                                    const label_value = props.data.datasets[0].data[context.dataIndex]
+                                    return  label_value ? `${(label_value / total * 100).toFixed(2)}%` : ''
                                 },
                                 color: 'rgb(255,255,255)',
                                 font: {
