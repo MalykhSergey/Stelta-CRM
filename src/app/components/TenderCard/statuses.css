@@ -5,6 +5,8 @@
     margin-left: auto;
     margin-top: -20px;
     margin-right: -20px;
+    text-align: center;
+    font-size: 14px;
 }
 .status-0 {
     background-color: rgba(231, 231, 231);

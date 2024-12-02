@@ -20,7 +20,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user_result = await authAction(async (user) => user.name)
-  const auth_user = typeof user_result == 'string' ? user_result : null
+  const auth_user = typeof user_result == 'string' ? user_result : ''
   return (
     <html lang="en">
       <body className={`${firaSans.variable}`}>

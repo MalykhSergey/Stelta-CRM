@@ -11,7 +11,7 @@ export default function LogOutPage() {
     const authContext = useAuth()
     useEffect(() => {
         const performLogout = async () => {
-            authContext.setUserName(null)
+            authContext.setUserName('')
             await logout();
             showMessage("Вы вышли из системы!");
             router.push("/");

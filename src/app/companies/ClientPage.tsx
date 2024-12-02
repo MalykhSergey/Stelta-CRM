@@ -19,14 +19,14 @@ export default function ClientCompanies({ companiesProps }: { companiesProps: Ar
     }
     return (
         <main className={styles.content}>
-            <div className={`card row ${styles.input}`}>
+            <div className={`card fullWidth row ${styles.input}`}>
                 <input ref={company_name} type="text" list="companies" name="company" />
                 <button className="BlueButton" onClick={createCompanyHandler}>Добавить</button>
                 <datalist id="companies">
                     {companies.map(row => <option key={'option' + row.id} company-id={row.id} value={row.name}></option>)}
                 </datalist>
             </div>
-            {companies.map(row => <div key={'company' + row.id} className="card" company-id={row.id}>{row.name}</div>)}
+            {companies.map(row => <div key={'company' + row.id} className="card fullWidth" company-id={row.id}>{row.name}</div>)}
         </main>
     )
 }

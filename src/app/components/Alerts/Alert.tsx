@@ -8,7 +8,6 @@ const timers: { [x: string]: (NodeJS.Timeout | number)[] } = {
 export const showMessage = (message: string, type: string = 'error') => {
     const alert = document.getElementById(`${type}-alert`)
     const alert_text = document.getElementById(`${type}-text`)
-    console.log(timers)
     if (alert && alert_text) {
         alert_text.textContent = message
         alert.style.display = "flex"

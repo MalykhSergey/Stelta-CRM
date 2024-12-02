@@ -1,4 +1,4 @@
-.header{
+.header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -6,9 +6,10 @@
     padding: 10px 10px 10px 10px;
     width: 100%;
 }
+
 .navPanel {
     display: flex;
-    background-color: rgba(0, 0, 0,0);
+    background-color: rgba(0, 0, 0, 0);
     justify-content: end;
     gap: 30px;
     padding: 10px;
@@ -28,4 +29,9 @@
 .navLink:hover {
     color: rgba(255, 255, 255, 1);
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.active {
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
