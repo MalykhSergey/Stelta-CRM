@@ -1,5 +1,5 @@
 import {HomePageClient} from './HomePageClient';
-import tenderStorage from '../models/TenderStorage';
+import tenderStorage from '../models/Tender/TenderStorage';
 
 export const dynamic = 'force-dynamic'
 export default async function HomePageServer() {

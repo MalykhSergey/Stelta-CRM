@@ -1,9 +1,9 @@
 import {makeAutoObservable} from "mobx"
-import {Result} from "../app/Result"
-import {DateRequest} from "./DateRequest"
-import FileName from "./FileName"
-import {RebiddingPrice} from "./RebiddingPrice"
-import Company from "./Company"
+import {Result} from "../../app/Result"
+import {DateRequest} from "../DateRequest"
+import FileName from "../FileName"
+import {RebiddingPrice} from "../RebiddingPrice"
+import Company from "../Company"
 
 export class Tender {
     public id: number = 0
@@ -19,6 +19,8 @@ export class Tender {
     public date1_finish = ''
     public date2_finish = ''
     public date_finish = ''
+    public startDateRange = 0
+    public endRange = 0
     public contractDate = ''
     public contractNumber = ''
     public contactPerson: string = ''
@@ -186,6 +188,11 @@ export class Tender {
         tender.date1_finish = row.date1_finish
         tender.date2_finish = row.date2_finish
         tender.date_finish = row.date_finish
+        tender.startDateRange = new Date(row.date1_start).getTime()
+        const date1 = new Date(row.date1_finish).getTime()
+        const date2 = new Date(row.date2_finish).getTime()
+        const date3 = new Date(row.date_finish).getTime()
+        tender.endRange = Math.max(date1, date2, date3)
         for (let i = 0; i < 6; i++) {
             if (row[`comment${i}`] != null)
                 tender.comments[i] = row[`comment${i}`]
@@ -235,6 +242,8 @@ export class Tender {
         tender.date1_finish = obj.date1_finish
         tender.date2_finish = obj.date2_finish
         tender.date_finish = obj.date_finish
+        tender.startDateRange = obj.startRange
+        tender.endRange = obj.endRange
         tender.contractNumber = obj.contractNumber
         tender.contractDate = obj.contractDate
         tender.contactPerson = obj.contactPerson

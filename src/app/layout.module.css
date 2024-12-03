@@ -3,8 +3,6 @@
     flex-direction: column;
     max-width: 100%;
     flex-grow: 1;
-    align-self: center;
-    justify-content: center;
     padding: 20px;
 }
 

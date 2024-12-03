@@ -1,4 +1,4 @@
-import {getTenderById} from '@/models/TenderService';
+import {getTenderById} from '@/models/Tender/TenderService';
 import TenderPageClientWrapper from './TenderPageClientWrapper';
 import {getCompanies} from '@/models/CompanyService';
 

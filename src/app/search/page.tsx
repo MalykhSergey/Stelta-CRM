@@ -1,4 +1,4 @@
-import tenderStorage from "../../models/TenderStorage"
+import tenderStorage from "../../models/Tender/TenderStorage"
 import SearchPage from "./ClientPage"
 
 export const dynamic = 'force-dynamic'

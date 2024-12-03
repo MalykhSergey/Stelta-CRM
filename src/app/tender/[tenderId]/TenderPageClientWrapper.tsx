@@ -2,7 +2,7 @@
 
 import {ConfirmDialogProvider} from '@/app/components/Dialog/ConfirmDialogContext';
 import Company from '@/models/Company';
-import {Tender} from '@/models/Tender';
+import {Tender} from '@/models/Tender/Tender';
 import TenderPageClient from './TenderPageClient';
 
 function TenderPageClientWrapper({tenderString, companies}: { tenderString: string, companies: Company[] }) {

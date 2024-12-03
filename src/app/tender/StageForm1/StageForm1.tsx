@@ -1,11 +1,11 @@
 import {DateRequest} from '@/models/DateRequest';
 import FileName from '@/models/FileName';
-import {addDateRequest} from '@/models/TenderService';
+import {addDateRequest} from '@/models/Tender/TenderService';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
-import {Tender} from '../../../models/Tender';
+import {Tender} from '../../../models/Tender/Tender';
 import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import DateRequestForm from './DateRequest';
 

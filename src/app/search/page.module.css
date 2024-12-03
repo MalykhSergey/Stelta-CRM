@@ -3,23 +3,14 @@
     flex-direction: row;
     gap: 20px;
 }
+#leftPanel{
+    min-width: 275px;
+}
 @media only screen and (max-width: 600px) {
     .content {
         display: flex;
         flex-wrap: wrap;
     }
-}
-.filter {
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 24px;
-    border-radius: 8px;
-    min-width: 275px;
-    max-width: 400px;
-    flex-grow: 1;
-    gap: 20px;
-    max-height: fit-content;
 }
 
 .tenders {

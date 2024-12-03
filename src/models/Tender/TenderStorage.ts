@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
-import connection from "./Database";
+import connection from "../Database";
 import {Tender} from "./Tender";
-import UPDATE_TENDER_QUERY from './querries/UPDATE_TENDER';
+import UPDATE_TENDER_QUERY from '../querries/UPDATE_TENDER';
 
 class TenderStorage {
     constructor() {

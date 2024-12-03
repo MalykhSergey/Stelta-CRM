@@ -1,7 +1,7 @@
 "use server"
 
 import tenderStorage from "./TenderStorage";
-import {authAction} from "./UserService";
+import {authAction} from "../UserService";
 
 export async function createTender() {
     return await tenderStorage.createTender()

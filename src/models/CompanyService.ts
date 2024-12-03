@@ -1,5 +1,5 @@
 "use server"
-import tenderStorage from "./TenderStorage";
+import tenderStorage from "./Tender/TenderStorage";
 import {authAction} from "./UserService";
 
 export async function getCompanies() {
