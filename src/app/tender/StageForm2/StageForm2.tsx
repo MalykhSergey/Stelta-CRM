@@ -23,7 +23,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender}) => {
     }));
     const isEditable = tender.status == 3;
     const collapsed = useLocalObservable(() => ({
-        isTrue: true,
+        isTrue: isEditable,
         toggle() {
             this.isTrue = !this.isTrue
         }

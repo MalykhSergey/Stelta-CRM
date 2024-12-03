@@ -16,7 +16,7 @@ interface StageFormProps {
 const StageForm1: React.FC<StageFormProps> = observer(({tender}) => {
     const isEditable = tender.status == 1;
     const collapsed = useLocalObservable(() => ({
-        isTrue: true,
+        isTrue: isEditable,
         toggle() {
             this.isTrue = !this.isTrue
         }

@@ -14,6 +14,7 @@ import {observer} from 'mobx-react-lite';
 import {useRouter} from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
 import Company from '@/models/Company';
+import {useAuth} from "@/app/AuthContext";
 
 const getGreenButtonText = (status: number) => {
     switch (status) {
@@ -54,7 +55,10 @@ const getLooseButtonText = (status: number) => {
 
 const TenderPageClient = observer(({tender, companies}: { tender: Tender, companies: Company[] }) => {
     const router = useRouter()
+    const auth = useAuth()
+    const isAuth = !!auth.userName
     let isEditable = {
+        status: isAuth,
         isSpecial: false,
         company: false,
         name: false,
@@ -70,29 +74,32 @@ const TenderPageClient = observer(({tender, companies}: { tender: Tender, compan
         phoneNumber: false,
         email: false,
     };
-    if (tender.status == 0)
-        isEditable = {
-            isSpecial: true,
-            company: true,
-            name: true,
-            regNumber: true,
-            lotNumber: true,
-            initialMaxPrice: true,
-            price: true,
-            date1_start: true,
-            date1_finish: true,
-            date2_finish: true,
-            date_finish: true,
-            contactPerson: true,
-            phoneNumber: true,
-            email: true,
-        };
-    if (tender.status <= 2)
-        isEditable.date1_finish = true
-    if (tender.status <= 3)
-        isEditable.date2_finish = true
-    if (tender.status <= 4)
-        isEditable.date_finish = true
+    if (isAuth) {
+        if (tender.status == 0)
+            isEditable = {
+                status: isAuth,
+                isSpecial: true,
+                company: true,
+                name: true,
+                regNumber: true,
+                lotNumber: true,
+                initialMaxPrice: true,
+                price: true,
+                date1_start: true,
+                date1_finish: true,
+                date2_finish: true,
+                date_finish: true,
+                contactPerson: true,
+                phoneNumber: true,
+                email: true,
+            };
+        if (tender.status <= 2)
+            isEditable.date1_finish = true
+        if (tender.status <= 3)
+            isEditable.date2_finish = true
+        if (tender.status <= 4)
+            isEditable.date_finish = true
+    }
     const saveHandler = async () => {
         const result = await updateTenderById(JSON.stringify(tender))
         if (result?.error)
@@ -122,12 +129,12 @@ const TenderPageClient = observer(({tender, companies}: { tender: Tender, compan
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                               title='Документы тендера' isEditable={tender.status == 0} className='card'/>
+                               title='Документы тендера' isEditable={tender.status == 0} className='card' isOpened={isEditable.company}/>
                 {tender.status >= 1 && <StageForm1 tender={tender}/>}
                 {tender.status >= 3 && <StageForm2 tender={tender}/>}
                 {tender.status >= 5 && <StageForm3 tender={tender}/>}
                 <CommentsForm tender={tender}/>
-                <div className={styles.buttonRow}>
+                {isAuth && <div className={styles.buttonRow}>
                     {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) &&
                         <button className='OrangeButton'
                                 onClick={() => updateStageHandler(tender.status - 1)}>{getOrangeButtonText(tender.status)}</button>}
@@ -136,9 +143,9 @@ const TenderPageClient = observer(({tender, companies}: { tender: Tender, compan
                     <button className='BlueButton' onClick={saveHandler}>Сохранить</button>
                     {tender.status == 0 &&
                         <button className='RedButton' onClick={() => deleteHandler()}>Удалить</button>}
-                    {tender.status > 0 && tender.status < 6 && <button className='RedButton'
+                    {tender.status > 0 && tender.status < 5 && <button className='RedButton'
                                                                        onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
-                </div>
+                </div>}
             </div>
         </div>
     );

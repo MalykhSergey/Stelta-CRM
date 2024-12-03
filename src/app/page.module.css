@@ -71,6 +71,7 @@
     text-align: center;
     align-content: center;
     height: 60px;
+    font-family: var(--bold-title-font), sans-serif;
 }
 
 #first {

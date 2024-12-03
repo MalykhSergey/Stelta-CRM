@@ -10,6 +10,7 @@ interface TenderFormProps {
     tender: Tender,
     companies: Company[],
     isEditable: {
+        status:boolean,
         isSpecial: boolean,
         company: boolean,
         name: boolean,
@@ -51,7 +52,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
         <div className={`${styles.form} card`}>
             <label className={styles.label}>Статус:</label>
             <div className={styles.formGroup}>
-                <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}>
+                <select name="Status" value={tender.status} className={styles.input} onChange={handleChange} disabled={!isEditable.status}>
                     {tender.status < 0 &&
                         <>
                             <option value="-1">{getStatusName(-1)}</option>
@@ -69,12 +70,12 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
             <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
             <div className={styles.formGroup}>
                 <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial}
-                       onClick={() => tender.toggleIsSpecial()} disabled={!isEditable.isSpecial}/>
+                       onChange={() => tender.toggleIsSpecial()} disabled={!isEditable.isSpecial}/>
             </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <select name="Company" id="Company" onChange={handleChange}>
+                    <select name="Company" id="Company" onChange={handleChange} disabled={!isEditable.company}>
                         {companies.map(company =>
                             <option key={"option" + company.id} value={company.id}>{company.name}</option>
                         )}

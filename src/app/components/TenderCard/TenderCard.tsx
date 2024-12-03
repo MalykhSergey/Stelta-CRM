@@ -48,7 +48,7 @@ export default function TenderCard(props: { tender: Tender }) {
             <div className={styles.indicator}></div>
             <div className={styles.title}>{props.tender.name}</div>
             <span className={styles.label}>НМЦК: </span>
-            <div className={styles.info}>{props.tender.initialMaxPrice + " ₽"}</div>
+            <div className={styles.info} >{props.tender.initialMaxPrice + " ₽"}</div>
             {props.tender.status > 0 &&
                 <>
                     {dateSpan}

@@ -75,43 +75,42 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
                     </div>
                 </div>
             </div>
-                <div className={` ${styles.column}`}>
-                    <div className={`${styles.columnHeader}  rounded shadowed`} id={styles.first}>
-                        <h3>Новый тендер </h3></div>
-                    {tenders.filter(tender => tender.status == 0).map((tender, index) => (
-                        <TenderCard key={index} tender={tender}/>
-                    ))}
-                </div>
-                <div className={`${styles.column}`}>
-                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.second}>Подготовка 1 Этап</h3>
-                    {tenders.filter(tender => tender.status == 1).map((tender, index) => (
-                        <TenderCard key={index} tender={tender}/>
-                    ))}
-                </div>
-                <div className={`${styles.column}`}>
-                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.third}>Подана 1 Этап</h3>
-                    {tenders.filter(tender => tender.status == 2).map((tender, index) => (
-                        <TenderCard key={index} tender={tender}/>
-                    ))}
-                </div>
-                <div className={`${styles.column}`}>
-                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.forth}>Подготовка 2 Этап</h3>
-                    {tenders.filter(tender => tender.status == 3).map((tender, index) => (
-                        <TenderCard key={index} tender={tender}/>
-                    ))}
-                </div>
-                <div className={`${styles.column}`}>
-                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.fifth}>Подана 2 Этап</h3>
-                    {tenders.filter(tender => tender.status == 4).map((tender, index) => (
-                        <TenderCard key={index} tender={tender}/>
-                    ))}
-                </div>
-                <div className={`${styles.column}`}>
-                    <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.sixth}>Заключение
-                        договора</h3>
-                    {tenders.filter(tender => tender.status == 5).map((tender, index) => (
-                        <TenderCard key={index} tender={tender}/>
-                    ))}
+            <div className={` ${styles.column}`}>
+                <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.first}>Новый тендер </h3>
+                {tenders.filter(tender => tender.status == 0).map((tender, index) => (
+                    <TenderCard key={index} tender={tender}/>
+                ))}
+            </div>
+            <div className={`${styles.column}`}>
+                <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.second}>Подготовка 1 Этап</h3>
+                {tenders.filter(tender => tender.status == 1).map((tender, index) => (
+                    <TenderCard key={index} tender={tender}/>
+                ))}
+            </div>
+            <div className={`${styles.column}`}>
+                <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.third}>Подана 1 Этап</h3>
+                {tenders.filter(tender => tender.status == 2).map((tender, index) => (
+                    <TenderCard key={index} tender={tender}/>
+                ))}
+            </div>
+            <div className={`${styles.column}`}>
+                <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.forth}>Подготовка 2 Этап</h3>
+                {tenders.filter(tender => tender.status == 3).map((tender, index) => (
+                    <TenderCard key={index} tender={tender}/>
+                ))}
+            </div>
+            <div className={`${styles.column}`}>
+                <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.fifth}>Подана 2 Этап</h3>
+                {tenders.filter(tender => tender.status == 4).map((tender, index) => (
+                    <TenderCard key={index} tender={tender}/>
+                ))}
+            </div>
+            <div className={`${styles.column}`}>
+                <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.sixth}>Заключение
+                    договора</h3>
+                {tenders.filter(tender => tender.status == 5).map((tender, index) => (
+                    <TenderCard key={index} tender={tender}/>
+                ))}
             </div>
         </main>
     );

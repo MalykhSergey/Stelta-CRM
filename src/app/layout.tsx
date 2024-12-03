@@ -1,4 +1,4 @@
-import localFont from "next/font/local";
+import {Inconsolata, Montserrat, Roboto} from 'next/font/google';
 import {AuthProvider} from "./AuthContext";
 import {AlertContainer} from "./components/Alerts/Alert";
 import Header from "./components/Header/Header";
@@ -9,11 +9,19 @@ import "@/static/styles/buttons.css";
 import "@/static/styles/inputs.css";
 import "@/static/styles/stageForm.css";
 
-const firaSans = localFont({
-    src: "../static/fonts/GeistVF.woff",
-    variable: "--font-geist-sans",
-    weight: "100 900",
+const MontserratFont = Montserrat({
+    subsets: ['cyrillic'],
+    variable: "--default-font",
 });
+const RobotoFont = Roboto({
+    weight: ['700'],
+    subsets: ['cyrillic'],
+    variable: "--bold-title-font",
+});
+const InconsolateFont = Inconsolata({
+    subsets: ['latin'],
+    variable: "--numbers-font",
+})
 
 export default async function RootLayout({
                                              children,
@@ -24,7 +32,7 @@ export default async function RootLayout({
     const auth_user = typeof user_result == 'string' ? user_result : ''
     return (
         <html lang="en">
-        <body className={`${firaSans.variable}`}>
+        <body className={`${MontserratFont.variable} ${RobotoFont.variable} ${InconsolateFont.variable}`}>
         <div className='background'></div>
         <AlertContainer></AlertContainer>
         <AuthProvider initialAuth={auth_user}>
