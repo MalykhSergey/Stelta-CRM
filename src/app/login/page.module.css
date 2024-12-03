@@ -1,7 +1,6 @@
 .login {
-    max-width: 30%;
-    margin: auto;
     display: flex;
+    max-width: 600px;
     flex-direction: column;
     gap: 20px;
 }

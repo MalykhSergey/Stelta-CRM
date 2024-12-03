@@ -1,16 +1,13 @@
 .content {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 20px;
-}
-
-.content > * {
-    max-width: 50%;
+    max-width: 800px;
+    flex-grow: 1;
 }
 
 @media only screen and (max-width: 600px) {
-    .content > * {
+    .content{
         max-width: none;
     }
 }

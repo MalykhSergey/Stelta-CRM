@@ -4,7 +4,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 10px 10px 10px;
-    flex-wrap: wrap;
 }
 
 #logo {
@@ -15,11 +14,9 @@
 .navPanel {
     display: flex;
     background-color: rgba(0, 0, 0, 0);
-    /*justify-content: end;*/
     gap: 30px;
     padding: 10px;
     border-radius: 8px;
-    flex-wrap: wrap;
 }
 
 
@@ -36,12 +33,13 @@
 @media only screen and (max-width: 600px) {
     #header{
         justify-content: center;
+        flex-wrap: wrap;
     }
     .navPanel {
         padding: 4px;
         gap: 4px;
+        flex-wrap: wrap;
     }
-
     .navLink {
         padding: 2px 6px;
     }

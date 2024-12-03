@@ -14,8 +14,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 1000px;
     flex-grow: 1;
+    width: 800px;
 }
 #leftPanel{
     max-width: 1000px;
