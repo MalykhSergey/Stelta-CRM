@@ -27,18 +27,18 @@ export async function login(loginForm: FormData) {
             process.env.JWT_SECRET!,
             {expiresIn: '1h'}
         );
-        const cookiesStore = cookies()
+        const cookiesStore = await cookies()
         cookiesStore.set('auth_token', token, {httpOnly: true, maxAge: 3600 * 24 * 7})
     }
 }
 
 export async function logout() {
-    const cookieStorage = cookies()
+    const cookieStorage = await cookies()
     cookieStorage.delete("auth_token")
 }
 
 export async function authAction<T>(handler: (user: User) => Promise<T>) {
-    const cookiesStore = cookies()
+    const cookiesStore = await cookies()
     const auth_token = cookiesStore.get('auth_token')
     if (auth_token) {
         try {

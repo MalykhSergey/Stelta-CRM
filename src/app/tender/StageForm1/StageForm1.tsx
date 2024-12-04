@@ -9,6 +9,8 @@ import {Tender} from '../../../models/Tender/Tender';
 import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import DateRequestForm from './DateRequest';
 
+import type { JSX } from "react";
+
 interface StageFormProps {
     tender: Tender
 }

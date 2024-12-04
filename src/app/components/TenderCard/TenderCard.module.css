@@ -2,9 +2,11 @@
     font-weight: 600;
     margin-top: 10px;
     margin-bottom: 10px;
+    color: black;
 }
 
 .info {
+    color: black;
     font-size: 14px;
     margin-left: 10px;
     margin-bottom: 10px;

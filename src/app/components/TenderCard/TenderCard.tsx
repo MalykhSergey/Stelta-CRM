@@ -41,7 +41,7 @@ export default function TenderCard(props: { tender: Tender }) {
             break
     }
     return (
-        <Link className={`card inherit ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}
+        <Link className={`card ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}
               target='_blank'>
             <div className={'indicator status-' + props.tender.status}>{props.tender.isSpecial && '✔'}</div>
             <span className={styles.label}>{props.tender.company.name}</span>

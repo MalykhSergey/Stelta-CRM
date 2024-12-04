@@ -1,11 +1,10 @@
 "use client"
-import {faFilter, faOutdent} from '@fortawesome/free-solid-svg-icons';
+import {faOutdent} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {useRouter} from 'next/navigation';
-import {useRef, useState} from 'react';
+import {useState} from 'react';
 import {showMessage} from './components/Alerts/Alert';
 import TenderCard from './components/TenderCard/TenderCard';
-import getStatusName from '../models/Status';
 import {Tender} from '@/models/Tender/Tender';
 import {createTender} from '@/models/Tender/TenderService';
 import styles from './page.module.css';
@@ -24,7 +23,7 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
             router.push(`/tender/${id}`)
     }
     return (
-        <main className={`${styles.grid} inherit`}>
+        <main className={`${styles.grid}`}>
             <div className={styles.leftPanel}>
                 <button className={`${styles.columnHeader} ${styles.createTender}  rounded shadowed`}
                         onClick={createHandler}><span>Добавить тендер</span><FontAwesomeIcon icon={faOutdent}

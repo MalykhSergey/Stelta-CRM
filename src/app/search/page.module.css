@@ -15,7 +15,9 @@
 
 .tenders {
     display: grid;
-    grid-template-columns: repeat(6,1fr);
+    grid-template-columns: repeat(5,1fr);
+    /*align-items: start;*/
+    align-self: start;
     gap: 20px;
 }
 

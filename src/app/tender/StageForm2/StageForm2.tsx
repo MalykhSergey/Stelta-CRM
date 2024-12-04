@@ -10,6 +10,8 @@ import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from "./StageForm2.module.css"
 
+import type { JSX } from "react";
+
 interface StageForm2Props {
     tender: Tender
 }
@@ -79,6 +81,6 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender}) => {
                 {isEditable && <button className='BlueButton' onClick={handleClick}>Переторжка</button>}
             </div>
         </div>
-    )
+    );
 });
 export default StageForm2

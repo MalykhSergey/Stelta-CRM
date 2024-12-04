@@ -2,9 +2,10 @@ import {getTenderById} from '@/models/Tender/TenderService';
 import TenderPageClientWrapper from './TenderPageClientWrapper';
 import {getCompanies} from '@/models/CompanyService';
 
+type Params = Promise<{ tenderId: string }>
 
-const TenderPageServer = async ({params}: { params: { tenderId: string } }) => {
-    const tender = await getTenderById(Number.parseInt(params.tenderId));
+const TenderPageServer = async (props:{params:Params}) => {
+    const tender = await getTenderById(Number.parseInt((await props.params).tenderId));
     const companies = await getCompanies();
     return <TenderPageClientWrapper tenderString={tender} companies={companies}/>;
 };

@@ -53,10 +53,6 @@ a {
     text-decoration: none;
 }
 
-.inherit * {
-    color: inherit;
-}
-
 .fullWidth {
     width: 100%;
 }
