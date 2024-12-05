@@ -1,5 +1,11 @@
 #canvas-container {
-    position: relative;
     height: 600px;
     width: 800px;
+}
+
+@media only screen and (max-width: 600px) {
+    #canvas-container {
+        height: 300px;
+        width: 300px;
+    }
 }

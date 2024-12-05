@@ -15,9 +15,13 @@ export default function TendersFilter(props: { allTenders: Tender[], setTenders:
     const changeFilter = () => {
         props.setTenders(props.allTenders.filter(tender => {
             let filterFlag = true
-            if (status.current && status.current.value != '')
+            if (status.current && status.current.value != '') {
+                if (status.current.value == '-1')
+                    if (tender.status == -4 || tender.status > 0)
+                        filterFlag = filterFlag && false
                 if (status.current.value != tender.status.toString())
                     filterFlag = filterFlag && false
+            }
             if (regNumber.current && regNumber.current.value != '')
                 if (!tender.regNumber.includes(regNumber.current.value))
                     filterFlag = filterFlag && false
@@ -43,6 +47,8 @@ export default function TendersFilter(props: { allTenders: Tender[], setTenders:
                 <label className={styles.filterLabel}>Статус:</label>
                 <select ref={status} className='input' onChange={changeFilter}>
                     <option value="">Любой</option>
+                    <option value="-4">{getStatusName(-4)}</option>
+                    <option value="-1">{getStatusName(-1)}</option>
                     <option value="0">{getStatusName(0)}</option>
                     <option value="1">{getStatusName(1)}</option>
                     <option value="2">{getStatusName(2)}</option>

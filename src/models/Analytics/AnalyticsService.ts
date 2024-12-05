@@ -1,5 +1,5 @@
 "use server"
-import Company from "../Company"
+import Company from "../Company/Company"
 import getStatusName from "../Status"
 import {
     loadCommonAnalytics,
@@ -24,7 +24,7 @@ export async function getCommonAnalytics() {
         else if (row.status < 0)
             analytics.not_participate_count += row.count
     }
-    return analytics
+    return {...analytics}
 }
 
 export async function getStatusAnalyticsByCompany(company_id: number) {

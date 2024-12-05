@@ -2,14 +2,26 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 800px;
+    min-width: 600px;
+    max-width: 1000px;
     flex-grow: 1;
     margin: auto;
+}
+.company{
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    padding: 6px;
+    border-radius: 8px;
+    gap: 20px;
+    align-items: center;
 }
 
 @media only screen and (max-width: 600px) {
     .content{
+        min-width: 100px;
         max-width: none;
+        flex-wrap: wrap;
     }
 }
 

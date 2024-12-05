@@ -13,7 +13,7 @@ import StageForm3 from '@/app/tender/StageForm3/StageForm3';
 import {observer} from 'mobx-react-lite';
 import {useRouter} from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
-import Company from '@/models/Company';
+import Company from '@/models/Company/Company';
 import {useAuth} from "@/app/AuthContext";
 
 const getGreenButtonText = (status: number) => {
@@ -130,9 +130,9 @@ const TenderPageClient = observer(({tender, companies}: { tender: Tender, compan
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
                                title='Документы тендера' isEditable={tender.status == 0} className='card' isOpened={isEditable.company}/>
-                {tender.status >= 1 && <StageForm1 tender={tender}/>}
-                {tender.status >= 3 && <StageForm2 tender={tender}/>}
-                {tender.status >= 5 && <StageForm3 tender={tender}/>}
+                {Math.abs(tender.status) >= 1 && <StageForm1 tender={tender}/>}
+                {Math.abs(tender.status) >= 3 && <StageForm2 tender={tender}/>}
+                {Math.abs(tender.status) >= 5 && <StageForm3 tender={tender}/>}
                 <CommentsForm tender={tender}/>
                 {isAuth && <div className={styles.buttonRow}>
                     {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) &&

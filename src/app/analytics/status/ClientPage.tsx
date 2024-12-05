@@ -1,40 +1,52 @@
 "use client"
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {useState} from "react";
+import {useMemo} from "react";
 import {CompanyAnalytics} from "@/models/Analytics/CompanyAnalytics";
 import {getCompanyAnalyticsByStatus} from "@/models/Analytics/AnalyticsService";
 import getStatusName from "@/models/Status";
 import styles from '../page.module.css';
+import {makeAutoObservable} from "mobx";
+import {observer} from "mobx-react-lite";
 
-export default function StatusAnalyticsClient(props: { initialData: CompanyAnalytics[] }) {
+class AnalyticsStore {
+    data: CompanyAnalytics[]
+    status: number
 
-    const [chartData, setChartData] = useState({
-        title: "Тендеры на стадии: Новый тендер",
+    constructor(initialData: CompanyAnalytics[]) {
+        this.data = initialData
+        this.status = 6
+        makeAutoObservable(this)
+    }
+
+    setData(newData: CompanyAnalytics[], status: number) {
+        this.data = newData
+        this.status = status
+    }
+}
+
+const StatusAnalyticsClient = observer((props: { initialData: CompanyAnalytics[] }) => {
+    const analyticsStore = useMemo(() => new AnalyticsStore(props.initialData), [props.initialData])
+    const chartData = {
+        title: `Статус: ${getStatusName(analyticsStore.status)}`,
         data: {
-            labels: props.initialData.map(company_analytics => company_analytics.company.name), datasets: [{
-                data: props.initialData.map(company_analytics => company_analytics.tenders_count)
+            labels: analyticsStore.data.map(company_analytics => company_analytics.company.name), datasets: [{
+                data: analyticsStore.data.map(company_analytics => company_analytics.tenders_count)
             }]
         }
-    })
+    }
 
     async function loadData(e: React.ChangeEvent<HTMLSelectElement>) {
         const status = Number.parseInt(e.target.value);
         const analytics_data = await getCompanyAnalyticsByStatus(status) as CompanyAnalytics[]
-        setChartData({
-            title: `Тендеры на стадии: ${getStatusName(status)}`,
-            data: {
-                labels: analytics_data.map(company_analytics => company_analytics.company.name), datasets: [{
-                    data: analytics_data.map(company_analytics => company_analytics.tenders_count)
-                }]
-            }
-        })
+        analyticsStore.setData(analytics_data, status)
     }
 
     return (
-        <>
+        <div id={styles.chartPage}>
             <div id={styles.inputsContainer}>
                 <label htmlFor="status">Статус:</label>
                 <select id="status" name="status" defaultValue={6} onChange={loadData}>
+                    <option value="-4">{getStatusName(-4)}</option>
                     <option value="-1">{getStatusName(-1)}</option>
                     <option value="0">{getStatusName(0)}</option>
                     <option value="1">{getStatusName(1)}</option>
@@ -45,7 +57,9 @@ export default function StatusAnalyticsClient(props: { initialData: CompanyAnaly
                     <option value="6">{getStatusName(6)}</option>
                 </select>
             </div>
+            <h1 id={styles.chartTitle}>{chartData.title}</h1>
             <DoughnutChart data={chartData.data} title={chartData.title}/>
-        </>
+        </div>
     )
-}
+})
+export default StatusAnalyticsClient

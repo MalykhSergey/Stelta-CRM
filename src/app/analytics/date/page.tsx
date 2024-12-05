@@ -2,6 +2,7 @@ import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService
 import DateRangeAnalyticsClient from "./ClientPage";
 import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
 
+export const dynamic = 'force-dynamic'
 export default async function DateRangeAnalyticsServer() {
     const currentYear = new Date().getFullYear();
     const startDate = new Date(currentYear, 0, 1);

@@ -1,5 +1,5 @@
-import Company from "../../models/Company"
-import {getCompanies} from "../../models/CompanyService"
+import Company from "../../models/Company/Company"
+import {getCompanies} from "@/models/Company/CompanyService"
 import ClientCompanies from "./ClientPage"
 
 export const dynamic = 'force-dynamic'

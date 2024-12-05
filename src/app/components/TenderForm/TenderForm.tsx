@@ -1,4 +1,4 @@
-import Company from '@/models/Company'
+import Company from '@/models/Company/Company'
 import {default as getStatusName} from '@/models/Status'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
@@ -55,6 +55,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                 <select name="Status" value={tender.status} className={styles.input} onChange={handleChange} disabled={!isEditable.status}>
                     {tender.status < 0 &&
                         <>
+                            <option value="-4">{getStatusName(-4)}</option>
                             <option value="-1">{getStatusName(-1)}</option>
                         </>
                     }

@@ -1,7 +1,7 @@
 'use client';
 
 import {ConfirmDialogProvider} from '@/app/components/Dialog/ConfirmDialogContext';
-import Company from '@/models/Company';
+import Company from '@/models/Company/Company';
 import {Tender} from '@/models/Tender/Tender';
 import TenderPageClient from './TenderPageClient';
 

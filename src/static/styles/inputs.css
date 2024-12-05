@@ -27,7 +27,7 @@ select:disabled {
 }
 
 input,
-select {
+select,textarea {
     width: 100%;
     padding: 12px;
     border-radius: 4px;
@@ -47,6 +47,12 @@ select:hover {
 
 input[type="checkbox"] {
     width: auto;
+}
+.row-inputs{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
 }
 
 .redButton {

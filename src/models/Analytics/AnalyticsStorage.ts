@@ -23,7 +23,14 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
 }
 
 export async function loadCompanyAnalyticsByStatus(status: number) {
-    return (await connection.query(`
+    if (status == -1)
+        return (await connection.query(`
+        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count FROM tenders 
+        JOIN companies ON tenders.company_id = companies.id 
+        WHERE status != -4 AND status < 0
+        GROUP BY companies.id, companies.name `)).rows
+    else
+        return (await connection.query(`
         SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count FROM tenders 
         JOIN companies ON tenders.company_id = companies.id 
         WHERE status = $1

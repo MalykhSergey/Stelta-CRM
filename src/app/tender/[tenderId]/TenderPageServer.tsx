@@ -1,6 +1,6 @@
 import {getTenderById} from '@/models/Tender/TenderService';
 import TenderPageClientWrapper from './TenderPageClientWrapper';
-import {getCompanies} from '@/models/CompanyService';
+import {getCompanies} from '@/models/Company/CompanyService';
 
 type Params = Promise<{ tenderId: string }>
 

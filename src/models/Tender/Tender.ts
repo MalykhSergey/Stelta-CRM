@@ -3,7 +3,7 @@ import {Result} from "../../app/Result"
 import {DateRequest} from "../DateRequest"
 import FileName from "../FileName"
 import {RebiddingPrice} from "../RebiddingPrice"
-import Company from "../Company"
+import Company from "../Company/Company"
 
 export class Tender {
     public id: number = 0

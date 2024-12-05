@@ -9,7 +9,7 @@ export default function LayoutPage({children,}: {
     const pathname = usePathname()
 
     return (
-        <main>
+        <>
             <div id={styles.tabBar}>
                 <Link href='./common'
                       className={`${styles.tab} ${pathname === '/analytics/common' ? styles.active : ''}`}>Общая</Link>
@@ -25,6 +25,6 @@ export default function LayoutPage({children,}: {
             <div id={styles.content} className='shadowed'>
                 {children}
             </div>
-        </main>
+        </>
     )
 }
