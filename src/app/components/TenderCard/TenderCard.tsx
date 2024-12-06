@@ -15,7 +15,7 @@ export default function TenderCard(props: { tender: Tender }) {
     let dateSpan
     let dateField
 
-    switch (props.tender.status) {
+    switch (Math.abs(props.tender.status)) {
         case 0:
             dateField = <></>
             break
@@ -39,6 +39,10 @@ export default function TenderCard(props: { tender: Tender }) {
             dateField = convertDate(props.tender.date_finish)
             dateSpan = <span className={styles.label}>Подведение итогов: </span>
             break
+        case 6:
+            dateField = convertDate(props.tender.date_finish)
+            dateSpan = <span className={styles.label}>Подведение итогов: </span>
+            break
     }
     return (
         <Link className={`card ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}
@@ -48,13 +52,9 @@ export default function TenderCard(props: { tender: Tender }) {
             <div className={styles.indicator}></div>
             <div className={styles.title}>{props.tender.name}</div>
             <span className={styles.label}>НМЦК: </span>
-            <div className={styles.info} >{props.tender.initialMaxPrice + " ₽"}</div>
-            {props.tender.status > 0 &&
-                <>
-                    {dateSpan}
-                    {dateField}
-                </>
-            }
+            <div className={styles.info}>{props.tender.initialMaxPrice + " ₽"}</div>
+            {dateSpan}
+            {dateField}
         </Link>
     );
 }

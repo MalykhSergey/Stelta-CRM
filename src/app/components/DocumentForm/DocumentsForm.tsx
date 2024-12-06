@@ -6,6 +6,7 @@ import {useRef} from 'react';
 import {useConfirmDialog} from '../Dialog/ConfirmDialogContext';
 import styles from './DocumentsForm.module.css';
 import {deleteHandler, uploadHandler} from './Handler';
+import {showMessage} from "@/app/components/Alerts/Alert";
 
 interface DocumentsFormProps {
     tenderId: number,
@@ -58,10 +59,12 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
         formData.append('stage', stage.toString());
         formData.append('tenderId', tenderId.toString());
         formData.append(specialPlaceName, specialPlaceId.toString());
-        const newFiles = JSON.parse(await uploadHandler(formData)) as FileName[]
-        for (const newFile of newFiles) {
-            pushFile(newFile)
-        }
+        const result = await uploadHandler(formData)
+        if (Array.isArray(result))
+            for (const newFile of result as FileName[])
+                pushFile(newFile)
+        else
+            showMessage(result.error)
     }
     const files = []
     for (const fileName of fileNames) {
@@ -73,9 +76,12 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                     showConfirmDialog(
                         {
                             message: `Вы действительно хотите удалить ${fileName.name}?`,
-                            onConfirm: () => {
-                                removeFile(fileName)
-                                deleteHandler(tenderId, fileName.id)
+                            onConfirm: async () => {
+                                const result = await deleteHandler(tenderId, fileName.id)
+                                if (result?.error) {
+                                    showMessage(result.error)
+                                } else
+                                    removeFile(fileName)
                             }
                         })
                 }}

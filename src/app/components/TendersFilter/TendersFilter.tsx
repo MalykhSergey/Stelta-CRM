@@ -5,7 +5,11 @@ import {useRef} from "react";
 import {Tender} from "@/models/Tender/Tender";
 import styles from "./TendersFilter.module.css";
 
-export default function TendersFilter(props: { allTenders: Tender[], setTenders: (tenders: Tender[]) => void }) {
+export default function TendersFilter(props: {
+    allTenders: Tender[],
+    setTenders: (tenders: Tender[]) => void,
+    hideOtherStatuses: boolean
+}) {
     const status = useRef<HTMLSelectElement | null>(null);
     const regNumber = useRef<HTMLInputElement | null>(null);
     const fullName = useRef<HTMLInputElement | null>(null);
@@ -47,15 +51,16 @@ export default function TendersFilter(props: { allTenders: Tender[], setTenders:
                 <label className={styles.filterLabel}>Статус:</label>
                 <select ref={status} className='input' onChange={changeFilter}>
                     <option value="">Любой</option>
-                    <option value="-4">{getStatusName(-4)}</option>
-                    <option value="-1">{getStatusName(-1)}</option>
+                    {!props.hideOtherStatuses && <option value="-4">{getStatusName(-4)}</option>}
+                    {!props.hideOtherStatuses && <option value="-1">{getStatusName(-1)}</option>}
                     <option value="0">{getStatusName(0)}</option>
                     <option value="1">{getStatusName(1)}</option>
                     <option value="2">{getStatusName(2)}</option>
                     <option value="3">{getStatusName(3)}</option>
                     <option value="4">{getStatusName(4)}</option>
                     <option value="5">{getStatusName(5)}</option>
-                    <option value="6">{getStatusName(6)}</option>
+                    {!props.hideOtherStatuses && <option value="6">{getStatusName(6)}</option>}
+
                 </select>
             </div>
             <div className='column'>

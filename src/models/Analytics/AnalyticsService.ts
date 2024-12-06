@@ -15,14 +15,19 @@ export async function getCommonAnalytics() {
     const result = await loadCommonAnalytics()
     const analytics = new CommonAnalytics()
     for (const row of result) {
-        if (row.is_special)
+        if (row.is_special) {
             analytics.special_count += row.count
-        else if (row.status == 6)
-            analytics.win_count += row.count
-        else if (row.status == -4)
-            analytics.loose_count += row.count
-        else if (row.status < 0)
+            analytics.special_price += Number.parseFloat(row.sum)
+        } else if (row.status == 6) {
+            analytics.win_count = row.count
+            analytics.win_price = Number.parseFloat(row.sum)
+        } else if (row.status == -4) {
+            analytics.loose_count = row.count
+            analytics.loose_price = Number.parseFloat(row.sum)
+        } else if (row.status < 0) {
             analytics.not_participate_count += row.count
+            analytics.not_participate_price += Number.parseFloat(row.sum)
+        }
     }
     return {...analytics}
 }
@@ -33,9 +38,11 @@ export async function getStatusAnalyticsByCompany(company_id: number) {
     for (const row of result) {
         if (row.is_special) {
             analytics.special_count += row.count
+            analytics.special_price += Number.parseFloat(row.sum)
         } else {
             const statusName = getStatusName(row.status)
-            analytics.statuses[statusName] = (analytics.statuses[statusName] || 0) + row.count
+            analytics.status_counts[statusName] = (analytics.status_counts[statusName] || 0) + row.count
+            analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
         }
     }
     return {...analytics};
@@ -47,9 +54,11 @@ export async function getStatusAnalyticsByDateRange(startDate: string, endDate: 
     for (const row of result) {
         if (row.is_special) {
             analytics.special_count += row.count
+            analytics.special_price += Number.parseFloat(row.sum)
         } else {
             const statusName = getStatusName(row.status)
-            analytics.statuses[statusName] = (analytics.statuses[statusName] || 0) + row.count
+            analytics.status_counts[statusName] = (analytics.status_counts[statusName] || 0) + row.count
+            analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
         }
     }
     return {...analytics}
@@ -59,7 +68,7 @@ export async function getCompanyAnalyticsByStatus(status: number) {
     const result = await loadCompanyAnalyticsByStatus(status)
     const analytics_list = []
     for (const row of result) {
-        analytics_list.push({...new CompanyAnalytics({...new Company(row.id, row.name)}, row.count)})
+        analytics_list.push({...new CompanyAnalytics({...new Company(row.id, row.name)}, row.count, Number.parseFloat(row.sum))})
     }
     return analytics_list
 }

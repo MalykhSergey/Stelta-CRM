@@ -86,24 +86,19 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     useEffect(() => {
             const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
-            // let titleFontSize = 24
+            console.log(total)
+            console.log(props.data.datasets[0])
             let legendFontSize = 15
-            let labelFontSize = props.data.datasets[0].data.length > 20 ? 9 : 18
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-                // titleFontSize /= 2
                 legendFontSize /= 3
-                labelFontSize /= 3
             }
-
             if (chartRef.current && total > 0) {
                 const ctx = chartRef.current.getContext('2d')!;
-
                 if (ctx) {
                     const chart = new Chart<'doughnut', number[], string>(ctx, {
                         type: 'doughnut',
                         data: props.data,
                         options: {
-                            // aspectRatio: 1.5,
                             maintainAspectRatio: false,
                             elements: {
                                 center: {
@@ -112,14 +107,6 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                                 },
                             },
                             plugins: {
-                                // title: {
-                                //     display: true,
-                                //     text: props.title,
-                                //     font: {
-                                //         size: titleFontSize
-                                //     },
-                                //     color: 'rgb(0,0,0)'
-                                // },
                                 legend: {
                                     position: 'right',
                                     labels: {
@@ -138,18 +125,15 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                                     },
                                     color: 'rgb(255,255,255)',
                                     font: (context) => {
+                                        const chartArea = context.chart.chartArea;
+                                        const width = chartArea.width
+                                        const height = chartArea.height
                                         const relative_Value = context.dataset.data[context.dataIndex] as number / total;
-                                        return {size: Math.min(Math.max(labelFontSize * relative_Value * 240, 8), 40)};
+                                        const sectorArea = Math.min(width, height) * relative_Value;
+                                        return {size: Math.min(Math.max(sectorArea * 0.4, 8), 40)};
                                     },
                                     anchor: 'center',
                                 },
-                            },
-                            onClick: function (e, item) {
-                                if (item.length > 0) {
-                                    // const index = item[0].index;
-                                    // const label = props.data.labels![index];
-                                    // alert('You clicked on ' + label);
-                                }
                             }
                         } as ChartOptions<'doughnut'>,
                     });

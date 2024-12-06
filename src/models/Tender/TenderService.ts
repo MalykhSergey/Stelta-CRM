@@ -4,7 +4,11 @@ import tenderStorage from "./TenderStorage";
 import {authAction} from "../UserService";
 
 export async function createTender() {
-    return await tenderStorage.createTender()
+    return authAction(
+        async () => {
+            return await tenderStorage.createTender()
+        }
+    )
 }
 
 export async function deleteTender(tenderId: number) {

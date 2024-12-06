@@ -29,6 +29,13 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
         if (result?.error)
             showMessage(result.error)
         else {
+            const id = Number.parseInt(formData.get('id') as string)
+            const name = formData.get('name') as string
+            setCompanies(companies.map(company => {
+                if (company.id == id)
+                    company.name = name
+                return company
+            }))
             showMessage("Организация успешно обновлена!", "successful")
         }
     }

@@ -41,7 +41,7 @@ class TenderStorage {
             await connection.query(UPDATE_TENDER_QUERY, [
                 tender.status,
                 tender.isSpecial,
-                tender.company.id,
+                tender.company.id ? tender.company.id : null,
                 tender.name,
                 tender.lotNumber,
                 tender.regNumber,
@@ -71,7 +71,7 @@ class TenderStorage {
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
         } catch {
-            return {error: 'Ошибка удаления тендера'}
+            return {error: 'Ошибка обновления тендера'}
         }
     }
 
@@ -79,7 +79,8 @@ class TenderStorage {
         const tenders_rows = (await connection.query(`
             SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(date_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
             FROM tenders
-            JOIN  companies ON companies.id = company_id`)).rows;
+            LEFT JOIN  companies ON companies.id = company_id
+            ORDER BY tenders.id DESC`)).rows;
         return tenders_rows.map(tender => Tender.fromQueryRow(tender))
     }
 
@@ -87,7 +88,7 @@ class TenderStorage {
         const tenders_row = (await connection.query(`
             SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(date_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
             FROM tenders
-            JOIN  companies ON companies.id = company_id 
+            LEFT JOIN  companies ON companies.id = company_id 
             WHERE tenders.id =  $1`, [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         for (let i = 0; i < 6; i++) {

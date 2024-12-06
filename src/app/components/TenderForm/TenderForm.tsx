@@ -76,7 +76,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <select name="Company" id="Company" onChange={handleChange} disabled={!isEditable.company}>
+                    <select name="Company" id="Company" onChange={handleChange} value={tender.company.id} disabled={!isEditable.company}>
                         {companies.map(company =>
                             <option key={"option" + company.id} value={company.id}>{company.name}</option>
                         )}

@@ -2,22 +2,25 @@
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
 import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
 import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
-import {useMemo, useRef} from "react";
+import React, {useMemo, useRef} from "react";
 import styles from '../page.module.css';
 import {makeAutoObservable} from "mobx";
 import {observer} from "mobx-react-lite";
+import ChartDataType from "@/models/Analytics/ChartDataType";
 
 class AnalyticsStore {
     data: StatusAnalytics
     startDate: string
     endDate: string
     isSpecial: boolean
+    type: ChartDataType
 
     constructor(initialData: StatusAnalytics, startDate: string, endDate: string) {
         this.data = initialData
         this.isSpecial = false
         this.startDate = startDate
         this.endDate = endDate
+        this.type = ChartDataType.COUNT
         makeAutoObservable(this)
     }
 
@@ -27,8 +30,35 @@ class AnalyticsStore {
         this.endDate = endDateString
     }
 
-    toggle() {
+        getChartData() {
+            let data
+            const labels = Object.keys(this.data.status_counts)
+            if (this.type == ChartDataType.COUNT)
+                data = Object.values(this.data.status_counts)
+            else
+                data = Object.values(this.data.status_price)
+            if (this.isSpecial) {
+                labels.push("Подыгрыш")
+                if (this.type == ChartDataType.COUNT)
+                    data.push(this.data.special_count)
+                else
+                    data.push(this.data.special_price)
+            }
+            return {
+                title: `Тендеры за период: ${this.startDate} – ${this.endDate}`,
+                data: {
+                    labels: labels,
+                    datasets: [{data: data}]
+                }
+            }
+        }
+
+    toggleIsSpecial() {
         this.isSpecial = !this.isSpecial
+    }
+
+    toggleType(type: ChartDataType) {
+        this.type = type
     }
 }
 
@@ -38,19 +68,7 @@ const DateRangeAnalyticsClient = observer((props: {
     endDate: Date
 }) => {
     const analyticsStore = useMemo(() => new AnalyticsStore(props.initialData, props.startDate.toLocaleDateString('ru-RU'), props.endDate.toLocaleDateString('ru-RU')), [props.initialData])
-    const chartData = {
-        title: `Тендеры за период: ${analyticsStore.startDate} – ${analyticsStore.endDate}`,
-        data: {
-            labels: Object.keys(analyticsStore.data.statuses),
-            datasets: [{
-                data: Object.values(analyticsStore.data.statuses),
-            }],
-        }
-    }
-    if (analyticsStore.isSpecial) {
-        chartData.data.labels.push('Подыгрыш')
-        chartData.data.datasets[0].data.push(analyticsStore.data.special_count)
-    }
+    const chartData = analyticsStore.getChartData()
     const startDateInput = useRef<HTMLInputElement | null>(null)
     const endDateInput = useRef<HTMLInputElement | null>(null)
 
@@ -64,21 +82,31 @@ const DateRangeAnalyticsClient = observer((props: {
     }
 
     function toggleIsSpecial() {
-        analyticsStore.toggle()
+        analyticsStore.toggleIsSpecial()
+    }
+
+    function toggleType(typeForm: React.ChangeEvent<HTMLInputElement>) {
+        analyticsStore.toggleType(Number.parseInt(typeForm.currentTarget.value))
     }
 
     return (
         <div id={styles.chartPage}>
             <div id={styles.inputsContainer}>
-                <label htmlFor="is_special">Показывать подыгрыш:</label>
-                <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial}/>
+                <div className="row-inputs">
+                    <label htmlFor="count">Количество:</label>
+                    <input id='count' type="radio" name='type' value='0' onChange={toggleType} defaultChecked={true}/>
+                    <label htmlFor="sum">Цена:</label>
+                    <input id='sum' type="radio" name='type' value='1' onChange={toggleType}/>
+                </div>
+                <div className='row-inputs'>
+                    <label htmlFor="is_special">Показывать подыгрыш:</label>
+                    <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial}/>
+                </div>
                 <div className='row-inputs'>
                     <label htmlFor="startDateInput">От:</label>
                     <input id="startDateInput" ref={startDateInput} type="date"
                            defaultValue={props.startDate.toLocaleDateString('en-CA')}
                            onChange={loadData}/>
-                </div>
-                <div className="row-inputs">
                     <label htmlFor="endDateInput">До:</label>
                     <input id="endDateInput" ref={endDateInput} type="date"
                            defaultValue={props.endDate.toLocaleDateString('en-CA')}

@@ -172,8 +172,10 @@ export class Tender {
         tender.id = row.id
         tender.status = row.status
         tender.isSpecial = row.is_special
-        tender.company.id = row.company_id
-        tender.company.name = row.company_name
+        if (row.company_id) {
+            tender.company.id = row.company_id
+            tender.company.name = row.company_name
+        }
         tender.name = row.name
         tender.lotNumber = row.lot_number
         tender.regNumber = row.register_number

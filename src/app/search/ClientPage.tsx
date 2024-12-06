@@ -12,7 +12,7 @@ export default function SearchPage({tendersJSON}: { tendersJSON: string }) {
     return (
         <main className={styles.content + ' inherit'}>
             <div id={styles.leftPanel}>
-                <TendersFilter allTenders={allTenders} setTenders={setTenders}/>
+                <TendersFilter allTenders={allTenders} setTenders={setTenders} hideOtherStatuses={false}/>
             </div>
             <div className={styles.tenders}>
                 {tenders.map(tender => <TenderCard tender={tender} key={tender.id}/>)}
