@@ -20,7 +20,7 @@ export class Tender {
     public date2_finish = ''
     public date_finish = ''
     public startDateRange = 0
-    public endRange = 0
+    public endDateRange = 0
     public contractDate = ''
     public contractNumber = ''
     public contactPerson: string = ''
@@ -194,7 +194,7 @@ export class Tender {
         const date1 = new Date(row.date1_finish).getTime()
         const date2 = new Date(row.date2_finish).getTime()
         const date3 = new Date(row.date_finish).getTime()
-        tender.endRange = Math.max(date1, date2, date3)
+        tender.endDateRange = Math.max(date1, date2, date3)
         for (let i = 0; i < 6; i++) {
             if (row[`comment${i}`] != null)
                 tender.comments[i] = row[`comment${i}`]
@@ -244,8 +244,8 @@ export class Tender {
         tender.date1_finish = obj.date1_finish
         tender.date2_finish = obj.date2_finish
         tender.date_finish = obj.date_finish
-        tender.startDateRange = obj.startRange
-        tender.endRange = obj.endRange
+        tender.startDateRange = obj.startDateRange
+        tender.endDateRange = obj.endDateRange
         tender.contractNumber = obj.contractNumber
         tender.contractDate = obj.contractDate
         tender.contactPerson = obj.contactPerson

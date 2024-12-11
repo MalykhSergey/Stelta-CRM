@@ -36,7 +36,7 @@ export default function TendersFilter(props: {
                 if (!tender.company.name.toLowerCase().includes(company.current.value.toLowerCase()))
                     filterFlag = filterFlag && false
             if (startDateRange.current && startDateRange.current.value != '' && endDateRange.current && endDateRange.current.value != '')
-                if (tender.startDateRange < new Date(startDateRange.current.value).getTime() || tender.endRange > new Date(endDateRange.current.value).getTime())
+                if (tender.startDateRange < new Date(startDateRange.current.value).getTime() || tender.endDateRange > new Date(endDateRange.current.value).getTime())
                     filterFlag = filterFlag && false
             return filterFlag
         }))

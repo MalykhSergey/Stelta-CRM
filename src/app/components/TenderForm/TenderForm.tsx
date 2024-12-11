@@ -44,7 +44,6 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
     const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
     const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
-    // const price = tender.rebiddingPrices.length == 0 ? renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange) : renderField("Price", tender.rebiddingPrices.at(-1)?.price, 'Наша цена:', false, errors, handleChange)
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
@@ -79,6 +78,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                 <div className={styles.inputRow}>
                     <select name="Company" id="Company" onChange={handleChange} value={tender.company.id}
                             disabled={!isEditable.company}>
+                        <option key={"option0"} value={0} disabled={true}>Выберите организацию</option>
                         {companies.map(company =>
                             <option key={"option" + company.id} value={company.id}>{company.name}</option>
                         )}
