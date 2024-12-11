@@ -2,6 +2,7 @@ import Link from 'next/link';
 import {Tender} from '../../../models/Tender/Tender';
 import styles from './TenderCard.module.css';
 import "./statuses.css";
+import {formatValue} from "react-currency-input-field";
 
 function convertDate(value: string) {
     const convertedDate = new Date(value).toLocaleString().split(',')
@@ -52,7 +53,7 @@ export default function TenderCard(props: { tender: Tender }) {
             <div className={styles.indicator}></div>
             <div className={styles.title}>{props.tender.name}</div>
             <span className={styles.label}>НМЦК: </span>
-            <div className={styles.info}>{props.tender.initialMaxPrice + " ₽"}</div>
+            <div className={styles.info}>{formatValue({value: props.tender.initialMaxPrice, suffix:'₽', groupSeparator:' ', decimalSeparator:','})}</div>
             {dateSpan}
             {dateField}
         </Link>

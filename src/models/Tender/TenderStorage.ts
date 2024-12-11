@@ -38,6 +38,8 @@ class TenderStorage {
 
     async update(tender: Tender) {
         try {
+            tender.price = tender.price.replace(',', '.')
+            tender.initialMaxPrice = tender.initialMaxPrice.replace(',', '.')
             await connection.query(UPDATE_TENDER_QUERY, [
                 tender.status,
                 tender.isSpecial,
@@ -70,7 +72,8 @@ class TenderStorage {
             for (const rebiddingPrice of tender.rebiddingPrices) {
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
-        } catch {
+        } catch (e) {
+            console.log(e)
             return {error: 'Ошибка обновления тендера'}
         }
     }

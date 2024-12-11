@@ -76,7 +76,7 @@ export class Tender {
     }
 
     setInitialMaxPrice(value: string): Result<string, string> {
-        this.initialMaxPrice = value
+        this.initialMaxPrice = value.replace(',','.')
         if (value == "") {
             return {ok: false, error: 'Поле не должно быть пустым!'}
         }
@@ -84,7 +84,7 @@ export class Tender {
     }
 
     setPrice(value: string): Result<string, string> {
-        this.price = value
+        this.price = value.replace(',','.')
         if (value == "") {
             return {ok: false, error: 'Поле не должно быть пустым!'}
         }
@@ -179,8 +179,8 @@ export class Tender {
         tender.name = row.name
         tender.lotNumber = row.lot_number
         tender.regNumber = row.register_number
-        tender.initialMaxPrice = row.initial_max_price.slice(0, -2)
-        tender.price = row.price.slice(0, -2)
+        tender.initialMaxPrice = row.initial_max_price
+        tender.price = row.price
         tender.contactPerson = row.contact_person
         tender.phoneNumber = row.phone_number
         tender.email = row.email

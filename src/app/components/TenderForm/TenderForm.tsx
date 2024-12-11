@@ -5,12 +5,13 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {observer, useLocalObservable} from 'mobx-react-lite'
 import {Tender} from '../../../models/Tender/Tender'
 import styles from './TenderForm.module.css'
+import CurrencyInput from "react-currency-input-field";
 
 interface TenderFormProps {
     tender: Tender,
     companies: Company[],
     isEditable: {
-        status:boolean,
+        status: boolean,
         isSpecial: boolean,
         company: boolean,
         name: boolean,
@@ -43,8 +44,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
     const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
     const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
-    const initialMaxPrice = renderField("InitialMaxPrice", tender.initialMaxPrice, 'НМЦК:', isEditable.initialMaxPrice, errors, handleChange)
-    const price = tender.rebiddingPrices.length == 0 ? renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange) : renderField("Price", tender.rebiddingPrices.at(-1)?.price, 'Наша цена:', false, errors, handleChange)
+    // const price = tender.rebiddingPrices.length == 0 ? renderField("Price", tender.price, 'Наша цена:', isEditable.price, errors, handleChange) : renderField("Price", tender.rebiddingPrices.at(-1)?.price, 'Наша цена:', false, errors, handleChange)
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
     const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
@@ -52,7 +52,8 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
         <div className={`${styles.form} card`}>
             <label className={styles.label}>Статус:</label>
             <div className={styles.formGroup}>
-                <select name="Status" value={tender.status} className={styles.input} onChange={handleChange} disabled={!isEditable.status}>
+                <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}
+                        disabled={!isEditable.status}>
                     {tender.status < 0 &&
                         <>
                             <option value="-4">{getStatusName(-4)}</option>
@@ -76,7 +77,8 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <select name="Company" id="Company" onChange={handleChange} value={tender.company.id} disabled={!isEditable.company}>
+                    <select name="Company" id="Company" onChange={handleChange} value={tender.company.id}
+                            disabled={!isEditable.company}>
                         {companies.map(company =>
                             <option key={"option" + company.id} value={company.id}>{company.name}</option>
                         )}
@@ -88,8 +90,55 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
             {name}
             {regNumber}
             {lotNumber}
-            {initialMaxPrice}
-            {price}
+            <label className={styles.label} htmlFor="InitialMaxPrice">НМЦК:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <CurrencyInput
+                        name="InitialMaxPrice"
+                        id="InitialMaxPrice"
+                        value={tender.initialMaxPrice}
+                        className={styles.input}
+                        disabled={!isEditable.initialMaxPrice}
+                        allowNegativeValue={false}
+                        onValueChange={value => {
+                            const result = tender.setInitialMaxPrice(value ? value : '')
+                            if (!result.ok) {
+                                errors['InitialMaxPrice'] = result.error
+                            } else {
+                                delete errors['InitialMaxPrice']
+                            }
+                        }}
+                        suffix="₽"
+                    />
+                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
+                </div>
+            </div>
+            {errors["InitialMaxPrice"] && <><span></span><span
+                className='under-input-error'>{errors["InitialMaxPrice"]}</span></>}
+            <label className={styles.label} htmlFor="Price">Наша цена:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <CurrencyInput
+                        name="Price"
+                        id="Price"
+                        value={tender.price}
+                        className={styles.input}
+                        disabled={!isEditable.price}
+                        allowNegativeValue={false}
+                        onValueChange={value => {
+                            const result = tender.setPrice(value ? value : '')
+                            if (!result.ok) {
+                                errors['Price'] = result.error
+                            } else {
+                                delete errors['Price']
+                            }
+                        }}
+                        suffix="₽"
+                    />
+                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
+                </div>
+            </div>
+            {errors["Price"] && <><span></span><span className='under-input-error'>{errors["Price"]}</span></>}
             <label className={styles.label} htmlFor='Date1_start'>Дата начала 1-го этапа:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
@@ -97,7 +146,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                            onChange={handleChange} disabled={!isEditable.date1_start}/>
                 </div>
                 {errors['Date1_start'] && <span></span>} {errors['Date1_start'] &&
-                <span className={styles.error}>{errors['Date1_start']}</span>}
+                <span className='under-input-error'>{errors['Date1_start']}</span>}
             </div>
             <label className={styles.label} htmlFor='Date1_finish'>Дата окончания 1-го этапа:</label>
             <div className={styles.formGroup}>
@@ -106,7 +155,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                            onChange={handleChange} disabled={!isEditable.date1_finish}/>
                 </div>
                 {errors['Date1_finish'] && <span></span>} {errors['Date1_finish'] &&
-                <span className={styles.error}>{errors['Date1_finish']}</span>}
+                <span className='under-input-error'>{errors['Date1_finish']}</span>}
             </div>
             <label className={styles.label} htmlFor='Date2_finish'>Дата окончания 2-го этапа:</label>
             <div className={styles.formGroup}>
@@ -115,7 +164,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                            onChange={handleChange} disabled={!isEditable.date2_finish}/>
                 </div>
                 {errors['Date2_finish'] && <span></span>} {errors['Date2_finish'] &&
-                <span className={styles.error}>{errors['Date2_finish']}</span>}
+                <span className='under-input-error'>{errors['Date2_finish']}</span>}
             </div>
             <label className={styles.label} htmlFor='Date_finish'>Подведение итогов:</label>
             <div className={styles.formGroup}>
@@ -124,7 +173,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                            onChange={handleChange} disabled={!isEditable.date_finish}/>
                 </div>
                 {errors['Date_finish'] && <span></span>} {errors['Date_finish'] &&
-                <span className={styles.error}>{errors['Date_finish']}</span>}
+                <span className='under-input-error'>{errors['Date_finish']}</span>}
             </div>
             {contactPerson}
             {phoneNumber}

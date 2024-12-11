@@ -86,8 +86,6 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     useEffect(() => {
             const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
-            console.log(total)
-            console.log(props.data.datasets[0])
             let legendFontSize = 15
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
                 legendFontSize /= 3

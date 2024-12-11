@@ -22,6 +22,7 @@
     "next": "15.0.3",
     "pg": "^8.13.1",
     "react": "^18.2.0",
+    "react-currency-input-field": "^3.9.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
