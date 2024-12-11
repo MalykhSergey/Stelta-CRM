@@ -3,7 +3,7 @@ import {default as getStatusName} from '@/models/Status'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {observer, useLocalObservable} from 'mobx-react-lite'
-import {Tender} from '../../../models/Tender/Tender'
+import {Tender} from '@/models/Tender/Tender'
 import styles from './TenderForm.module.css'
 import CurrencyInput from "react-currency-input-field";
 
@@ -31,7 +31,7 @@ interface TenderFormProps {
 
 const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEditable}) => {
     const errors: { [key: string]: string } = useLocalObservable(() => ({}))
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = (tender as any)["set" + name](value)
@@ -41,7 +41,6 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
             delete errors[name]
         }
     }
-    const name = renderField("Name", tender.name, 'Наименование тендера:', isEditable.name, errors, handleChange)
     const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
     const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
     const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
@@ -87,7 +86,22 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                 {errors['Company'] && <span></span>} {errors['Company'] &&
                 <span className={styles.error}>{errors['Company']}</span>}
             </div>
-            {name}
+            <label className={styles.label} htmlFor="Name">Полное наименование:</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    <textarea
+                        name="Name"
+                        id="Name"
+                        value={tender.name}
+                        className={styles.input}
+                        disabled={!isEditable.name}
+                        onChange={handleChange}
+                    />
+                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
+                </div>
+            </div>
+            {errors["Name"] && <><span></span><span
+                className='under-input-error'>{errors["Name"]}</span></>}
             {regNumber}
             {lotNumber}
             <label className={styles.label} htmlFor="InitialMaxPrice">НМЦК:</label>

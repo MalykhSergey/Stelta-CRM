@@ -11,7 +11,11 @@
     display: flex;
     flex-direction: row;
 }
-
+.input{
+    max-width: 100%;
+    min-width: 100%;
+    min-height: fit-content;
+}
 .input:focus ~ .icon {
     transform: scaleX(-1);
     opacity: 0;
