@@ -14,10 +14,10 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
         SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(tenders.price)::numeric 
         FROM tenders 
         WHERE 
-            (date1_start >= $1::timestamp AND date1_start < $2::timestamp OR 
-             date1_finish >= $1::timestamp AND date1_finish < $2::timestamp OR 
-             date2_finish >= $1::timestamp AND date2_finish < $2::timestamp OR 
-             date_finish >= $1::timestamp AND date_finish < $2::timestamp)
+            (date1_start >= $1::timestamp AND date1_start <= $2::timestamp OR 
+             date1_finish >= $1::timestamp AND date1_finish <= $2::timestamp OR 
+             date2_finish >= $1::timestamp AND date2_finish <= $2::timestamp OR 
+             date_finish >= $1::timestamp AND date_finish <= $2::timestamp)
         GROUP BY status, is_special;
 `, [start_date, finish_date])).rows
 }

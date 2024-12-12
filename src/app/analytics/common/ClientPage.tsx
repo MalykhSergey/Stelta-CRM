@@ -83,7 +83,7 @@ const CommonAnalyticsClient = observer((props: { initialData: CommonAnalytics })
                 </div>
             </div>
             <h1 id={styles.chartTitle}>Общая аналитика по тендерам</h1>
-            <DoughnutChart data={chartData.data} title={chartData.title}/>
+            <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
         </div>
     )
 })

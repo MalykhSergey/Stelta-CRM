@@ -15,7 +15,6 @@ function convertDate(value: string) {
 export default function TenderCard(props: { tender: Tender }) {
     let dateSpan
     let dateField
-
     switch (Math.abs(props.tender.status)) {
         case 0:
             dateField = <></>
@@ -53,7 +52,13 @@ export default function TenderCard(props: { tender: Tender }) {
             <div className={styles.indicator}></div>
             <div className={styles.title}>{props.tender.name}</div>
             <span className={styles.label}>НМЦК: </span>
-            <div className={styles.info}>{formatValue({value: props.tender.initialMaxPrice, suffix:'₽', groupSeparator:' ', decimalSeparator:','})}</div>
+            <div className={styles.info}>{
+                formatValue({
+                value: props.tender.initialMaxPrice.slice(-2) == '00' ? props.tender.initialMaxPrice.slice(0, -2) : props.tender.initialMaxPrice,
+                suffix: '₽',
+                groupSeparator: ' ',
+                decimalSeparator: ','})}
+            </div>
             {dateSpan}
             {dateField}
         </Link>

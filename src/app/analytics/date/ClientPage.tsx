@@ -114,7 +114,7 @@ const DateRangeAnalyticsClient = observer((props: {
                 </div>
             </div>
             <h1 id={styles.chartTitle}>{chartData.title}</h1>
-            <DoughnutChart data={chartData.data} title={chartData.title}/>
+            <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
         </div>
     )
 })

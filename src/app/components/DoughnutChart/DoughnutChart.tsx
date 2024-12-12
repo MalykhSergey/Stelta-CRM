@@ -3,6 +3,8 @@ import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
 import {useEffect, useRef} from 'react';
 import "./DoughnutChart.css";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartDataType from "@/models/Analytics/ChartDataType";
+import {formatValue} from "react-currency-input-field";
 
 Chart.register(ChartDataLabels);
 const centerTextPlugin = {
@@ -82,7 +84,7 @@ const centerTextPlugin = {
 
 Chart.register(centerTextPlugin);
 
-export default function DoughnutChart(props: { data: ChartData<'doughnut', number[], string>, title: string }) {
+export default function DoughnutChart(props: { data: ChartData<'doughnut', number[], string>, title: string, type:ChartDataType }) {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     useEffect(() => {
             const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
@@ -100,7 +102,11 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                             maintainAspectRatio: false,
                             elements: {
                                 center: {
-                                    text: total,
+                                    text: formatValue({
+                                        value: total.toString(),
+                                        suffix: props.type == ChartDataType.COUNT ? '' : '₽',
+                                        groupSeparator: ' ',
+                                        decimalSeparator: ','}),
                                     maxFontSize: 50,
                                 },
                             },
