@@ -3,7 +3,7 @@ import {useState} from "react"
 import {showMessage} from "../components/Alerts/Alert"
 import styles from "./page.module.css"
 import {createCompany, deleteCompany, updateCompany} from "@/models/Company/CompanyService"
-import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Company from "@/models/Company/Company";
 
@@ -53,20 +53,27 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
 
     return (
         <main className={styles.content}>
-            <form action={createCompanyHandler} className={`card fullWidth row ${styles.input}`}>
-                <textarea name="company" required/>
-                <button className="BlueButton">Добавить</button>
-            </form>
-            {companies.map(row =>
-                <form action={updateHandler} key={'company' + row.id} className={styles.company + ' shadowed'}>
-                    <input type="hidden" name='id' defaultValue={row.id}/>
-                    <textarea name='name' defaultValue={row.name}/>
-                    <button type="submit" className='BlueButton'>Сохранить</button>
-                    <button onClick={deleteHandler} type="button" value={row.id} className='iconButton redButton'>
-                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                    </button>
-                </form>)
-            }
+            <div className={styles.addCompany + ' card'}>
+                <h3>Добавить организацию</h3>
+                <form action={createCompanyHandler} className={`row ${styles.input}`}>
+                    <textarea name="company" required/>
+                    <button className="BlueButton">Добавить</button>
+                </form>
+            </div>
+            <div className={styles.companies + ' card'}>
+                <h3>Организации</h3>
+                {companies.map(row =>
+                    <form action={updateHandler} key={'company' + row.id} className={styles.company}>
+                        <input type="hidden" name='id' defaultValue={row.id}/>
+                        <textarea name='name' defaultValue={row.name}/>
+                        <button type="submit" className='BlueButton'><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+                        </button>
+                        <button onClick={deleteHandler} type="button" value={row.id} className='iconButton redButton'>
+                            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                        </button>
+                    </form>)
+                }
+            </div>
         </main>
     )
 }

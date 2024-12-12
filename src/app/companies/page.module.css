@@ -4,21 +4,28 @@
     gap: 20px;
     min-width: 600px;
     max-width: 1000px;
-    flex-grow: 1;
-    margin: auto;
+    align-self: center;
 }
-.company{
+
+.companies {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.addCompany{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.company {
     display: flex;
     flex-direction: row;
-    background-color: white;
-    padding: 6px;
-    border-radius: 8px;
     gap: 20px;
     align-items: center;
 }
 
 @media only screen and (max-width: 600px) {
-    .content{
+    .content {
         min-width: 100px;
         max-width: none;
         flex-wrap: wrap;
