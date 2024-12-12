@@ -1,8 +1,12 @@
 import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
 import DateRangeAnalyticsClient from "./ClientPage";
 import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
+import {Metadata} from "next";
 
 export const dynamic = 'force-dynamic'
+export const metadata: Metadata = {
+    title: 'Аналитика по дате',
+}
 export default async function DateRangeAnalyticsServer() {
     const currentYear = new Date().getFullYear();
     const startDate = new Date(currentYear, 0, 1);
