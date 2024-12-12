@@ -9,14 +9,14 @@ import {Tender} from '../../../models/Tender/Tender';
 import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
 import DateRequestForm from './DateRequest';
 
-import type { JSX } from "react";
+import type {JSX} from "react";
 
 interface StageFormProps {
-    tender: Tender
+    tender: Tender,
+    isEditable: boolean
 }
 
-const StageForm1: React.FC<StageFormProps> = observer(({tender}) => {
-    const isEditable = tender.status == 1;
+const StageForm1: React.FC<StageFormProps> = observer(({tender, isEditable}) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: isEditable,
         toggle() {

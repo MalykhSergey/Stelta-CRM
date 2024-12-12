@@ -70,6 +70,7 @@ class TenderStorage {
                 await connection.query("UPDATE dates_requests SET date = $2 WHERE id =  $1", [dateRequest.id, dateRequest.date])
             }
             for (const rebiddingPrice of tender.rebiddingPrices) {
+                rebiddingPrice.price = rebiddingPrice.price.replace(',', '.')
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
         } catch (e) {
@@ -104,7 +105,6 @@ class TenderStorage {
         })))
         const rebiddingPrices = (await connection.query('SELECT * FROM rebidding_prices WHERE tender_id = $1', [id])).rows
         tender.rebiddingPrices = (await Promise.all(rebiddingPrices.map(async rebiddingPrice => {
-            rebiddingPrice.price = rebiddingPrice.price.slice(0, -2)
             rebiddingPrice.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id =$2', [id, rebiddingPrice.id])).rows
             return rebiddingPrice
         })))

@@ -11,19 +11,20 @@ import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from "./StageForm2.module.css"
 
 import type { JSX } from "react";
+import CurrencyInput from "react-currency-input-field";
 
 interface StageForm2Props {
-    tender: Tender
+    tender: Tender,
+    isEditable:boolean
 }
 
-const StageForm2: React.FC<StageForm2Props> = observer(({tender}) => {
+const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) => {
     const error = useLocalObservable(() => ({
         value: '',
         setError(value: string) {
             this.value = value
         }
     }));
-    const isEditable = tender.status == 3;
     const collapsed = useLocalObservable(() => ({
         isTrue: isEditable,
         toggle() {
@@ -63,17 +64,21 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender}) => {
                                    independent={false} className='card'/>
                     <div>
                         <label htmlFor={`Stage2FormPrice${tender.id}`}>Наша цена:</label>
-                        <input id={`Stage2FormPrice${tender.id}`} type="text" value={tender.price} onChange={
-                            (e) => {
-                                e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                                const result = tender.setPrice(e.target.value)
+                        <CurrencyInput
+                            name="Price"
+                            id={`Stage2FormPrice${tender.id}`}
+                            value={tender.rebiddingPrices.length == 0 ? tender.price : tender.rebiddingPrices.at(-1)?.price}
+                            className={styles.input}
+                            disabled={!isEditable}
+                            allowNegativeValue={false}
+                            onValueChange={value => {
+                                const result = tender.setPrice(value ? value : '')
                                 if (!result.ok)
                                     error.setError(result.error)
                                 else
                                     error.setError('')
-                            }
-                        }
-                               disabled={!isEditable || tender.rebiddingPrices.length > 0}
+                            }}
+                            suffix="₽"
                         />
                     </div>
                 </div>

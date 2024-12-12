@@ -135,7 +135,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                     <CurrencyInput
                         name="Price"
                         id="Price"
-                        value={tender.price}
+                        value={tender.rebiddingPrices.length == 0 ? tender.price : tender.rebiddingPrices.at(-1)?.price}
                         className={styles.input}
                         disabled={!isEditable.price}
                         allowNegativeValue={false}

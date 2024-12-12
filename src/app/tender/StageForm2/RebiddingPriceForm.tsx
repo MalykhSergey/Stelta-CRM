@@ -5,6 +5,7 @@ import {observer} from "mobx-react-lite";
 import {useState} from "react";
 import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
 import styles from './RebiddingPriceForm.module.css';
+import CurrencyInput from "react-currency-input-field";
 
 interface RebiddingPriceProps {
     tenderId: number,
@@ -37,15 +38,22 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
                            isEditable={isEditable} independent={isEditable} className="card"/>
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
-                <input id={`rebiddingPrice${rebiddingPrice.id}`} type="text" value={rebiddingPrice.price}
-                       onChange={(e) => {
-                           e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                           const result = rebiddingPrice.setPrice(e.target.value)
-                           if (!result.ok)
-                               setError(result.error)
-                           else
-                               setError('')
-                       }} required disabled={!isEditable}/>
+                <CurrencyInput
+                    name="Price"
+                    id="Price"
+                    value={rebiddingPrice.price}
+                    className={styles.input}
+                    disabled={!isEditable}
+                    allowNegativeValue={false}
+                    onValueChange={value => {
+                        const result = rebiddingPrice.setPrice(value!)
+                        if (!result.ok)
+                            setError(result.error)
+                        else
+                            setError('')
+                    }}
+                    suffix="₽"
+                />
                 {error != '' && <span className='under-input-error'>{error}</span>}
             </div>
         </div>

@@ -7,11 +7,11 @@ import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
 import styles from "./StageForm3.module.css";
 
 interface StageForm3Props {
-    tender: Tender
+    tender: Tender,
+    isEditable: boolean
 }
 
-const StageForm3: React.FC<StageForm3Props> = observer(({tender}) => {
-    const isEditable = tender.status == 5;
+const StageForm3: React.FC<StageForm3Props> = observer(({tender, isEditable}) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: true,
         toggle() {
