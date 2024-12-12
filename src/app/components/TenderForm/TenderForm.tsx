@@ -97,7 +97,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                         disabled={!isEditable.name}
                         onChange={handleChange}
                     />
-                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
+                    {isEditable.name && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
             {errors["Name"] && <><span></span><span
@@ -124,7 +124,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                         }}
                         suffix="₽"
                     />
-                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
+                    {isEditable.initialMaxPrice && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
             {errors["InitialMaxPrice"] && <><span></span><span
@@ -149,7 +149,7 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                         }}
                         suffix="₽"
                     />
-                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
+                    {isEditable.price && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
             {errors["Price"] && <><span></span><span className='under-input-error'>{errors["Price"]}</span></>}
