@@ -48,9 +48,9 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
     const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
     return (
         <div className={`${styles.form} card`}>
-            <label className={styles.label}>Статус:</label>
+            <label className={styles.label} htmlFor='Status'>Статус:</label>
             <div className={styles.formGroup}>
-                <select name="Status" value={tender.status} className={styles.input} onChange={handleChange}
+                <select id='Status' name="Status" value={tender.status} className={styles.input} onChange={handleChange}
                         disabled={!isEditable.status}>
                     {tender.status < 0 &&
                         <>
@@ -201,7 +201,7 @@ export default TenderForm
 const renderField = (fieldName: string, value: any, labelTitle: string, isEditableField: boolean, errors: {
     [key: string]: string
 }, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
-    let elem = <input type="text" className={styles.input} disabled value={value}/>
+    let elem = <input type="text" id={fieldName} className={styles.input} disabled value={value}/>
     if (isEditableField) {
         let fieldType = 'text'
         if (fieldName == 'Email')

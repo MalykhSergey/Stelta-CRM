@@ -40,7 +40,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
                 <CurrencyInput
                     name="Price"
-                    id="Price"
+                    id={`RebPrice${rebiddingPrice.id}`}
                     value={rebiddingPrice.price}
                     className={styles.input}
                     disabled={!isEditable}
