@@ -69,7 +69,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
                             id={`Stage2FormPrice${tender.id}`}
                             value={tender.rebiddingPrices.length == 0 ? tender.price : tender.rebiddingPrices.at(-1)?.price}
                             className={styles.input}
-                            disabled={!isEditable}
+                            disabled={!isEditable || tender.rebiddingPrices.length != 0}
                             allowNegativeValue={false}
                             onValueChange={value => {
                                 const result = tender.setPrice(value ? value : '')

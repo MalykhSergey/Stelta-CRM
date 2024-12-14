@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import {cookies} from 'next/headers'
 import {User} from './User'
 import {createUser, getUserByName, getUserNames, hash_password} from "./UserStorage"
+import logger from "@/config/Logger";
 
 export async function register(registerForm: FormData) {
     const name = registerForm.get('name') as string
@@ -44,7 +45,8 @@ export async function authAction<T>(handler: (user: User) => Promise<T>) {
         try {
             const decoded_token = jwt.verify(auth_token.value, process.env.JWT_SECRET!)
             return handler(decoded_token as User);
-        } catch {
+        } catch (e) {
+            logger.error(e)
             return {error: "Попытка неавторизованного доступа! Войдите в систему."}
         }
     } else

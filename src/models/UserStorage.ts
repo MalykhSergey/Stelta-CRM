@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import connection from "./Database";
+import connection, {handleDatabaseError} from "../config/Database";
 import {User} from "./User";
 
 
@@ -16,12 +16,10 @@ export async function createUser(name: string, password: string) {
     const hashed_password = hash_password(password, salt)
     try {
         await connection.query("INSERT INTO users(name, password, salt) VALUES ($1,$2,$3)", [name, hashed_password, salt]);
-    }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    catch (error: any) {
-        if (error.code === '23505')
-            return {error: 'Пользователь с таким именем уже есть!'};
-        return {error: 'Ошибка создания пользователя!'};
+    } catch (e) {
+        return handleDatabaseError(e,
+            {'23505': 'Пользователь с таким именем уже есть!'},
+            'Ошибка создания пользователя!')
     }
 }
 

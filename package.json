@@ -23,7 +23,9 @@
     "pg": "^8.13.1",
     "react": "^18.2.0",
     "react-currency-input-field": "^3.9.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",

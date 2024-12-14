@@ -2,8 +2,9 @@ import getStatusName from '@/models/Status';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';
-import {Tender} from '../../../models/Tender/Tender';
+import {Tender} from '@/models/Tender/Tender';
 import styles from './CommentsForm.module.css';
+import React from "react";
 
 interface CommentsFormProps {
     tender: Tender
@@ -19,16 +20,28 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({tender}) => {
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         tender.comments[tender.status] = e.target.value
     }
-    const comments = []
-    for (let i = 0; i < tender.status; i++) {
-        if (tender.comments.length > i && tender.comments[i] != '') {
-            comments.push(<label key={`label_${i}`} className={styles.label}>{getStatusName(i)}</label>)
-            comments.push(<p key={`p_${i}`} className={styles.comment}>{tender.comments[i]}</p>)
+    const comments = tender.comments.map((comment, index) => {
+        if (index < tender.status && comment !== '') {
+            return (
+                <React.Fragment key={index}>
+                    <label className={styles.label}>{getStatusName(index)}</label>
+                    <p className={styles.comment}>{comment}</p>
+                </React.Fragment>
+            );
         }
-    }
-    comments.push(<label key={`label_${tender.status}`} className={styles.label}>{getStatusName(tender.status)}</label>)
-    comments.push(<textarea key='textarea' className={styles.input} onChange={handleChange}
-                            value={tender.comments[tender.status]}></textarea>)
+        return null;
+    });
+    comments.push(
+        <React.Fragment key="textarea">
+            <label className={styles.label} htmlFor='comment-input'>{getStatusName(tender.status)}</label>
+            <textarea
+                id='comment-input'
+                className={styles.input}
+                onChange={handleChange}
+                value={tender.comments[tender.status]}
+            />
+        </React.Fragment>
+    );
     return (
         <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
             <div className='cardHeader'>

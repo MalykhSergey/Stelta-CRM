@@ -1,11 +1,12 @@
 import fs from 'fs/promises';
-import connection from "../Database";
+import connection, {handleDatabaseError} from "../../config/Database";
 import {Tender} from "./Tender";
 import UPDATE_TENDER_QUERY from '../querries/UPDATE_TENDER';
+import logger from "@/config/Logger";
 
 class TenderStorage {
     constructor() {
-        console.log('Created Tender storage')
+        logger.info('Created Tender storage')
     }
 
     async getCompanies() {
@@ -15,7 +16,8 @@ class TenderStorage {
     async createCompany(name: string) {
         try {
             return (await connection.query(`INSERT INTO companies("name") values($1) RETURNING id`, [name])).rows[0].id
-        } catch {
+        } catch (e) {
+            logger.error(e)
             return {error: "Ошибка создания организации. Возможно такая уже есть!"}
         }
     }
@@ -23,16 +25,20 @@ class TenderStorage {
     async createTender() {
         try {
             return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
-        } catch {
-            return {error: 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!'}
+        } catch (e) {
+            return handleDatabaseError(e,
+                {'23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!',},
+                'Ошибка создания тендера');
         }
     }
 
     async deleteTender(tenderId: number) {
         try {
             await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
-        } catch {
-            return {error: 'Ошибка удаления тендера!'}
+        } catch (e) {
+            return handleDatabaseError(e, {
+                '23503': 'Невозможно удалить тендер: имеются связанные данные (дозапросы, переторжки, файлы)!',
+            }, 'Ошибка удаления тендера!');
         }
     }
 
@@ -74,8 +80,9 @@ class TenderStorage {
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
         } catch (e) {
-            console.log(e)
-            return {error: 'Ошибка обновления тендера'}
+            return handleDatabaseError(e,
+                {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
+                'Ошибка обновления тендера');
         }
     }
 
@@ -119,32 +126,32 @@ class TenderStorage {
                 return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, rebidding_price_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, rebiddingPriceId])).rows[0].id;
             else
                 return (await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
-        } catch {
-            return {error: 'Ошибка добавления файла!'}
+        } catch (e) {
+            return handleDatabaseError(e, {}, 'Ошибка добавления файла!');
         }
     }
 
     async deleteFile(id: number) {
         try {
             await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
-        } catch {
-            return {error: 'Ошибка удаления файла!'}
+        } catch (e) {
+            return handleDatabaseError(e, {}, 'Ошибка удаления файла!');
         }
     }
 
     async addDateRequest(tenderId: number) {
         try {
             return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
-        } catch {
-            return {error: 'Ошибка создания дозапроса документов!'}
+        } catch (e) {
+            return handleDatabaseError(e, {}, 'Ошибка создания дозапроса документов!');
         }
     }
 
     async addRebiddingPrice(tenderId: number) {
         try {
             return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
-        } catch {
-            return {error: 'Ошибка создания переторжки!'}
+        } catch (e) {
+            return handleDatabaseError(e, {}, 'Ошибка создания переторжки!');
         }
     }
 
@@ -152,24 +159,23 @@ class TenderStorage {
         try {
             const filesId = (await connection.query('DELETE FROM file_names WHERE date_request_id = $1 returning id', [dateRequestId])).rows
             await connection.query('DELETE FROM dates_requests WHERE id = $1', [dateRequestId])
-            filesId.forEach(async row => {
+            for (const row of filesId) {
                 await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, {recursive: true})
-            })
-        } catch {
-            return {error: 'Ошибка удаления дозапроса документов!'}
+            }
+        } catch (e) {
+            return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
         }
     }
 
     async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
         try {
-
             const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
             await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
-            filesId.forEach(async row => {
+            for (const row of filesId) {
                 await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, {recursive: true})
-            })
-        } catch {
-            return {error: 'Ошибка удаления переторжки!'}
+            }
+        } catch (e) {
+            return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');
         }
     }
 

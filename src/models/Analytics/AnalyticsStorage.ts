@@ -1,5 +1,5 @@
 "use server"
-import connection from "../Database";
+import connection from "../../config/Database";
 
 export async function loadCommonAnalytics() {
     return (await connection.query(`SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(tenders.price)::numeric FROM tenders GROUP BY status, is_special`)).rows

@@ -1,4 +1,5 @@
 import fs from "fs/promises";
+import logger from "@/config/Logger";
 
 type GetParams = {
     params: Promise<{
@@ -15,7 +16,8 @@ export async function GET(req: Request, props: GetParams) {
         await fs.access(filePath)
         const file = await fs.readFile(filePath)
         return new Response(file)
-    } catch {
+    } catch (e) {
+            logger.error(e)
         return new Response(
             `Файл не найден!`, {
                 status: 404
