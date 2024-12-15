@@ -4,7 +4,7 @@ import {AlertContainer} from "./components/Alerts/Alert";
 import Header from "./components/Header/Header";
 import "../static/styles/globals.css";
 import styles from "./layout.module.css";
-import {authAction} from "@/models/UserService";
+import {authAction} from "@/models/User/UserService";
 import "@/static/styles/buttons.css";
 import "@/static/styles/inputs.css";
 

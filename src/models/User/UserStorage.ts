@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import connection, {handleDatabaseError} from "../config/Database";
+import connection, {handleDatabaseError} from "../../config/Database";
 import {User} from "./User";
 
 

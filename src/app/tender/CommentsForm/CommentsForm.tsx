@@ -1,4 +1,4 @@
-import getStatusName from '@/models/Status';
+import getStatusName from '@/models/Tender/Status';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';

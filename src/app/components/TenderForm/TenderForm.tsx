@@ -1,5 +1,5 @@
 import Company from '@/models/Company/Company'
-import {default as getStatusName} from '@/models/Status'
+import {default as getStatusName} from '@/models/Tender/Status'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {observer, useLocalObservable} from 'mobx-react-lite'

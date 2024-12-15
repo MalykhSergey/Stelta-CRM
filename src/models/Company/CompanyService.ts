@@ -1,6 +1,6 @@
 "use server"
 import tenderStorage from "../Tender/TenderStorage";
-import {authAction} from "../UserService";
+import {authAction} from "../User/UserService";
 import CompanyStorage from "@/models/Company/CompanyStorage";
 
 export async function getCompanies() {

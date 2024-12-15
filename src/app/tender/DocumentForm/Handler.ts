@@ -1,8 +1,8 @@
 "use server";
-import FileName from '@/models/FileName';
+import FileName from '@/models/Tender/FileName';
 import tenderStorage from '@/models/Tender/TenderStorage';
 import fs from 'fs/promises';
-import {authAction} from "@/models/UserService";
+import {authAction} from "@/models/User/UserService";
 
 export async function uploadHandler(formData: FormData) {
     return authAction(async () => {

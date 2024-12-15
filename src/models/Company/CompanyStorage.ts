@@ -1,4 +1,4 @@
-import connection from "@/config/Database";
+import connection, {handleDatabaseError} from "@/config/Database";
 import logger from "@/config/Logger";
 
 export default class CompanyStorage {
@@ -23,12 +23,14 @@ export default class CompanyStorage {
             return {error: "Ошибка обновления организации."}
         }
     }
+
     static async deleteCompany(id: number) {
         try {
             await connection.query(`DELETE FROM companies WHERE id = $1`, [id])
         } catch (e) {
-            logger.error(e)
-            return {error: "Ошибка удаления организации."}
+            return handleDatabaseError(e,
+                {'23503': 'Невозможно удалить организацию: существуют связанные тендера или контактные лица.'},
+                'Ошибка удаления организации.');
         }
     }
 }

@@ -4,7 +4,7 @@ import CommentsForm from '@/app/tender/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import {showMessage} from '@/app/components/Alerts/Alert';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
-import FileName from '@/models/FileName';
+import FileName from '@/models/Tender/FileName';
 import {Tender} from '@/models/Tender/Tender';
 import {deleteTender, updateTenderById} from '@/models/Tender/TenderService';
 import StageForm1 from '@/app/tender/StageForm1/StageForm1';

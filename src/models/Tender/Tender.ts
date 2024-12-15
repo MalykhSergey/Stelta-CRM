@@ -1,8 +1,8 @@
 import {makeAutoObservable} from "mobx"
 import {Result} from "../../app/Result"
-import {DateRequest} from "../DateRequest"
-import FileName from "../FileName"
-import {RebiddingPrice} from "../RebiddingPrice"
+import {DateRequest} from "./DateRequest"
+import FileName from "./FileName"
+import {RebiddingPrice} from "./RebiddingPrice"
 import Company from "../Company/Company"
 
 export class Tender {

@@ -3,7 +3,7 @@ import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
 import {useMemo} from "react";
 import {CompanyAnalytics} from "@/models/Analytics/CompanyAnalytics";
 import {getCompanyAnalyticsByStatus} from "@/models/Analytics/AnalyticsService";
-import getStatusName from "@/models/Status";
+import getStatusName from "@/models/Tender/Status";
 import styles from '../page.module.css';
 import {makeAutoObservable} from "mobx";
 import {observer} from "mobx-react-lite";

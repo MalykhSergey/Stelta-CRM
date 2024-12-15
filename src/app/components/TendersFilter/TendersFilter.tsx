@@ -1,6 +1,6 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
-import getStatusName from "@/models/Status";
+import getStatusName from "@/models/Tender/Status";
 import {useRef} from "react";
 import {Tender} from "@/models/Tender/Tender";
 import styles from "./TendersFilter.module.css";

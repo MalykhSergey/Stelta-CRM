@@ -3,7 +3,7 @@ import {faUser} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {FormEvent, useRef, useState} from "react";
 import {showMessage} from "../components/Alerts/Alert";
-import {register} from "../../models/UserService";
+import {register} from "../../models/User/UserService";
 import styles from "./ClientPage.module.css";
 
 function generatePassword(length: number) {

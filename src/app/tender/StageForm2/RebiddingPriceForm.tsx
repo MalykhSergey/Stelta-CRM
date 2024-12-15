@@ -1,5 +1,5 @@
-import FileName from "@/models/FileName";
-import {RebiddingPrice} from "@/models/RebiddingPrice";
+import FileName from "@/models/Tender/FileName";
+import {RebiddingPrice} from "@/models/Tender/RebiddingPrice";
 import {deleteRebiddingPriceById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
 import {useState} from "react";

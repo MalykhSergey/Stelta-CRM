@@ -1,5 +1,5 @@
-import {DateRequest} from "@/models/DateRequest";
-import FileName from "@/models/FileName";
+import {DateRequest} from "@/models/Tender/DateRequest";
+import FileName from "@/models/Tender/FileName";
 import {deleteDateRequestById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
 import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";

@@ -1,6 +1,6 @@
 "use server"
 import Company from "../Company/Company"
-import getStatusName from "../Status"
+import getStatusName from "../Tender/Status"
 import {
     loadCommonAnalytics,
     loadCompanyAnalyticsByStatus,

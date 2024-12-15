@@ -1,4 +1,4 @@
-import FileName from "@/models/FileName";
+import FileName from "@/models/Tender/FileName";
 import {Tender} from "@/models/Tender/Tender";
 import {observer, useLocalObservable} from "mobx-react-lite";
 import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";

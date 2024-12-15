@@ -1,5 +1,5 @@
-import {DateRequest} from '@/models/DateRequest';
-import FileName from '@/models/FileName';
+import {DateRequest} from '@/models/Tender/DateRequest';
+import FileName from '@/models/Tender/FileName';
 import {addDateRequest} from '@/models/Tender/TenderService';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';

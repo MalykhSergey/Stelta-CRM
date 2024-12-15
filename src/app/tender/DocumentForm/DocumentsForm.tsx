@@ -1,4 +1,4 @@
-import FileName from '@/models/FileName';
+import FileName from '@/models/Tender/FileName';
 import {faDownload} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';

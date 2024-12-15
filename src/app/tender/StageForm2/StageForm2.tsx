@@ -1,5 +1,5 @@
-import FileName from '@/models/FileName';
-import {RebiddingPrice} from '@/models/RebiddingPrice';
+import FileName from '@/models/Tender/FileName';
+import {RebiddingPrice} from '@/models/Tender/RebiddingPrice';
 import {addRebiddingPrice} from '@/models/Tender/TenderService';
 import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';

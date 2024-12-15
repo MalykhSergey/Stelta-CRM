@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import connection, {handleDatabaseError} from "../../config/Database";
 import {Tender} from "./Tender";
-import UPDATE_TENDER_QUERY from '../querries/UPDATE_TENDER';
 import logger from "@/config/Logger";
 
 class TenderStorage {
@@ -46,7 +45,33 @@ class TenderStorage {
         try {
             tender.price = tender.price.replace(',', '.')
             tender.initialMaxPrice = tender.initialMaxPrice.replace(',', '.')
-            await connection.query(UPDATE_TENDER_QUERY, [
+            await connection.query(`
+            UPDATE tenders 
+            SET status = $1,
+            is_special = $2,
+                company_id = $3,
+                name = $4,
+                lot_number = $5,
+                register_number = $6,
+                initial_max_price = $7,
+                price = $8,
+                contact_person = $9,
+                phone_number = $10,
+                email = $11,
+                date1_start = $12,
+                date1_finish = $13,
+                date2_finish = $14,
+                date_finish = $15,
+                contract_number = $16,
+                contract_date = $17,
+                comment0 = $18,
+                comment1 = $19,
+                comment2 = $20,
+                comment3 = $21,
+                comment4 = $22,
+                comment5 = $23
+            WHERE id = $24
+            `, [
                 tender.status,
                 tender.isSpecial,
                 tender.company.id ? tender.company.id : null,
