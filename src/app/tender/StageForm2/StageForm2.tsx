@@ -6,12 +6,14 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
 import {Tender} from '../../../models/Tender/Tender';
-import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
+import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from "./StageForm2.module.css"
 
 import type { JSX } from "react";
 import CurrencyInput from "react-currency-input-field";
+import StageStyles from "@/app/tender/StageForms.module.css";
+import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 
 interface StageForm2Props {
     tender: Tender,
@@ -44,13 +46,12 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
         )
     })
     return (
-        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
-            <div className='cardHeader'>
+        <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
+            <div className={StageStyles.cardHeader}>
                 <h3>Этап 2</h3>
-                <button className={`iconButton toggler rightPanel`} onClick={collapsed.toggle}><FontAwesomeIcon
-                    icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`}/></button>
+                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel} expanded={!collapsed.isTrue}/>
             </div>
-            <div className='hiddenContent stageForm'>
+            <div className={`${StageStyles.hiddenContent}  ${StageStyles.stageForm}`}>
                 <DocumentsForm tenderId={tender.id} stage={2}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}

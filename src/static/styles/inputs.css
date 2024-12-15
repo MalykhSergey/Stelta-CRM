@@ -68,10 +68,6 @@ input[type="checkbox"] {
     transition: transform 0.3s ease;
 }
 
-.rightPanel {
-    margin-left: auto;
-}
-
 .rotated {
     transform: rotate(180deg);
 }

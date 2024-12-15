@@ -2,7 +2,7 @@ import {DateRequest} from "@/models/DateRequest";
 import FileName from "@/models/FileName";
 import {deleteDateRequestById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
-import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
+import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 import styles from './RequestDate.module.css';
 
 interface DateRequestFormProps {

@@ -1,0 +1,9 @@
+.AttachButton {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    box-shadow: none;
+    font-size: 16px;
+}
+.AttachButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}

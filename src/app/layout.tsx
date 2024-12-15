@@ -7,7 +7,6 @@ import styles from "./layout.module.css";
 import {authAction} from "@/models/UserService";
 import "@/static/styles/buttons.css";
 import "@/static/styles/inputs.css";
-import "@/static/styles/stageForm.css";
 
 const MontserratFont = Montserrat({
     subsets: ['cyrillic'],

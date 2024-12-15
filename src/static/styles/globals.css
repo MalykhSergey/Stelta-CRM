@@ -37,12 +37,6 @@ body {
     border-radius: 8px;
 }
 
-.cardHeader {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
 * {
     box-sizing: border-box;
     padding: 0;

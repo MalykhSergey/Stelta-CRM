@@ -1,10 +1,10 @@
 import FileName from "@/models/FileName";
 import {Tender} from "@/models/Tender/Tender";
-import {faCaretUp} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {observer, useLocalObservable} from "mobx-react-lite";
-import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
+import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 import styles from "./StageForm3.module.css";
+import StageStyles from "@/app/tender/StageForms.module.css";
+import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 
 interface StageForm3Props {
     tender: Tender,
@@ -19,13 +19,12 @@ const StageForm3: React.FC<StageForm3Props> = observer(({tender, isEditable}) =>
         }
     }));
     return (
-        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
-            <div className='cardHeader'>
+        <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
+            <div className={StageStyles.cardHeader}>
                 <h3>Договор</h3>
-                <button className={`iconButton toggler rightPanel`} onClick={collapsed.toggle}><FontAwesomeIcon
-                    icon={faCaretUp} className={`${!collapsed.isTrue ? 'rotated' : ''}`}/></button>
+                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel} expanded={!collapsed.isTrue}/>
             </div>
-            <div className='hiddenContent stageForm'>
+            <div className={`${StageStyles.hiddenContent}  ${StageStyles.stageForm}`}>
                 <DocumentsForm tenderId={tender.id} stage={5}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 5)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 5)}

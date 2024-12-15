@@ -1,0 +1,12 @@
+.CloseButton {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    font-size: 18px;
+}
+
+.CloseButton:hover {
+    color: rgb(230, 17, 38);
+    background-color: rgba(0, 0, 0, 0.1);
+}

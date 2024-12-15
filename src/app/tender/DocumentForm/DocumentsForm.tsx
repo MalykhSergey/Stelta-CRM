@@ -1,12 +1,17 @@
 import FileName from '@/models/FileName';
-import {faCaretUp, faDownload, faPaperclip, faTrash, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {faDownload} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';
 import {useRef} from 'react';
-import {useConfirmDialog} from '../Dialog/ConfirmDialogContext';
+import {useConfirmDialog} from '../../components/Dialog/ConfirmDialogContext';
 import styles from './DocumentsForm.module.css';
 import {deleteHandler, uploadHandler} from './Handler';
 import {showMessage} from "@/app/components/Alerts/Alert";
+import {CloseButton} from "@/app/components/Buttons/CloseButton/CloseButton";
+import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
+import StageStyles from "@/app/tender/StageForms.module.css";
+import {AttachButton} from "@/app/components/Buttons/AttachButton/AttachButton";
+import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
 
 interface DocumentsFormProps {
     tenderId: number,
@@ -67,59 +72,59 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
             showMessage(result.error)
     }
     const files = []
+
+    function deleteClickHandler(fileName: FileName) {
+        return () => {
+            showConfirmDialog(
+                {
+                    message: `Вы действительно хотите удалить ${fileName.name}?`,
+                    onConfirm: async () => {
+                        const result = await deleteHandler(tenderId, fileName.id)
+                        if (result?.error) {
+                            showMessage(result.error)
+                        } else
+                            removeFile(fileName)
+                    }
+                })
+        };
+    }
+
     for (const fileName of fileNames) {
         files.push(
             <div className={styles.fileItem} key={fileName.name + files.length}>
-                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>{fileName.name}
-                    <FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
-                {isEditable && <button onClick={() => {
-                    showConfirmDialog(
-                        {
-                            message: `Вы действительно хотите удалить ${fileName.name}?`,
-                            onConfirm: async () => {
-                                const result = await deleteHandler(tenderId, fileName.id)
-                                if (result?.error) {
-                                    showMessage(result.error)
-                                } else
-                                    removeFile(fileName)
-                            }
-                        })
-                }}
-                                       className='iconButton redButton'
-                ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></button>}</div>)
+                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>
+                    {fileName.name}<FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
+                {isEditable && <DeleteButton onClick={deleteClickHandler(fileName)}/>}
+            </div>)
     }
     return (
-        <div className={`${className} dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
-            <div className='cardHeader'>
+        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
+            <div className={StageStyles.cardHeader}>
                 <h3>{title}</h3>
                 {
                     isEditable &&
                     <div>
-                        <button
-                            onClick={() => {
-                                if (fileInput.current)
-                                    fileInput.current.click()
-                            }}
-                            className='iconButton'
-                        ><FontAwesomeIcon icon={faPaperclip}/></button>
+                        <AttachButton onClick={() => {
+                            if (fileInput.current) fileInput.current.click()
+                        }}/>
                         <input ref={fileInput} onChange={handleChange} type="file" name="file" multiple hidden/>
                         <input type="hidden" name="tenderId" value={tenderId}/>
                     </div>
                 }
-                <div className='rightPanel'>
+                <div className={StageStyles.rightPanel}>
                     {fileNames.length > 0 &&
-                        <button className={`iconButton toggler`} onClick={collapsed.toggle}><FontAwesomeIcon
-                            icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`}/></button>}
-                    {independent && isEditable && <button className={`iconButton redButton`} onClick={() => {
-                        showConfirmDialog(
-                            {
+                        <ExpandButton onClick={collapsed.toggle} expanded={!collapsed.isTrue}/>}
+                    {independent && isEditable &&
+                        <CloseButton onClick={() => {
+                            showConfirmDialog({
                                 message: `Вы действительно хотите удалить?`,
                                 onConfirm: onDelete
                             })
-                    }}><FontAwesomeIcon icon={faXmark}/></button>}
+                        }}/>
+                    }
                 </div>
             </div>
-            <div className='hiddenContent'>
+            <div className={StageStyles.hiddenContent}>
                 {files}
             </div>
         </div>

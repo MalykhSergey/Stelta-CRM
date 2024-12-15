@@ -1,15 +1,13 @@
 import {DateRequest} from '@/models/DateRequest';
 import FileName from '@/models/FileName';
 import {addDateRequest} from '@/models/Tender/TenderService';
-import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
-import {Tender} from '../../../models/Tender/Tender';
-import DocumentsForm from '../../components/DocumentForm/DocumentsForm';
+import {Tender} from '@/models/Tender/Tender';
+import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import DateRequestForm from './DateRequest';
-
-import type {JSX} from "react";
+import StageStyles from '../StageForms.module.css'
+import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 
 interface StageFormProps {
     tender: Tender,
@@ -26,24 +24,22 @@ const StageForm1: React.FC<StageFormProps> = observer(({tender, isEditable}) => 
     const handleClick = async () => {
         tender.datesRequests.push(makeAutoObservable(new DateRequest(await addDateRequest(tender.id), new Date(Date.now()).toISOString().slice(0, 10), [])))
     }
-    const datesRequests: JSX.Element[] = []
-    tender.datesRequests.forEach((dateRequest, index) => {
-        datesRequests.push(
-            <DateRequestForm dateRequest={dateRequest} deleteDateRequest={() => {
-                tender.deleteDateRequest(dateRequest)
-            }} tenderId={tender.id} orderNumber={index + 1}
-                             isEditable={(index + 1 == tender.datesRequests.length) && isEditable}
-                             key={index}></DateRequestForm>
-        )
+    const datesRequests = tender.datesRequests.map((dateRequest, index) => {
+        return <DateRequestForm
+            dateRequest={dateRequest}
+            deleteDateRequest={() => tender.deleteDateRequest(dateRequest)}
+            tenderId={tender.id} orderNumber={index + 1}
+            isEditable={(index + 1 == tender.datesRequests.length) && isEditable}
+            key={index}></DateRequestForm>
     })
     return (
-        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
-            <div className='cardHeader'>
+        <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
+            <div className={StageStyles.cardHeader}>
                 <h3>Этап 1</h3>
-                <button className={`iconButton toggler rightPanel`} onClick={collapsed.toggle}><FontAwesomeIcon
-                    icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`}/></button>
+                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel}
+                              expanded={!collapsed.isTrue}/>
             </div>
-            <div className='hiddenContent stageForm'>
+            <div className={`${StageStyles.hiddenContent}  ${StageStyles.stageForm}`}>
                 <DocumentsForm
                     title='Формы 1 этапа'
                     tenderId={tender.id}

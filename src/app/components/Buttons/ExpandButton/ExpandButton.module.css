@@ -1,0 +1,15 @@
+.ExpandButton {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    box-shadow: none;
+    transition: none;
+    font-size: 18px;
+}
+
+.ExpandButton:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.rotated {
+    transform: rotate(180deg);
+}

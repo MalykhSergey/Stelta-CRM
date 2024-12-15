@@ -5,6 +5,8 @@ import {observer, useLocalObservable} from 'mobx-react-lite';
 import {Tender} from '@/models/Tender/Tender';
 import styles from './CommentsForm.module.css';
 import React from "react";
+import StageStyles from "@/app/tender/StageForms.module.css";
+import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 
 interface CommentsFormProps {
     tender: Tender
@@ -43,13 +45,12 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({tender}) => {
         </React.Fragment>
     );
     return (
-        <div className={`card dynamicSizeForm ${collapsed.isTrue ? 'expanded' : ''}`}>
-            <div className='cardHeader'>
+        <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
+            <div className={StageStyles.cardHeader}>
                 <h3>Комментарии</h3>
-                <button className={`iconButton toggler rightPanel`} onClick={collapsed.toggle}><FontAwesomeIcon
-                    icon={faCaretUp} className={` ${!collapsed.isTrue ? 'rotated' : ''}`}/></button>
+                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel} expanded={!collapsed.isTrue}/>
             </div>
-            <div className='hiddenContent' style={{marginTop: '0px'}}>
+            <div className={StageStyles.hiddenContent} style={{marginTop: '0px'}}>
                 {comments}
             </div>
         </div>

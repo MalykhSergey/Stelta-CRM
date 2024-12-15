@@ -3,14 +3,14 @@ import {useState} from "react"
 import {showMessage} from "../components/Alerts/Alert"
 import styles from "./page.module.css"
 import {createCompany, deleteCompany, updateCompany} from "@/models/Company/CompanyService"
-import {faCheck, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Company from "@/models/Company/Company";
+import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
+import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
+import {faCheck} from "@fortawesome/free-solid-svg-icons";
 
 export default function ClientCompanies({companiesProps}: { companiesProps: Company[] }) {
     const [companies, setCompanies] = useState(companiesProps)
-    // const companies = companiesProps
-    // useEffect(() => {makeAutoObservable(companies)})
 
     async function createCompanyHandler(formData: FormData) {
         const company_name = formData.get('company') as string
@@ -57,7 +57,7 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
                 <h3>Добавить организацию</h3>
                 <form action={createCompanyHandler} className={`row ${styles.input}`}>
                     <textarea name="company" required/>
-                    <button className="BlueButton">Добавить</button>
+                    <PrimaryButton>Добавить</PrimaryButton>
                 </form>
             </div>
             <div className={styles.companies + ' card'}>
@@ -66,11 +66,8 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
                     <form action={updateHandler} key={'company' + row.id} className={styles.company}>
                         <input type="hidden" name='id' defaultValue={row.id}/>
                         <textarea name='name' defaultValue={row.name}/>
-                        <button type="submit" className='BlueButton'><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                        </button>
-                        <button onClick={deleteHandler} type="button" value={row.id} className='iconButton redButton'>
-                            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                        </button>
+                        <PrimaryButton type="submit"><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon></PrimaryButton>
+                        <DeleteButton onClick={deleteHandler} type="button" value={row.id}/>
                     </form>)
                 }
             </div>

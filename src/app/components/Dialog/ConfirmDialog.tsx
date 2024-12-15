@@ -1,4 +1,6 @@
 import styles from './ConfirmDialog.module.css';
+import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
+import {Button} from "@/app/components/Buttons/Button";
 
 type ConfirmDialogProps = {
     message: string;
@@ -12,8 +14,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({message, onConfirm, onCanc
                 <h3>Подтверждение удаления</h3>
                 <p>{message}</p>
                 <div className={styles.buttons}>
-                    <button className='' onClick={onCancel}>Нет</button>
-                    <button className='BlueButton' onClick={onConfirm}>Да</button>
+                    <button onClick={onCancel} type='button'>Нет</button>
+                    <PrimaryButton onClick={onConfirm}>Да</PrimaryButton>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
-import CommentsForm from '@/app/components/CommentsForm/CommentsForm';
-import DocumentsForm from '@/app/components/DocumentForm/DocumentsForm';
+import CommentsForm from '@/app/tender/CommentsForm/CommentsForm';
+import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import {showMessage} from '@/app/components/Alerts/Alert';
 import TenderForm from '@/app/components/TenderForm/TenderForm';
 import FileName from '@/models/FileName';
@@ -15,6 +15,7 @@ import {useRouter} from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
 import Company from '@/models/Company/Company';
 import {useAuth} from "@/app/AuthContext";
+import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
 
 const getGreenButtonText = (status: number) => {
     switch (status) {
@@ -140,7 +141,7 @@ const TenderPageClient = observer(({tender, companies}: { tender: Tender, compan
                                 onClick={() => updateStageHandler(tender.status - 1)}>{getOrangeButtonText(tender.status)}</button>}
                     {tender.status >= 0 && tender.status < 6 && <button className='GreenButton'
                                                                         onClick={() => updateStageHandler(tender.status + 1)}>{getGreenButtonText(tender.status)}</button>}
-                    <button className='BlueButton' onClick={saveHandler}>Сохранить</button>
+                    <PrimaryButton onClick={saveHandler}>Сохранить</PrimaryButton>
                     {tender.status == 0 &&
                         <button className='RedButton' onClick={() => deleteHandler()}>Удалить</button>}
                     {tender.status > 0 && tender.status < 5 && <button className='RedButton'

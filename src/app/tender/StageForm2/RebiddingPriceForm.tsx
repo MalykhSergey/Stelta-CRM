@@ -3,7 +3,7 @@ import {RebiddingPrice} from "@/models/RebiddingPrice";
 import {deleteRebiddingPriceById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
 import {useState} from "react";
-import DocumentsForm from "../../components/DocumentForm/DocumentsForm";
+import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 import styles from './RebiddingPriceForm.module.css';
 import CurrencyInput from "react-currency-input-field";
 

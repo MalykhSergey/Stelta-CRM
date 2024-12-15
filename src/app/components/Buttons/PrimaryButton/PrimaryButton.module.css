@@ -1,0 +1,8 @@
+.PrimaryButton {
+    color: white;
+    background-color: rgb(17, 141, 230);
+}
+
+.PrimaryButton:hover {
+    background-color: rgb(0, 124, 213);
+}
