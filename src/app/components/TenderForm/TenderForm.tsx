@@ -6,6 +6,7 @@ import {observer, useLocalObservable} from 'mobx-react-lite'
 import {Tender} from '@/models/Tender/Tender'
 import styles from './TenderForm.module.css'
 import CurrencyInput from "react-currency-input-field";
+import {TenderFormField} from "@/app/components/TenderForm/TenderFormField";
 
 interface TenderFormProps {
     tender: Tender,
@@ -29,30 +30,26 @@ interface TenderFormProps {
     }
 }
 
-const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEditable}) => {
+const TenderForm = observer((props: TenderFormProps) => {
     const errors: { [key: string]: string } = useLocalObservable(() => ({}))
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = (tender as any)["set" + name](value)
+        const result = (props.tender as any)["set" + name](value)
         if (!result.ok) {
             errors[name] = result.error
         } else {
             delete errors[name]
         }
     }
-    const regNumber = renderField("RegNumber", tender.regNumber, 'Реестровый номер  :', isEditable.regNumber, errors, handleChange)
-    const lotNumber = renderField("LotNumber", tender.lotNumber, 'Лот №:', isEditable.lotNumber, errors, handleChange)
-    const contactPerson = renderField("ContactPerson", tender.contactPerson, 'Контактное лицо:', isEditable.contactPerson, errors, handleChange)
-    const phoneNumber = renderField("PhoneNumber", tender.phoneNumber, 'Тел.:', isEditable.phoneNumber, errors, handleChange)
-    const email = renderField("Email", tender.email, 'Email:', isEditable.email, errors, handleChange)
     return (
         <div className={`${styles.form} card`}>
             <label className={styles.label} htmlFor='Status'>Статус:</label>
             <div className={styles.formGroup}>
-                <select id='Status' name="Status" value={tender.status} className={styles.input} onChange={handleChange}
-                        disabled={!isEditable.status}>
-                    {tender.status < 0 &&
+                <select id='Status' name="Status" value={props.tender.status} className={styles.input}
+                        onChange={handleChange}
+                        disabled={!props.isEditable.status}>
+                    {props.tender.status < 0 &&
                         <>
                             <option value="-4">{getStatusName(-4)}</option>
                             <option value="-1">{getStatusName(-1)}</option>
@@ -69,16 +66,16 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
             </div>
             <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
             <div className={styles.formGroup}>
-                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={tender.isSpecial}
-                       onChange={() => tender.toggleIsSpecial()} disabled={!isEditable.isSpecial}/>
+                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={props.tender.isSpecial}
+                       onChange={() => props.tender.toggleIsSpecial()} disabled={!props.isEditable.isSpecial}/>
             </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <select name="Company" id="Company" onChange={handleChange} value={tender.company.id}
-                            disabled={!isEditable.company}>
+                    <select name="Company" id="Company" onChange={handleChange} value={props.tender.company.id}
+                            disabled={!props.isEditable.company}>
                         <option key={"option0"} value={0} disabled={true}>Выберите организацию</option>
-                        {companies.map(company =>
+                        {props.companies.map(company =>
                             <option key={"option" + company.id} value={company.id}>{company.name}</option>
                         )}
                     </select>
@@ -86,36 +83,25 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                 {errors['Company'] && <span></span>} {errors['Company'] &&
                 <span className={styles.error}>{errors['Company']}</span>}
             </div>
-            <label className={styles.label} htmlFor="Name">Полное наименование:</label>
-            <div className={styles.formGroup}>
-                <div className={styles.inputRow}>
-                    <textarea
-                        name="Name"
-                        id="Name"
-                        value={tender.name}
-                        className={styles.input}
-                        disabled={!isEditable.name}
-                        onChange={handleChange}
-                    />
-                    {isEditable.name && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
-                </div>
-            </div>
-            {errors["Name"] && <><span></span><span
-                className='under-input-error'>{errors["Name"]}</span></>}
-            {regNumber}
-            {lotNumber}
+            <TenderFormField propertyName="Name" value={props.tender.name} label="Полное наименование:"
+                             onChange={handleChange} isEditable={props.isEditable.name} errors={errors}
+                             type="textarea"/>
+            <TenderFormField propertyName={'RegNumber'} value={props.tender.regNumber} label={"Реестровый номер  :"}
+                             onChange={handleChange} isEditable={props.isEditable.regNumber} errors={errors}/>
+            <TenderFormField propertyName={'LotNumber'} value={props.tender.lotNumber} label={"Лот номер:"}
+                             onChange={handleChange} isEditable={props.isEditable.lotNumber} errors={errors}/>
             <label className={styles.label} htmlFor="InitialMaxPrice">НМЦК:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
                     <CurrencyInput
                         name="InitialMaxPrice"
                         id="InitialMaxPrice"
-                        value={tender.initialMaxPrice}
+                        value={props.tender.initialMaxPrice}
                         className={styles.input}
-                        disabled={!isEditable.initialMaxPrice}
+                        disabled={!props.isEditable.initialMaxPrice}
                         allowNegativeValue={false}
                         onValueChange={value => {
-                            const result = tender.setInitialMaxPrice(value ? value : '')
+                            const result = props.tender.setInitialMaxPrice(value ? value : '')
                             if (!result.ok) {
                                 errors['InitialMaxPrice'] = result.error
                             } else {
@@ -124,7 +110,8 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                         }}
                         suffix="₽"
                     />
-                    {isEditable.initialMaxPrice && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
+                    {props.isEditable.initialMaxPrice &&
+                        <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
             {errors["InitialMaxPrice"] && <><span></span><span
@@ -135,12 +122,12 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                     <CurrencyInput
                         name="Price"
                         id="Price"
-                        value={tender.rebiddingPrices.length == 0 ? tender.price : tender.rebiddingPrices.at(-1)?.price}
+                        value={props.tender.rebiddingPrices.length == 0 ? props.tender.price : props.tender.rebiddingPrices.at(-1)?.price}
                         className={styles.input}
-                        disabled={!isEditable.price}
+                        disabled={!props.isEditable.price}
                         allowNegativeValue={false}
                         onValueChange={value => {
-                            const result = tender.setPrice(value ? value : '')
+                            const result = props.tender.setPrice(value ? value : '')
                             if (!result.ok) {
                                 errors['Price'] = result.error
                             } else {
@@ -149,91 +136,33 @@ const TenderForm: React.FC<TenderFormProps> = observer(({tender, companies, isEd
                         }}
                         suffix="₽"
                     />
-                    {isEditable.price && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
+                    {props.isEditable.price && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
             {errors["Price"] && <><span></span><span className='under-input-error'>{errors["Price"]}</span></>}
-            <label className={styles.label} htmlFor='Date1_start'>Дата начала 1-го этапа:</label>
-            <div className={styles.formGroup}>
-                <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date1_start' id='Date1_start' value={tender.date1_start}
-                           onChange={handleChange} disabled={!isEditable.date1_start}/>
-                </div>
-                {errors['Date1_start'] && <span></span>} {errors['Date1_start'] &&
-                <span className='under-input-error'>{errors['Date1_start']}</span>}
-            </div>
-            <label className={styles.label} htmlFor='Date1_finish'>Дата окончания 1-го этапа:</label>
-            <div className={styles.formGroup}>
-                <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date1_finish' id='Date1_finish' value={tender.date1_finish}
-                           onChange={handleChange} disabled={!isEditable.date1_finish}/>
-                </div>
-                {errors['Date1_finish'] && <span></span>} {errors['Date1_finish'] &&
-                <span className='under-input-error'>{errors['Date1_finish']}</span>}
-            </div>
-            <label className={styles.label} htmlFor='Date2_finish'>Дата окончания 2-го этапа:</label>
-            <div className={styles.formGroup}>
-                <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date2_finish' id='Date2_finish' value={tender.date2_finish}
-                           onChange={handleChange} disabled={!isEditable.date2_finish}/>
-                </div>
-                {errors['Date2_finish'] && <span></span>} {errors['Date2_finish'] &&
-                <span className='under-input-error'>{errors['Date2_finish']}</span>}
-            </div>
-            <label className={styles.label} htmlFor='Date_finish'>Подведение итогов:</label>
-            <div className={styles.formGroup}>
-                <div className={styles.inputRow}>
-                    <input type="datetime-local" name='Date_finish' id='Date_finish' value={tender.date_finish}
-                           onChange={handleChange} disabled={!isEditable.date_finish}/>
-                </div>
-                {errors['Date_finish'] && <span></span>} {errors['Date_finish'] &&
-                <span className='under-input-error'>{errors['Date_finish']}</span>}
-            </div>
-            {contactPerson}
-            {phoneNumber}
-            {email}
+            <TenderFormField propertyName="Date1_start" value={props.tender.date1_start} label="Дата начала 1-го этапа:"
+                             onChange={handleChange} isEditable={props.isEditable.date1_start} errors={errors}
+                             type="datetime-local"/>
+            <TenderFormField propertyName="Date1_finish" value={props.tender.date1_finish}
+                             label="Дата окончания 1-го этапа:"
+                             onChange={handleChange} isEditable={props.isEditable.date1_finish} errors={errors}
+                             type="datetime-local"/>
+            <TenderFormField propertyName="Date2_finish" value={props.tender.date2_finish}
+                             label="Дата окончания 2-го этапа:"
+                             onChange={handleChange} isEditable={props.isEditable.date2_finish} errors={errors}
+                             type="datetime-local"/>
+            <TenderFormField propertyName="Date_finish" value={props.tender.date_finish} label="Подведение итогов:"
+                             onChange={handleChange} isEditable={props.isEditable.date_finish} errors={errors}
+                             type="datetime-local"/>
+            <TenderFormField propertyName={'ContactPerson'} value={props.tender.contactPerson}
+                             label={"Контактное лицо:"}
+                             onChange={handleChange} isEditable={props.isEditable.contactPerson} errors={errors}/>
+            <TenderFormField propertyName={'PhoneNumber'} value={props.tender.phoneNumber} label={"Номер телефона:"}
+                             onChange={handleChange} isEditable={props.isEditable.phoneNumber} errors={errors}/>
+            <TenderFormField propertyName={'Email'} value={props.tender.email} label={"Электронная почта:"}
+                             onChange={handleChange} isEditable={props.isEditable.email} errors={errors}/>
         </div>
     )
 })
 
 export default TenderForm
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const renderField = (fieldName: string, value: any, labelTitle: string, isEditableField: boolean, errors: {
-    [key: string]: string
-}, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => {
-    let elem = <input type="text" id={fieldName} className={styles.input} disabled value={value}/>
-    if (isEditableField) {
-        let fieldType = 'text'
-        if (fieldName == 'Email')
-            fieldType = 'email'
-        elem = <>
-            <div className={styles.formGroup}>
-                <div className={styles.inputRow}>
-                    <input
-                        type={fieldType}
-                        name={fieldName}
-                        id={fieldName}
-                        value={value}
-                        onChange={(e) => {
-                            if (["InitialMaxPrice", "Price"].includes(fieldName)) {
-                                e.target.value = e.target.value.replace(/[^0-9,]+|,(?=.*,)/g, '')
-                            }
-                            handleChange(e)
-
-                        }}
-                        className={styles.input}
-                    />
-                    <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>
-                </div>
-            </div>
-            {errors[fieldName] && <span></span>} {errors[fieldName] &&
-            <span className='under-input-error'>{errors[fieldName]}</span>}
-        </>
-    }
-    return (
-        <>
-            <label htmlFor={fieldName} className={styles.label}>{labelTitle}</label>
-            {elem}
-        </>
-    )
-}
