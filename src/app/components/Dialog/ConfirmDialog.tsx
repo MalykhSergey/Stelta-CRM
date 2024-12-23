@@ -1,6 +1,5 @@
 import styles from './ConfirmDialog.module.css';
 import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
-import {Button} from "@/app/components/Buttons/Button";
 
 type ConfirmDialogProps = {
     message: string;

@@ -1,6 +1,4 @@
 import getStatusName from '@/models/Tender/Status';
-import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observer, useLocalObservable} from 'mobx-react-lite';
 import {Tender} from '@/models/Tender/Tender';
 import styles from './CommentsForm.module.css';
@@ -48,7 +46,8 @@ const CommentsForm: React.FC<CommentsFormProps> = observer(({tender}) => {
         <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
             <div className={StageStyles.cardHeader}>
                 <h3>Комментарии</h3>
-                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel} expanded={!collapsed.isTrue}/>
+                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel}
+                              expanded={!collapsed.isTrue}/>
             </div>
             <div className={StageStyles.hiddenContent} style={{marginTop: '0px'}}>
                 {comments}

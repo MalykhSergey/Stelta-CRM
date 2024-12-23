@@ -2,6 +2,7 @@
 
 import tenderStorage from "./TenderStorage";
 import {authAction} from "../User/UserService";
+import {CalendarService} from "@/models/Tender/Calendar/CalendarService";
 
 export async function createTender() {
     return authAction(
@@ -52,6 +53,7 @@ export async function deleteRebiddingPriceById(tenderId: number, rebiddingPriceI
 export async function updateTenderById(tender_string: string) {
     return authAction(async () => {
         const tender = JSON.parse(tender_string)
+        CalendarService.handleTenderEvents(tender);
         return await tenderStorage.update(tender);
     })
 }

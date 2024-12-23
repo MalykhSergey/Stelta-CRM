@@ -1,8 +1,6 @@
 import FileName from '@/models/Tender/FileName';
 import {RebiddingPrice} from '@/models/Tender/RebiddingPrice';
 import {addRebiddingPrice} from '@/models/Tender/TenderService';
-import {faCaretUp} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
 import {Tender} from '../../../models/Tender/Tender';
@@ -10,14 +8,14 @@ import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from "./StageForm2.module.css"
 
-import type { JSX } from "react";
+import type {JSX} from "react";
 import CurrencyInput from "react-currency-input-field";
 import StageStyles from "@/app/tender/StageForms.module.css";
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 
 interface StageForm2Props {
     tender: Tender,
-    isEditable:boolean
+    isEditable: boolean
 }
 
 const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) => {
@@ -49,7 +47,8 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
         <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
             <div className={StageStyles.cardHeader}>
                 <h3>Этап 2</h3>
-                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel} expanded={!collapsed.isTrue}/>
+                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel}
+                              expanded={!collapsed.isTrue}/>
             </div>
             <div className={`${StageStyles.hiddenContent}  ${StageStyles.stageForm}`}>
                 <DocumentsForm tenderId={tender.id} stage={2}
