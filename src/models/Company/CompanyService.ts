@@ -4,7 +4,7 @@ import {authAction} from "../User/UserService";
 import CompanyStorage from "@/models/Company/CompanyStorage";
 
 export async function getCompanies() {
-    return await CompanyStorage.getCompanies();
+    return JSON.stringify(await CompanyStorage.getCompanies());
 }
 
 export async function createCompany(name: string) {

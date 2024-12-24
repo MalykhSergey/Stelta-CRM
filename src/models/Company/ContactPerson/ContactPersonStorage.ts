@@ -1,13 +1,25 @@
 import connection, {handleDatabaseError} from "@/config/Database";
 import logger from "@/config/Logger";
+import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
 export default class ContactPersonStorage {
     static async getContactPersonsByCompanyId(companyId: number) {
         try {
-            return (await connection.query(`SELECT * FROM contact_persons WHERE "company_id" = \$1 ORDER BY "contact_person"`, [companyId])).rows;
+            return (await connection.query(`SELECT * FROM contact_persons WHERE "company_id" = \$1 ORDER BY "name"`,
+                [companyId])).rows.map(row => new ContactPerson(row.id, row.name, row.phone_number, row.email));
         } catch (e) {
             logger.error(e);
-            return { error: "Ошибка получения контактных лиц по ID компании." };
+            return {error: "Ошибка получения контактных лиц по ID компании."};
+        }
+    }
+
+    static async getContactPersonById(id: number) {
+        try {
+            const row = (await connection.query(`SELECT * FROM contact_persons WHERE "id" = \$1 ORDER BY "name"`, [id])).rows[0]
+            return new ContactPerson(row.id, row.name, row.phone_number, row.email);
+        } catch (e) {
+            logger.error(e);
+            return {error: "Ошибка получения контактного лица по ID."};
         }
     }
 

@@ -7,6 +7,7 @@ import {Tender} from '@/models/Tender/Tender'
 import styles from './TenderForm.module.css'
 import CurrencyInput from "react-currency-input-field";
 import {TenderFormField} from "@/app/components/TenderForm/TenderFormField";
+import {ContactPersonForm} from "@/app/components/TenderForm/ContactPersonForm/ContactPersonForm";
 
 interface TenderFormProps {
     tender: Tender,
@@ -72,7 +73,13 @@ const TenderForm = observer((props: TenderFormProps) => {
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
-                    <select name="Company" id="Company" onChange={handleChange} value={props.tender.company.id}
+                    <select name="Company" id="Company"
+                            onChange={(e) => {
+                                const selected_company = props.companies.find(company => company.id == Number.parseInt(e.currentTarget.value));
+                                if (selected_company)
+                                    props.tender.setCompany(selected_company);
+                            }}
+                            value={props.tender.company.id}
                             disabled={!props.isEditable.company}>
                         <option key={"option0"} value={0} disabled={true}>Выберите организацию</option>
                         {props.companies.map(company =>
@@ -154,13 +161,15 @@ const TenderForm = observer((props: TenderFormProps) => {
             <TenderFormField propertyName="Date_finish" value={props.tender.date_finish} label="Подведение итогов:"
                              onChange={handleChange} isEditable={props.isEditable.date_finish} errors={errors}
                              type="datetime-local"/>
-            <TenderFormField propertyName={'ContactPerson'} value={props.tender.contactPerson}
-                             label={"Контактное лицо:"}
-                             onChange={handleChange} isEditable={props.isEditable.contactPerson} errors={errors}/>
-            <TenderFormField propertyName={'PhoneNumber'} value={props.tender.phoneNumber} label={"Номер телефона:"}
-                             onChange={handleChange} isEditable={props.isEditable.phoneNumber} errors={errors}/>
-            <TenderFormField propertyName={'Email'} value={props.tender.email} label={"Электронная почта:"}
-                             onChange={handleChange} isEditable={props.isEditable.email} errors={errors}/>
+            {/*<TenderFormField propertyName={'ContactPerson'} value={props.tender.contactPerson}*/}
+            {/*                 label={"Контактное лицо:"}*/}
+            {/*                 onChange={handleChange} isEditable={props.isEditable.contactPerson} errors={errors}/>*/}
+            {/*<TenderFormField propertyName={'PhoneNumber'} value={props.tender.phoneNumber} label={"Номер телефона:"}*/}
+            {/*                 onChange={handleChange} isEditable={props.isEditable.phoneNumber} errors={errors}/>*/}
+            {/*<TenderFormField propertyName={'Email'} value={props.tender.email} label={"Электронная почта:"}*/}
+            {/*                 onChange={handleChange} isEditable={props.isEditable.email} errors={errors}/>*/}
+            <ContactPersonForm company={props.tender.company} contactPerson={props.tender.contactPerson} errors={errors}
+                               isEditable={props.isEditable.contactPerson}/>
         </div>
     )
 })

@@ -1,9 +1,18 @@
 import connection, {handleDatabaseError} from "@/config/Database";
 import logger from "@/config/Logger";
+import Company from "@/models/Company/Company";
+import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 
 export default class CompanyStorage {
     static async getCompanies() {
-        return (await connection.query(`SELECT * FROM companies ORDER BY "name"`)).rows
+        const companies_rows = (await connection.query(`SELECT * FROM companies ORDER BY "name"`)).rows;
+        return await Promise.all(companies_rows.map(async row => {
+            const company = new Company(row.id, row.name);
+            const personsByCompanyId = await ContactPersonStorage.getContactPersonsByCompanyId(row.id);
+            if (!('error' in personsByCompanyId))
+                company.contactPersons = personsByCompanyId
+            return company
+        }))
     }
 
     static async createCompany(name: string) {

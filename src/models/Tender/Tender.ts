@@ -4,6 +4,7 @@ import {DateRequest} from "./DateRequest"
 import FileName from "./FileName"
 import {RebiddingPrice} from "./RebiddingPrice"
 import Company from "../Company/Company"
+import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
 export class Tender {
     public id: number = 0
@@ -23,7 +24,7 @@ export class Tender {
     public endDateRange = 0
     public contractDate = ''
     public contractNumber = ''
-    public contactPerson: string = ''
+    public contactPerson: ContactPerson = new ContactPerson(0, '', '', '')
     public phoneNumber: string = ''
     public email: string = ''
     public comments: string[] = ['', '', '', '', '', '']
@@ -32,6 +33,84 @@ export class Tender {
     public datesRequests: DateRequest[] = []
 
     constructor() {
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromQueryRow(row: any) {
+        const tender = new Tender()
+        tender.id = row.id
+        tender.status = row.status
+        tender.isSpecial = row.is_special
+        if (row.company_id) {
+            tender.company.id = row.company_id
+            tender.company.name = row.company_name
+        }
+        tender.name = row.name
+        tender.lotNumber = row.lot_number
+        tender.regNumber = row.register_number
+        tender.initialMaxPrice = row.initial_max_price
+        tender.price = row.price
+        tender.date1_start = row.date1_start
+        tender.contractNumber = row.contract_number
+        tender.contractDate = row.contract_date
+        tender.date1_finish = row.date1_finish
+        tender.date2_finish = row.date2_finish
+        tender.date_finish = row.date_finish
+        tender.startDateRange = new Date(row.date1_start).getTime()
+        const date1 = new Date(row.date1_finish).getTime()
+        const date2 = new Date(row.date2_finish).getTime()
+        const date3 = new Date(row.date_finish).getTime()
+        tender.endDateRange = Math.max(date1, date2, date3)
+        for (let i = 0; i < 6; i++) {
+            if (row[`comment${i}`] != null)
+                tender.comments[i] = row[`comment${i}`]
+        }
+        return tender
+    }
+
+    static toJSON(tender: Tender) {
+        return JSON.stringify(tender);
+    }
+
+    static fromJSON(data: string) {
+        const obj = JSON.parse(data)
+        const tender = new Tender()
+        tender.id = obj.id
+        tender.status = obj.status
+        tender.isSpecial = obj.isSpecial
+        const company = new Company(obj.company.id, obj.company.name)
+        company.contactPersons = obj.company.contactPersons.map(contactPerson => {
+            return new ContactPerson(contactPerson._id, contactPerson._name, contactPerson._phoneNumber, contactPerson._email)
+        })
+        makeAutoObservable(company)
+        tender.company = company
+        tender.name = obj.name
+        tender.regNumber = obj.regNumber
+        tender.lotNumber = obj.lotNumber
+        tender.initialMaxPrice = obj.initialMaxPrice
+        tender.price = obj.price
+        tender.date1_start = obj.date1_start
+        tender.date1_finish = obj.date1_finish
+        tender.date2_finish = obj.date2_finish
+        tender.date_finish = obj.date_finish
+        tender.startDateRange = obj.startDateRange
+        tender.endDateRange = obj.endDateRange
+        tender.contractNumber = obj.contractNumber
+        tender.contractDate = obj.contractDate
+        tender.contactPerson = makeAutoObservable(new ContactPerson(obj.contactPerson._id, obj.contactPerson._name, obj.contactPerson._phoneNumber, obj.contactPerson._email))
+        tender.comments = obj.comments
+        tender.stagedFileNames = obj.stagedFileNames
+        tender.rebiddingPrices = obj.rebiddingPrices.map((value: {
+            id: number;
+            price: string;
+            fileNames: FileName[]
+        }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
+        tender.datesRequests = obj.datesRequests.map((value: {
+            id: number;
+            date: string;
+            fileNames: FileName[]
+        }) => makeAutoObservable(new DateRequest(value.id, value.date, value.fileNames)))
+        return makeAutoObservable(tender)
     }
 
     setStatus(value: string): Result<string, string> {
@@ -46,9 +125,12 @@ export class Tender {
         this.isSpecial = !this.isSpecial
     }
 
-    setCompany(value: number): Result<string, string> {
-        this.company.id = value
-        return {ok: true, value: ''}
+    setCompany(value: Company){
+        this.company = value
+        // this.company.id = value.id
+        // this.company.name = value.name
+        // this.company.contactPersons = value.contactPersons
+        // console.log(this.company)
     }
 
     setName(value: string): Result<string, string> {
@@ -76,7 +158,7 @@ export class Tender {
     }
 
     setInitialMaxPrice(value: string): Result<string, string> {
-        this.initialMaxPrice = value.replace(',','.')
+        this.initialMaxPrice = value.replace(',', '.')
         if (value == "") {
             return {ok: false, error: 'Поле не должно быть пустым!'}
         }
@@ -84,7 +166,7 @@ export class Tender {
     }
 
     setPrice(value: string): Result<string, string> {
-        this.price = value.replace(',','.')
+        this.price = value.replace(',', '.')
         if (value == "") {
             return {ok: false, error: 'Поле не должно быть пустым!'}
         }
@@ -123,12 +205,8 @@ export class Tender {
         return {ok: true, value: ''}
     }
 
-    setContactPerson(value: string): Result<string, string> {
+    setContactPerson(value: ContactPerson) {
         this.contactPerson = value
-        if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
-        }
-        return {ok: true, value: ''}
     }
 
     setPhoneNumber(value: string): Result<string, string> {
@@ -166,42 +244,6 @@ export class Tender {
         return {ok: true, value: ''}
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromQueryRow(row: any) {
-        const tender = new Tender()
-        tender.id = row.id
-        tender.status = row.status
-        tender.isSpecial = row.is_special
-        if (row.company_id) {
-            tender.company.id = row.company_id
-            tender.company.name = row.company_name
-        }
-        tender.name = row.name
-        tender.lotNumber = row.lot_number
-        tender.regNumber = row.register_number
-        tender.initialMaxPrice = row.initial_max_price
-        tender.price = row.price
-        tender.contactPerson = row.contact_person
-        tender.phoneNumber = row.phone_number
-        tender.email = row.email
-        tender.date1_start = row.date1_start
-        tender.contractNumber = row.contract_number
-        tender.contractDate = row.contract_date
-        tender.date1_finish = row.date1_finish
-        tender.date2_finish = row.date2_finish
-        tender.date_finish = row.date_finish
-        tender.startDateRange = new Date(row.date1_start).getTime()
-        const date1 = new Date(row.date1_finish).getTime()
-        const date2 = new Date(row.date2_finish).getTime()
-        const date3 = new Date(row.date_finish).getTime()
-        tender.endDateRange = Math.max(date1, date2, date3)
-        for (let i = 0; i < 6; i++) {
-            if (row[`comment${i}`] != null)
-                tender.comments[i] = row[`comment${i}`]
-        }
-        return tender
-    }
-
     public removeFileFromStagedFileNames(fileName: FileName, arrayIndex: number): void {
         const index = this.stagedFileNames[arrayIndex].findIndex(item => item.name === fileName.name);
         if (index > -1)
@@ -222,47 +264,5 @@ export class Tender {
 
     public addToStagedFileNames(fileName: FileName, arrayIndex: number): void {
         this.stagedFileNames[arrayIndex].push(fileName);
-    }
-
-    static toJSON(tender: Tender) {
-        return JSON.stringify(tender);
-    }
-
-    static fromJSON(data: string) {
-        const obj = JSON.parse(data)
-        const tender = new Tender()
-        tender.id = obj.id
-        tender.status = obj.status
-        tender.isSpecial = obj.isSpecial
-        tender.company = obj.company
-        tender.name = obj.name
-        tender.regNumber = obj.regNumber
-        tender.lotNumber = obj.lotNumber
-        tender.initialMaxPrice = obj.initialMaxPrice
-        tender.price = obj.price
-        tender.date1_start = obj.date1_start
-        tender.date1_finish = obj.date1_finish
-        tender.date2_finish = obj.date2_finish
-        tender.date_finish = obj.date_finish
-        tender.startDateRange = obj.startDateRange
-        tender.endDateRange = obj.endDateRange
-        tender.contractNumber = obj.contractNumber
-        tender.contractDate = obj.contractDate
-        tender.contactPerson = obj.contactPerson
-        tender.phoneNumber = obj.phoneNumber
-        tender.email = obj.email
-        tender.comments = obj.comments
-        tender.stagedFileNames = obj.stagedFileNames
-        tender.rebiddingPrices = obj.rebiddingPrices.map((value: {
-            id: number;
-            price: string;
-            fileNames: FileName[]
-        }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
-        tender.datesRequests = obj.datesRequests.map((value: {
-            id: number;
-            date: string;
-            fileNames: FileName[]
-        }) => makeAutoObservable(new DateRequest(value.id, value.date, value.fileNames)))
-        return makeAutoObservable(tender)
     }
 }  

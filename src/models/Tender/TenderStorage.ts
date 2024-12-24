@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import connection, {handleDatabaseError} from "../../config/Database";
 import {Tender} from "./Tender";
 import logger from "@/config/Logger";
+import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 
 class TenderStorage {
     constructor() {
@@ -127,6 +128,13 @@ class TenderStorage {
             LEFT JOIN  companies ON companies.id = company_id 
             WHERE tenders.id =  $1`, [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
+        const contactPersons = await ContactPersonStorage.getContactPersonsByCompanyId(tender.company.id)
+        if (!('error' in contactPersons)) {
+            tender.company.contactPersons = contactPersons
+            const contactPerson = contactPersons.find(contactPerson => contactPerson.id == tenders_row[0].contact_person_id);
+            if (contactPerson)
+                tender.contactPerson = contactPerson
+        }
         for (let i = 0; i < 6; i++) {
             tender.stagedFileNames[i] = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
         }

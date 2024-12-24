@@ -4,10 +4,10 @@ import {getCompanies} from '@/models/Company/CompanyService';
 
 type Params = Promise<{ tenderId: string }>
 
-const TenderPageServer = async (props:{params:Params}) => {
+const TenderPageServer = async (props: { params: Params }) => {
     const tender = await getTenderById(Number.parseInt((await props.params).tenderId));
     const companies = await getCompanies();
-    return <TenderPageClientWrapper tenderString={tender} companies={companies}/>;
+    return <TenderPageClientWrapper tenderString={tender} companiesString={companies}/>;
 };
 
 export default TenderPageServer;
