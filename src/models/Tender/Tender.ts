@@ -79,11 +79,10 @@ export class Tender {
         tender.status = obj.status
         tender.isSpecial = obj.isSpecial
         const company = new Company(obj.company.id, obj.company.name)
-        company.contactPersons = obj.company.contactPersons.map(contactPerson => {
-            return new ContactPerson(contactPerson._id, contactPerson._name, contactPerson._phoneNumber, contactPerson._email)
+        company.contactPersons = obj.company.contactPersons.map((contactPerson: ContactPerson) => {
+            return new ContactPerson(contactPerson.id, contactPerson.name, contactPerson.phoneNumber, contactPerson.email)
         })
-        makeAutoObservable(company)
-        tender.company = company
+        tender.company = makeAutoObservable(company)
         tender.name = obj.name
         tender.regNumber = obj.regNumber
         tender.lotNumber = obj.lotNumber
@@ -97,7 +96,7 @@ export class Tender {
         tender.endDateRange = obj.endDateRange
         tender.contractNumber = obj.contractNumber
         tender.contractDate = obj.contractDate
-        tender.contactPerson = makeAutoObservable(new ContactPerson(obj.contactPerson._id, obj.contactPerson._name, obj.contactPerson._phoneNumber, obj.contactPerson._email))
+        tender.contactPerson = makeAutoObservable(new ContactPerson(obj.contactPerson.id, obj.contactPerson.name, obj.contactPerson.phoneNumber, obj.contactPerson.email))
         tender.comments = obj.comments
         tender.stagedFileNames = obj.stagedFileNames
         tender.rebiddingPrices = obj.rebiddingPrices.map((value: {
@@ -125,7 +124,7 @@ export class Tender {
         this.isSpecial = !this.isSpecial
     }
 
-    setCompany(value: Company){
+    setCompany(value: Company) {
         this.company = value
         // this.company.id = value.id
         // this.company.name = value.name

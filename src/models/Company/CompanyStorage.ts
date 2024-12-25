@@ -4,7 +4,7 @@ import Company from "@/models/Company/Company";
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 
 export default class CompanyStorage {
-    static async getCompanies() {
+    static async getCompaniesWithPersons() {
         const companies_rows = (await connection.query(`SELECT * FROM companies ORDER BY "name"`)).rows;
         return await Promise.all(companies_rows.map(async row => {
             const company = new Company(row.id, row.name);
@@ -41,5 +41,9 @@ export default class CompanyStorage {
                 {'23503': 'Невозможно удалить организацию: существуют связанные тендера или контактные лица.'},
                 'Ошибка удаления организации.');
         }
+    }
+
+    static async getCompanies() {
+        return (await connection.query(`SELECT * FROM companies ORDER BY "name"`)).rows;
     }
 }

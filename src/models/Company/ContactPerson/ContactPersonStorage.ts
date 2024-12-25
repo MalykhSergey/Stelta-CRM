@@ -23,11 +23,15 @@ export default class ContactPersonStorage {
         }
     }
 
-    static async createContactPerson(contactPerson: string, phoneNumber: string, email: string, companyId: number) {
+    static async createContactPerson(contactPerson: ContactPerson, companyId: number) {
         try {
-            return (await connection.query(`INSERT INTO contact_persons("contact_person", "phone_number", "email", "company_id") VALUES(\$1, \$2, \$3, \$4) RETURNING id`, [contactPerson, phoneNumber, email, companyId])).rows[0].id;
+            return (await connection.query(`
+            INSERT INTO contact_persons("name", "phone_number", "email", "company_id")
+            VALUES(\$1, \$2, \$3, \$4) RETURNING id`,
+                [contactPerson.name, contactPerson.phoneNumber, contactPerson.email, companyId])).rows[0].id;
         } catch (e) {
             logger.error(e);
+            console.log(e)
             return {error: "Ошибка создания контактного лица. Возможно, такие данные уже существуют!"};
         }
     }

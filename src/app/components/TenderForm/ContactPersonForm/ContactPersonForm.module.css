@@ -12,6 +12,7 @@
     border-radius: 4px;
     overflow: auto;
     position: absolute;
+    max-height: 130px;
     top: 50px;
     width: 100%;
     visibility: hidden;

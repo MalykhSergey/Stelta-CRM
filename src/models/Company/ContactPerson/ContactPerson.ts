@@ -1,53 +1,18 @@
 export class ContactPerson {
+    email: string = '';
+    name: string = '';
+    phoneNumber: string = '';
+    id: number = 0;
+
     constructor(id: number, name: string, phoneNumber: string, email: string) {
-        this._id = id;
-        this._name = name;
-        this._phoneNumber = phoneNumber;
-        this._email = email;
-    }
-
-    private _email: string = '';
-
-    get email(): string {
-        return this._email;
-    }
-
-    set email(value: string) {
-        this._email = value;
-    }
-
-    private _name: string = '';
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(value: string) {
-        this._name = value;
-    }
-
-    private _phoneNumber: string = '';
-
-    get phoneNumber(): string {
-        return this._phoneNumber;
-    }
-
-    set phoneNumber(value: string) {
-        this._phoneNumber = value;
-    }
-
-    private _id: number = 0;
-
-    get id(): number {
-        return this._id;
-    }
-
-    set id(value: number) {
-        this._id = value;
+        this.id = id;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
     setName(value: string) {
-        this._name = value;
+        this.name = value;
         if (value === "") {
             return {ok: false, error: 'Поле не должно быть пустым!'};
         }
@@ -55,7 +20,7 @@ export class ContactPerson {
     }
 
     setPhoneNumber(value: string) {
-        this._phoneNumber = value;
+        this.phoneNumber = value;
         if (value === "") {
             return {ok: false, error: 'Поле не должно быть пустым!'};
         }
@@ -63,32 +28,21 @@ export class ContactPerson {
     }
 
     setEmail(value: string) {
-        this._email = value;
+        this.email = value;
         if (value === "") {
             return {ok: false, error: 'Поле не должно быть пустым!'};
         }
-        if (!this._email.includes('@')) {
+        if (!this.email.includes('@')) {
             return {ok: false, error: 'Email не содержит @!'};
         }
         return {ok: true, value: ''};
     }
 
-    getName(): string {
-        return this._name;
-    }
-
-    getPhoneNumber(): string {
-        return this._phoneNumber;
-    }
-
-    getEmail(): string {
-        return this._email;
-    }
 
     isEquals(contactPerson: ContactPerson): boolean {
-        if (contactPerson.getName() != this._name) return false
-        if (contactPerson.getPhoneNumber() != this._phoneNumber) return false
-        if (contactPerson.getEmail() != this._email) return false
+        if (contactPerson.name != this.name) return false
+        if (contactPerson.phoneNumber != this.phoneNumber) return false
+        if (contactPerson.email != this.email) return false
         return true
     }
 }

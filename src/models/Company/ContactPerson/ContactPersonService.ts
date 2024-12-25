@@ -2,6 +2,7 @@
 
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 import {authAction} from "@/models/User/UserService";
+import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
 
 export async function getContactPersonsByCompanyId(companyId: number) {
@@ -10,18 +11,17 @@ export async function getContactPersonsByCompanyId(companyId: number) {
 
 export async function createContactPerson(form: FormData) {
     return authAction(async () => {
-        const contactPerson = form.get('contact_person');
+        const name = form.get('name');
         const phoneNumber = form.get('phone_number');
         const email = form.get('email');
         const companyId = form.get('company_id');
-
-        if (contactPerson && phoneNumber && email && companyId) {
+        if (name && phoneNumber && email && companyId) {
             return await ContactPersonStorage.createContactPerson(
-                contactPerson as string,
-                phoneNumber as string,
-                email as string,
+                new ContactPerson(0, name as string, phoneNumber as string, email as string),
                 Number.parseInt(companyId as string)
             );
+        }else {
+            return {error: 'Недостаточно полей!'};
         }
     });
 }

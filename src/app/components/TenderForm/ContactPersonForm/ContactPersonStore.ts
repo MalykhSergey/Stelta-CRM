@@ -42,7 +42,7 @@ export class ContactPersonStore {
 
     findMatches(name: string) {
         const searchString = name.toLowerCase();
-        this.searchResults = this.company.contactPersons.filter(contactPerson => contactPerson.getName().toLowerCase().includes(searchString))
+        this.searchResults = this.company.contactPersons.filter(contactPerson => contactPerson.name.toLowerCase().includes(searchString))
     }
 
     get isNew() {

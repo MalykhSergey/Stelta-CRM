@@ -9,14 +9,15 @@ export default class Company {
         this.id = id
         this.name = name
     }
+    addContactPerson(contactPerson: ContactPerson) {
+        this.contactPersons.push(contactPerson)
+    }
 
     static fromJSONArray(array: string) {
-        return JSON.parse(array).map(value => {
-            value.contactPersons = value.contactPersons.map(contactPerson => {
-                return new ContactPerson(contactPerson._id, contactPerson._name, contactPerson._phoneNumber, contactPerson._email)
+        return JSON.parse(array).map((value: Company) => {
+            value.contactPersons = value.contactPersons.map((contactPerson: ContactPerson) => {
+                return new ContactPerson(contactPerson.id, contactPerson.name, contactPerson.phoneNumber, contactPerson.email)
             })
-            if(value.id == 91)
-                console.log(value)
             return value
         })
     }

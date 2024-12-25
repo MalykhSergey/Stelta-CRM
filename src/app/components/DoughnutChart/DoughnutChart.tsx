@@ -103,7 +103,7 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                             elements: {
                                 center: {
                                     text: formatValue({
-                                        value: total.toString(),
+                                        value: Math.round(total).toString(),
                                         suffix: props.type == ChartDataType.COUNT ? '' : '₽',
                                         groupSeparator: ' ',
                                         decimalSeparator: ','}),

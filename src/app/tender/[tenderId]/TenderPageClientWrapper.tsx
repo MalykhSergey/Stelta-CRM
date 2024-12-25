@@ -8,7 +8,6 @@ import TenderPageClient from './TenderPageClient';
 function TenderPageClientWrapper({tenderString, companiesString}: { tenderString: string, companiesString: string }) {
     const tender = Tender.fromJSON(tenderString)
     const companies = Company.fromJSONArray(companiesString)
-    // console.log(companies)
     return (<ConfirmDialogProvider><TenderPageClient tender={tender}
                                                      companies={companies}></TenderPageClient></ConfirmDialogProvider>)
 }
