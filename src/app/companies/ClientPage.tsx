@@ -18,7 +18,7 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
         if (result?.error)
             showMessage(result.error)
         else {
-            setCompanies([{id: result as number, name: company_name}, ...companies])
+            setCompanies([new Company(result as number, company_name), ...companies])
             showMessage("Организация успешно добавлена!", "successful")
         }
 

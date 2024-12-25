@@ -1,6 +1,6 @@
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
-export default class Company {
+export class CompanyDTO {
     id: number = 0
     name = ''
     contactPersons = [] as ContactPerson[]
@@ -9,9 +9,9 @@ export default class Company {
         this.id = id
         this.name = name
     }
-    addContactPerson(contactPerson: ContactPerson) {
-        this.contactPersons.push(contactPerson)
-    }
+}
+
+export default class Company extends CompanyDTO {
 
     static fromJSONArray(array: string) {
         return JSON.parse(array).map((value: Company) => {
@@ -20,5 +20,9 @@ export default class Company {
             })
             return value
         })
+    }
+
+    addContactPerson(contactPerson: ContactPerson) {
+        this.contactPersons.push(contactPerson)
     }
 }
