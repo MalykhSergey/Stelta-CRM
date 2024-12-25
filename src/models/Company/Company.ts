@@ -11,7 +11,16 @@ export class CompanyDTO {
     }
 }
 
-export default class Company extends CompanyDTO {
+export default class Company{
+
+    id: number = 0
+    name = ''
+    contactPersons = [] as ContactPerson[]
+
+    constructor(id: number, name: string) {
+        this.id = id
+        this.name = name
+    }
 
     static fromJSONArray(array: string) {
         return JSON.parse(array).map((value: Company) => {
