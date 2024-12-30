@@ -1,20 +1,22 @@
 "use client"
-import {useState} from "react"
-import {showMessage} from "../components/Alerts/Alert"
+import { ContactPersonForm } from "@/app/companies/ContactPersonForm/ContactPersonForm"
+import { DeleteButton } from "@/app/components/Buttons/DeleteButton/DeleteButton"
+import { PrimaryButton } from "@/app/components/Buttons/PrimaryButton/PrimaryButton"
+import Company from "@/models/Company/Company"
+import { createCompany, deleteCompany, updateCompany } from "@/models/Company/CompanyService"
+import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson"
+import { faCheck } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { makeAutoObservable } from "mobx"
+import { useState } from "react"
+import { useAuth } from "../AuthContext"
+import { showMessage } from "../components/Alerts/Alert"
 import styles from "./page.module.css"
-import {createCompany, deleteCompany, updateCompany} from "@/models/Company/CompanyService"
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import Company from "@/models/Company/Company";
-import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
-import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
-import {faCheck} from "@fortawesome/free-solid-svg-icons";
-import {ContactPersonForm} from "@/app/companies/ContactPersonForm/ContactPersonForm";
-import {makeAutoObservable} from "mobx";
-import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
 export default function ClientCompanies({companiesProps}: { companiesProps: string }) {
     const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
-
+    const auth = useAuth()
+    const isAuth = !!auth.userName
     async function createCompanyHandler(formData: FormData) {
         const company_name = formData.get('company') as string
         const result = await createCompany(company_name)
@@ -57,25 +59,29 @@ export default function ClientCompanies({companiesProps}: { companiesProps: stri
     return (
         <main className={styles.content}>
             <h1 id={styles.header}>Организации</h1>
-
-            <div className={styles.addCompany + ' card'}>
-                <h3>Добавить организацию</h3>
-                <form action={createCompanyHandler} className={`row ${styles.input}`} aria-label="Добавить организацию">
+            {isAuth &&
+                <div className={styles.addCompany + ' card'}>
+                    <h3>Добавить организацию</h3>
+                    <form action={createCompanyHandler} className={`row ${styles.input}`} aria-label="Добавить организацию">
                     <textarea name="company" required/>
                     <PrimaryButton>Добавить</PrimaryButton>
                 </form>
-            </div>
+                </div>
+            }
             <div className={styles.companies}>
                 {companies.map((row: Company) =>
                     <div key={'company' + row.id} className={styles.company + ' card'}>
                         <form action={updateHandler} className={styles.companyInputs}>
                             <input type="hidden" name='id' defaultValue={row.id}/>
                             <textarea name='name' defaultValue={row.name}/>
-                            <PrimaryButton type="submit"><FontAwesomeIcon
-                                icon={faCheck}></FontAwesomeIcon></PrimaryButton>
-                            <DeleteButton onClick={deleteHandler} type="button" value={row.id}/>
+                            {isAuth&&
+                            <>
+                                <PrimaryButton type="submit"><FontAwesomeIcon
+                                    icon={faCheck}></FontAwesomeIcon></PrimaryButton>
+                                <DeleteButton onClick={deleteHandler} type="button" value={row.id}/>
+                            </>}
                         </form>
-                        <ContactPersonForm company={row} isEditable={true} errors={{}}
+                        <ContactPersonForm company={row} isEditable={isAuth} errors={{}}
                                            contactPerson={makeAutoObservable(new ContactPerson(0, '', '', ''))}/>
                     </div>
                 )

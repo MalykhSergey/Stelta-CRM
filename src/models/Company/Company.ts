@@ -1,5 +1,5 @@
-import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
-import {makeAutoObservable} from "mobx";
+import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
+import { makeAutoObservable } from "mobx";
 
 
 export interface ICompany {
@@ -18,12 +18,13 @@ export default class Company implements ICompany {
         this.name = name;
     }
 
-    static fromJSONArray(array: string) {
-        return JSON.parse(array).map((value: Company) => {
-            value.contactPersons = value.contactPersons.map((contactPerson: ContactPerson) => {
+    static fromJSONArray(array: string): Company[] {
+        return JSON.parse(array).map((value: ICompany) => {
+            const company = new Company(value.id, value.name)
+            company.contactPersons = value.contactPersons.map((contactPerson: ContactPerson) => {
                 return makeAutoObservable(new ContactPerson(contactPerson.id, contactPerson.name, contactPerson.phoneNumber, contactPerson.email))
             })
-            return makeAutoObservable(value)
+            return company
         })
     }
 

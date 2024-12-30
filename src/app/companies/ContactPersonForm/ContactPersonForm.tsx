@@ -71,7 +71,6 @@ const ContactPersonForm = observer(
                             className={`${style.ContactPersonName} ${styles.input}`}
                             name={style.ContactPersonName+store.company.id}
                             value={store.contactPerson.name}
-                            disabled={!props.isEditable}
                             onChange={(e) => {
                                 const result = store.contactPerson.setName(e.target.value);
                                 if (result.error)
@@ -81,7 +80,7 @@ const ContactPersonForm = observer(
                             }}
                             autoComplete="off"
                         />
-                        {props.isEditable && <FontAwesomeIcon icon={faChevronUp} className={style.chevronIcon}/>}
+                        <FontAwesomeIcon icon={faChevronUp} className={style.chevronIcon}/>
                         {store.searchResults.length > 0 && <>
                             <div className={style.searchList}>
                                 {store.searchResults.map(result =>
@@ -94,7 +93,7 @@ const ContactPersonForm = observer(
                             </div>
                         </>
                         }
-                        {props.errors['ContactPersonName'+store.company.id] &&
+                        {props.errors['ContactPersonName'+store.company.id]&& props.isEditable && 
                             <span className='under-input-error'>{props.errors['ContactPersonName'+store.company.id]}</span>}
                     </div>
                     <div className={style.formGroup}>

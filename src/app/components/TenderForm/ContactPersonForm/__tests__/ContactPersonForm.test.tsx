@@ -133,7 +133,7 @@ describe('ContactPersonForm', () => {
         render(
             <ContactPersonForm
                 company={mockCompanyWithContacts}
-                contactPerson={new ContactPerson(0, '', '', '')}
+                contactPerson={new ContactPerson(0, 'Иван', '', '')}
                 isEditable={true}
                 errors={{}}
             />
@@ -171,4 +171,5 @@ describe('ContactPersonForm', () => {
         expect((screen.getByLabelText('Номер телефона:') as HTMLInputElement).value).toBe('1234567890');
         expect((screen.getByLabelText('Электронная почта:') as HTMLInputElement).value).toBe('ivan@example.com');
     });
+    
 }); 

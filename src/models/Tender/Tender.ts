@@ -126,10 +126,6 @@ export class Tender {
 
     setCompany(value: Company) {
         this.company = value
-        // this.company.id = value.id
-        // this.company.name = value.name
-        // this.company.contactPersons = value.contactPersons
-        // console.log(this.company)
     }
 
     setName(value: string): Result<string, string> {
