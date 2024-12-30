@@ -98,7 +98,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
             </div>)
     }
     return (
-        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
+        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`} data-testid="documents-container">
             <div className={StageStyles.cardHeader}>
                 <h3>{title}</h3>
                 {

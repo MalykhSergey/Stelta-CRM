@@ -1,5 +1,4 @@
 "use server"
-import {CompanyDTO} from "../Company/Company"
 import getStatusName from "../Tender/Status"
 import {
     loadCommonAnalytics,
@@ -7,9 +6,9 @@ import {
     loadStatusAnalyticsByCompany,
     loadStatusAnalyticsByDate
 } from "./AnalyticsStorage"
-import {CommonAnalytics} from "./CommonAnalytics"
-import {CompanyAnalyticsDTO} from "./CompanyAnalytics"
-import {StatusAnalytics} from "./StatusAnalytics"
+import { CommonAnalytics } from "./CommonAnalytics"
+import { CompanyAnalyticsDTO } from "./CompanyAnalytics"
+import { StatusAnalytics } from "./StatusAnalytics"
 
 export async function getCommonAnalytics() {
     const result = await loadCommonAnalytics()
@@ -68,7 +67,7 @@ export async function getCompanyAnalyticsByStatus(status: number) {
     const result = await loadCompanyAnalyticsByStatus(status)
     const analytics_list = []
     for (const row of result) {
-        analytics_list.push({...new CompanyAnalyticsDTO({...new CompanyDTO(row.id, row.name)}, row.count, Number.parseFloat(row.sum))})
+        analytics_list.push({...new CompanyAnalyticsDTO({id: row.id, name: row.name, contactPersons:[]}, row.count, Number.parseFloat(row.sum))})
     }
     return analytics_list
 }

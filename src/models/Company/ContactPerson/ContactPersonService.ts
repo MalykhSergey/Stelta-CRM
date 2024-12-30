@@ -2,10 +2,13 @@
 
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 import {authAction} from "@/models/User/UserService";
-import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
+import {ContactPerson, IContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
+export async function getContactPersonById(id: number): Promise<IContactPerson | {error: string}> {
+    return await ContactPersonStorage.getContactPersonById(id);
+}
 
-export async function getContactPersonsByCompanyId(companyId: number) {
+export async function getContactPersonsByCompanyId(companyId: number): Promise<IContactPerson[] | {error: string}> {
     return await ContactPersonStorage.getContactPersonsByCompanyId(companyId);
 }
 

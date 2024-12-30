@@ -10,7 +10,12 @@ interface DeleteButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
 
 export const DeleteButton: React.FC<DeleteButtonProps> = ({onClick, className, ...rest}) => {
     return (
-        <button onClick={onClick} className={`${styles.DeleteButton} ${className}`} {...rest}>
+        <button 
+            onClick={onClick} 
+            className={`${styles.DeleteButton} ${className}`} 
+            aria-label="Удалить"
+            {...rest}
+        >
             <FontAwesomeIcon icon={faTrash}/>
         </button>
     );

@@ -50,7 +50,7 @@ const ContactPersonForm = observer(
             }
             return (
                 <>
-                    <label htmlFor={styles.ContactPersonName} className={styles.label}>Контактное лицо: </label>
+                    <label htmlFor={style.ContactPersonName} className={styles.label}>Контактное лицо: </label>
                     <div className={styles.formGroup}>
                         <div className={styles.inputRow} id={style.ContactPersonNameContainer}>
                             <input

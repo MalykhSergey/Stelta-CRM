@@ -10,7 +10,7 @@ interface ExpandButtonProps {
 
 export const ExpandButton: React.FC<ExpandButtonProps> = ({onClick, expanded,className, ...rest}) => {
     return (
-        <button onClick={onClick} className={`${styles.ExpandButton} ${className} ${expanded ? styles.rotated : ''}`} {...rest}>
+        <button onClick={onClick} className={`${styles.ExpandButton} ${className} ${expanded ? styles.rotated : ''}`} {...rest} aria-label="Развернуть">
             <FontAwesomeIcon icon={faCaretUp}/>
         </button>
     );

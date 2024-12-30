@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
@@ -21,28 +22,35 @@
     "jsonwebtoken": "^9.0.2",
     "mobx": "^6.13.5",
     "mobx-react-lite": "^4.0.7",
-    "next": "15.0.3",
+    "next": "15.1.2",
     "pg": "^8.13.1",
-    "react": "^18.2.0",
+    "react": "19.0.0",
     "react-currency-input-field": "^3.9.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "19.0.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
     "@types/d3": "^7.4.3",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8",
-    "eslint-config-next": "15.0.3",
-    "typescript": "^5"
+    "eslint-config-next": "15.1.2",
+    "jsdom": "^25.0.1",
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.8"
   },
   "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2"
   }
 }

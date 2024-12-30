@@ -9,7 +9,7 @@ interface AttachButtonProps {
 
 export const AttachButton: React.FC<AttachButtonProps> = ({onClick, className, ...rest}) => {
     return (
-        <button onClick={onClick} className={`${styles.AttachButton} ${className}`} {...rest}>
+        <button onClick={onClick} className={`${styles.AttachButton} ${className}`} {...rest} aria-label="Прикрепить">
             <FontAwesomeIcon icon={faPaperclip}/>
         </button>
     );

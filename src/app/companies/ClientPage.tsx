@@ -9,8 +9,8 @@ import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
 import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 
-export default function ClientCompanies({companiesProps}: { companiesProps: Company[] }) {
-    const [companies, setCompanies] = useState(companiesProps)
+export default function ClientCompanies({companiesProps}: { companiesProps: string }) {
+    const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
 
     async function createCompanyHandler(formData: FormData) {
         const company_name = formData.get('company') as string
@@ -31,7 +31,7 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
         else {
             const id = Number.parseInt(formData.get('id') as string)
             const name = formData.get('name') as string
-            setCompanies(companies.map(company => {
+            setCompanies(companies.map((company:Company) => {
                 if (company.id == id)
                     company.name = name
                 return company
@@ -46,7 +46,7 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
         if (result?.error)
             showMessage(result.error)
         else {
-            setCompanies(companies.filter(company => company.id != id))
+            setCompanies(companies.filter((company:Company) => company.id != id))
             showMessage("Организация успешно удалена!", "successful")
         }
     }
@@ -55,14 +55,14 @@ export default function ClientCompanies({companiesProps}: { companiesProps: Comp
         <main className={styles.content}>
             <div className={styles.addCompany + ' card'}>
                 <h3>Добавить организацию</h3>
-                <form action={createCompanyHandler} className={`row ${styles.input}`}>
+                <form action={createCompanyHandler} className={`row ${styles.input}`} aria-label="Добавить организацию">
                     <textarea name="company" required/>
                     <PrimaryButton>Добавить</PrimaryButton>
                 </form>
             </div>
             <div className={styles.companies + ' card'}>
                 <h3>Организации</h3>
-                {companies.map(row =>
+                {companies.map((row:Company) =>
                     <form action={updateHandler} key={'company' + row.id} className={styles.company}>
                         <input type="hidden" name='id' defaultValue={row.id}/>
                         <textarea name='name' defaultValue={row.name}/>

@@ -161,13 +161,6 @@ const TenderForm = observer((props: TenderFormProps) => {
             <TenderFormField propertyName="Date_finish" value={props.tender.date_finish} label="Подведение итогов:"
                              onChange={handleChange} isEditable={props.isEditable.date_finish} errors={errors}
                              type="datetime-local"/>
-            {/*<TenderFormField propertyName={'ContactPerson'} value={props.tender.contactPerson}*/}
-            {/*                 label={"Контактное лицо:"}*/}
-            {/*                 onChange={handleChange} isEditable={props.isEditable.contactPerson} errors={errors}/>*/}
-            {/*<TenderFormField propertyName={'PhoneNumber'} value={props.tender.phoneNumber} label={"Номер телефона:"}*/}
-            {/*                 onChange={handleChange} isEditable={props.isEditable.phoneNumber} errors={errors}/>*/}
-            {/*<TenderFormField propertyName={'Email'} value={props.tender.email} label={"Электронная почта:"}*/}
-            {/*                 onChange={handleChange} isEditable={props.isEditable.email} errors={errors}/>*/}
             <ContactPersonForm company={props.tender.company} contactPerson={props.tender.contactPerson} errors={errors}
                                isEditable={props.isEditable.contactPerson}/>
         </div>

@@ -1,7 +1,7 @@
-import Company, {CompanyDTO} from "../Company/Company";
+import Company, { ICompany } from "../Company/Company";
 
 export class CompanyAnalyticsDTO {
-    constructor(public company: CompanyDTO, public tenders_count: number, public tenders_price: number) {
+    constructor(public company: ICompany, public tenders_count: number, public tenders_price: number) {
     }
 }
 

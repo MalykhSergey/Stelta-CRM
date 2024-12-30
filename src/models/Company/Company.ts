@@ -1,25 +1,20 @@
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
-export class CompanyDTO {
-    id: number = 0
-    name = ''
-    contactPersons = [] as ContactPerson[]
 
-    constructor(id: number, name: string) {
-        this.id = id
-        this.name = name
-    }
+export interface ICompany {
+    id: number;
+    name: string;
+    contactPersons: ContactPerson[];
 }
 
-export default class Company{
-
-    id: number = 0
-    name = ''
-    contactPersons = [] as ContactPerson[]
+export default class Company implements ICompany {
+    id: number = 0;
+    name = '';
+    contactPersons = [] as ContactPerson[];
 
     constructor(id: number, name: string) {
-        this.id = id
-        this.name = name
+        this.id = id;
+        this.name = name;
     }
 
     static fromJSONArray(array: string) {
