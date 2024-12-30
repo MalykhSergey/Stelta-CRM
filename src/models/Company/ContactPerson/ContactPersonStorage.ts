@@ -31,14 +31,15 @@ export default class ContactPersonStorage {
                 [contactPerson.name, contactPerson.phoneNumber, contactPerson.email, companyId])).rows[0].id;
         } catch (e) {
             logger.error(e);
-            console.log(e)
-            return {error: "Ошибка создания контактного лица. Возможно, такие данные уже существуют!"};
+            return handleDatabaseError(e,   
+                {'23514': 'Невозможно создать контактное лицо: неправильный email.'},
+                'Ошибка создания контактного лица.');
         }
     }
 
     static async updateContactPerson(id: number, contactPerson: string, phoneNumber: string, email: string) {
         try {
-            await connection.query(`UPDATE contact_persons SET "contact_person" = \$1, "phone_number" = \$2, "email" = \$3 WHERE id = \$4`, [contactPerson, phoneNumber, email, id]);
+            await connection.query(`UPDATE contact_persons SET "name" = \$1, "phone_number" = \$2, "email" = \$3 WHERE id = \$4`, [contactPerson, phoneNumber, email, id]);
         } catch (e) {
             logger.error(e);
             return {error: "Ошибка обновления контактного лица."};
@@ -50,7 +51,7 @@ export default class ContactPersonStorage {
             await connection.query(`DELETE FROM contact_persons WHERE id = \$1`, [id]);
         } catch (e) {
             return handleDatabaseError(e,
-                {'23503': 'Невозможно удалить контактное лицо: существуют связанные тендера или компании.'},
+                {'23503': 'Невозможно удалить контактное лицо: существуют связанные тендера.'},
                 'Ошибка удаления контактного лица.');
         }
     }

@@ -1,5 +1,3 @@
-import { makeAutoObservable } from "mobx";
-
 export interface IContactPerson {
     id: number;
     name: string;
@@ -47,7 +45,9 @@ export class ContactPerson {
         return {ok: true, value: ''};
     }
 
-
+    get isValid(): boolean {
+        return this.name !== '' && this.phoneNumber !== '' && this.email !== '' && this.email.includes('@');
+    }
 
     isEquals(contactPerson: ContactPerson): boolean {
         if (contactPerson.name != this.name) return false
@@ -55,4 +55,5 @@ export class ContactPerson {
         if (contactPerson.email != this.email) return false
         return true
     }
+    
 }

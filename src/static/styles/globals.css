@@ -62,6 +62,3 @@ a {
     flex-direction: row;
     align-items: center;
 }
-.numbers{
-    font-family: var(--numbers-font), sans-serif;
-}

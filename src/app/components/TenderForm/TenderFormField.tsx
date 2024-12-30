@@ -12,35 +12,41 @@ interface TenderFormFieldProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
-export const TenderFormField = (props: TenderFormFieldProps) => (
-    <>
-        <label htmlFor={props.propertyName} className={styles.label}>{props.label}</label>
-        <div className={styles.formGroup}>
-            <div className={styles.inputRow}>
-                {props.type === 'textarea' ? (
-                    <textarea
-                        id={props.propertyName}
-                        name={props.propertyName}
-                        value={props.value}
-                        disabled={!props.isEditable}
-                        onChange={props.onChange}
-                        className={styles.input}
-                    />
-                ) : (
-                    <input
-                        type={props.type}
-                        id={props.propertyName}
-                        name={props.propertyName}
-                        value={props.value}
-                        disabled={!props.isEditable}
-                        onChange={props.onChange}
-                        className={styles.input}
-                    />
-                )}
-                {props.isEditable && props.type!='datetime-local' && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
+export const TenderFormField = (props: TenderFormFieldProps) => {
+    return (
+        <>
+            <label htmlFor={props.propertyName} className={styles.label}>{props.label}</label>
+            <div className={styles.formGroup}>
+                <div className={styles.inputRow}>
+                    {props.type === 'textarea' ? (
+                        <textarea
+                            id={props.propertyName}
+                            name={props.propertyName}
+                            value={props.value}
+                            disabled={!props.isEditable}
+                            onChange={props.onChange}
+                            className={styles.input}
+                        />
+                    ) : (
+                        <input
+                            type={props.type}
+                            id={props.propertyName}
+                            name={props.propertyName}
+                            value={props.value}
+                            disabled={!props.isEditable}
+                            onChange={props.onChange}
+                            className={styles.input}
+                        />
+                    )}
+                    {props.isEditable && props.type != 'datetime-local' &&
+                        <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
+                </div>
             </div>
             {props.errors[props.propertyName] &&
-                <span className='under-input-error'>{props.errors[props.propertyName]}</span>}
-        </div>
-    </>
-);
+                <>
+                    <div></div>
+                    <span className='under-input-error'>{props.errors[props.propertyName]}</span></>
+            }
+        </>
+    )
+};

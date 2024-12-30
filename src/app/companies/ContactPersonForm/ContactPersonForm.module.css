@@ -1,0 +1,53 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.form > button{
+    align-self: flex-end;
+}
+.ContactPersonNameContainer{
+    position: relative;
+}
+.searchList {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: white;
+    margin-top: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: auto;
+    position: absolute;
+    max-height: 130px;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 2;
+}
+
+.ContactPersonName:focus + .chevronIcon {
+    transform: rotate(180deg);
+}
+.ContactPersonName:focus ~ .searchList {
+    visibility: visible;
+    opacity: 1;
+}
+
+.chevronIcon {
+    transition: transform .3s;
+    margin-left: -30px;
+    pointer-events: none;
+}
+
+.searchItem {
+    padding: 12px;
+    font-size: 16px;
+    color: black;
+}
+
+.searchItem:hover {
+    background-color: var(--border);
+}

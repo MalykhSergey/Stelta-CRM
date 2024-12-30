@@ -24,7 +24,6 @@ const ContactPersonForm = observer(
             useEffect(() => {
                 store.company = props.company
                 store.contactPerson = props.contactPerson
-                store.searchResults = props.company.contactPersons
                 if (store.isNew) {
                     store.contactPerson.id = 0
                     store.contactPerson.name = ''
@@ -61,7 +60,6 @@ const ContactPersonForm = observer(
                                 disabled={!props.isEditable}
                                 onChange={(e) => {
                                     store.contactPerson.setName(e.target.value)
-                                    store.findMatches(e.target.value)
                                 }}
                                 className={styles.input}
                             />

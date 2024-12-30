@@ -1,4 +1,5 @@
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
+import {makeAutoObservable} from "mobx";
 
 
 export interface ICompany {
@@ -20,9 +21,9 @@ export default class Company implements ICompany {
     static fromJSONArray(array: string) {
         return JSON.parse(array).map((value: Company) => {
             value.contactPersons = value.contactPersons.map((contactPerson: ContactPerson) => {
-                return new ContactPerson(contactPerson.id, contactPerson.name, contactPerson.phoneNumber, contactPerson.email)
+                return makeAutoObservable(new ContactPerson(contactPerson.id, contactPerson.name, contactPerson.phoneNumber, contactPerson.email))
             })
-            return value
+            return makeAutoObservable(value)
         })
     }
 

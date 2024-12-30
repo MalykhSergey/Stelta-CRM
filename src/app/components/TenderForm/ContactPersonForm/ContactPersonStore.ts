@@ -6,7 +6,6 @@ export class ContactPersonStore {
     constructor(company: Company, contactPerson: ContactPerson) {
         this._company = company;
         this._contactPerson = contactPerson;
-        this.searchResults = this._company.contactPersons
         makeAutoObservable(this)
     }
 
@@ -30,19 +29,10 @@ export class ContactPersonStore {
         this._contactPerson = value;
     }
 
-    private _searchResults: ContactPerson[] = []
 
-    get searchResults(): ContactPerson[] {
-        return this._searchResults;
-    }
-
-    set searchResults(value: ContactPerson[]) {
-        this._searchResults = value
-    }
-
-    findMatches(name: string) {
-        const searchString = name.toLowerCase();
-        this.searchResults = this.company.contactPersons.filter(contactPerson => contactPerson.name.toLowerCase().includes(searchString))
+    get searchResults() {
+        const searchString = this.contactPerson.name.toLowerCase();
+        return this.company.contactPersons.filter(contactPerson => contactPerson.name.toLowerCase().includes(searchString))
     }
 
     get isNew() {

@@ -3,6 +3,7 @@ import connection, {handleDatabaseError} from "../../config/Database";
 import {Tender} from "./Tender";
 import logger from "@/config/Logger";
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
+import { ContactPerson } from '../Company/ContactPerson/ContactPerson';
 
 class TenderStorage {
     constructor() {
@@ -105,6 +106,9 @@ class TenderStorage {
                 rebiddingPrice.price = rebiddingPrice.price.replace(',', '.')
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
+            if (tender.contactPerson.id != 0) {
+                await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
+            }
         } catch (e) {
             return handleDatabaseError(e,
                 {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
@@ -130,10 +134,10 @@ class TenderStorage {
         const tender = Tender.fromQueryRow(tenders_row[0])
         const contactPersons = await ContactPersonStorage.getContactPersonsByCompanyId(tender.company.id)
         if (!('error' in contactPersons)) {
-            tender.company.contactPersons = contactPersons
+            tender.company.contactPersons = contactPersons as ContactPerson[]
             const contactPerson = contactPersons.find(contactPerson => contactPerson.id == tenders_row[0].contact_person_id);
             if (contactPerson)
-                tender.contactPerson = contactPerson
+                tender.contactPerson = contactPerson as ContactPerson
         }
         for (let i = 0; i < 6; i++) {
             tender.stagedFileNames[i] = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows

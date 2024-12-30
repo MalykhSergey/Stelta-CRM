@@ -8,6 +8,9 @@ import Company from "@/models/Company/Company";
 import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
 import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
+import {ContactPersonForm} from "@/app/companies/ContactPersonForm/ContactPersonForm";
+import {makeAutoObservable} from "mobx";
+import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 
 export default function ClientCompanies({companiesProps}: { companiesProps: string }) {
     const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
@@ -31,7 +34,7 @@ export default function ClientCompanies({companiesProps}: { companiesProps: stri
         else {
             const id = Number.parseInt(formData.get('id') as string)
             const name = formData.get('name') as string
-            setCompanies(companies.map((company:Company) => {
+            setCompanies(companies.map((company: Company) => {
                 if (company.id == id)
                     company.name = name
                 return company
@@ -46,13 +49,15 @@ export default function ClientCompanies({companiesProps}: { companiesProps: stri
         if (result?.error)
             showMessage(result.error)
         else {
-            setCompanies(companies.filter((company:Company) => company.id != id))
+            setCompanies(companies.filter((company: Company) => company.id != id))
             showMessage("Организация успешно удалена!", "successful")
         }
     }
 
     return (
         <main className={styles.content}>
+            <h1 id={styles.header}>Организации</h1>
+
             <div className={styles.addCompany + ' card'}>
                 <h3>Добавить организацию</h3>
                 <form action={createCompanyHandler} className={`row ${styles.input}`} aria-label="Добавить организацию">
@@ -60,15 +65,20 @@ export default function ClientCompanies({companiesProps}: { companiesProps: stri
                     <PrimaryButton>Добавить</PrimaryButton>
                 </form>
             </div>
-            <div className={styles.companies + ' card'}>
-                <h3>Организации</h3>
-                {companies.map((row:Company) =>
-                    <form action={updateHandler} key={'company' + row.id} className={styles.company}>
-                        <input type="hidden" name='id' defaultValue={row.id}/>
-                        <textarea name='name' defaultValue={row.name}/>
-                        <PrimaryButton type="submit"><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon></PrimaryButton>
-                        <DeleteButton onClick={deleteHandler} type="button" value={row.id}/>
-                    </form>)
+            <div className={styles.companies}>
+                {companies.map((row: Company) =>
+                    <div key={'company' + row.id} className={styles.company + ' card'}>
+                        <form action={updateHandler} className={styles.companyInputs}>
+                            <input type="hidden" name='id' defaultValue={row.id}/>
+                            <textarea name='name' defaultValue={row.name}/>
+                            <PrimaryButton type="submit"><FontAwesomeIcon
+                                icon={faCheck}></FontAwesomeIcon></PrimaryButton>
+                            <DeleteButton onClick={deleteHandler} type="button" value={row.id}/>
+                        </form>
+                        <ContactPersonForm company={row} isEditable={true} errors={{}}
+                                           contactPerson={makeAutoObservable(new ContactPerson(0, '', '', ''))}/>
+                    </div>
+                )
                 }
             </div>
         </main>

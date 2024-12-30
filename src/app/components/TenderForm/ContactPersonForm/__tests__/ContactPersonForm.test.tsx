@@ -1,10 +1,10 @@
-import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { ContactPersonForm } from '../ContactPersonForm';
-import { createContactPerson } from '@/models/Company/ContactPerson/ContactPersonService';
+import {afterEach, describe, expect, it, vi} from 'vitest';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {ContactPersonForm} from '../ContactPersonForm';
+import {createContactPerson} from '@/models/Company/ContactPerson/ContactPersonService';
 import Company from '@/models/Company/Company';
-import { ContactPerson } from '@/models/Company/ContactPerson/ContactPerson';
-import { makeAutoObservable } from 'mobx';
+import {ContactPerson} from '@/models/Company/ContactPerson/ContactPerson';
+import {makeAutoObservable} from 'mobx';
 
 vi.mock('@/models/Company/ContactPerson/ContactPersonService', () => ({
     createContactPerson: vi.fn().mockResolvedValue(42),
@@ -50,12 +50,12 @@ describe('ContactPersonForm', () => {
         const nameInput = screen.getByLabelText('Контактное лицо:') as HTMLInputElement;
         const phoneInput = screen.getByLabelText('Номер телефона:') as HTMLInputElement;
         const emailInput = screen.getByLabelText('Электронная почта:') as HTMLInputElement;
-        
-        const submitButton = screen.getByRole('button', { name: 'Добавить контактное лицо' });
-        fireEvent.change(nameInput, { target: { value: 'Петр Петров' } });
-        fireEvent.change(phoneInput, { target: { value: '9876543210' } });
-        fireEvent.change(emailInput, { target: { value: 'petr@example.com' } });
-        
+
+        const submitButton = screen.getByRole('button', {name: 'Добавить контактное лицо'});
+        fireEvent.change(nameInput, {target: {value: 'Петр Петров'}});
+        fireEvent.change(phoneInput, {target: {value: '9876543210'}});
+        fireEvent.change(emailInput, {target: {value: 'petr@example.com'}});
+
         await fireEvent.click(submitButton);
 
         expect(createContactPerson).toHaveBeenCalled();
@@ -63,7 +63,7 @@ describe('ContactPersonForm', () => {
 
     it('должен отображать ошибки валидации', () => {
         setup(true, mockErrors);
-        
+
         expect(screen.getByText('Имя обязательно')).toBeDefined();
         expect(screen.getByText('Номер телефона некорректен')).toBeDefined();
         expect(screen.getByText('Некорректный email')).toBeDefined();
@@ -71,11 +71,11 @@ describe('ContactPersonForm', () => {
 
     it('должен быть недоступным для редактирования, когда isEditable=false', () => {
         setup(false);
-        
+
         const nameInput = screen.getByLabelText('Контактное лицо:') as HTMLInputElement;
         const phoneInput = screen.getByLabelText('Номер телефона:') as HTMLInputElement;
         const emailInput = screen.getByLabelText('Электронная почта:') as HTMLInputElement;
-        
+
         expect(nameInput.disabled).toBe(true);
         expect(phoneInput.disabled).toBe(true);
         expect(emailInput.disabled).toBe(true);
@@ -84,15 +84,15 @@ describe('ContactPersonForm', () => {
 
     it('должен обновлять значения полей при вводе', () => {
         setup();
-        
+
         const nameInput = screen.getByLabelText('Контактное лицо:') as HTMLInputElement;
         const phoneInput = screen.getByLabelText('Номер телефона:') as HTMLInputElement;
         const emailInput = screen.getByLabelText('Электронная почта:') as HTMLInputElement;
-        
-        fireEvent.change(nameInput, { target: { value: 'Новое Имя' } });
-        fireEvent.change(phoneInput, { target: { value: '1111111111' } });
-        fireEvent.change(emailInput, { target: { value: 'new@example.com' } });
-        
+
+        fireEvent.change(nameInput, {target: {value: 'Новое Имя'}});
+        fireEvent.change(phoneInput, {target: {value: '1111111111'}});
+        fireEvent.change(emailInput, {target: {value: 'new@example.com'}});
+
         expect(nameInput.value).toBe('Новое Имя');
         expect(phoneInput.value).toBe('1111111111');
         expect(emailInput.value).toBe('new@example.com');
@@ -140,7 +140,7 @@ describe('ContactPersonForm', () => {
         );
 
         const nameInput = screen.getByLabelText('Контактное лицо:');
-        fireEvent.change(nameInput, { target: { value: 'Иван' } });
+        fireEvent.change(nameInput, {target: {value: 'Иван'}});
 
         expect(screen.getByText('Иван Иванов')).toBeDefined();
         expect(screen.queryByText('Петр Петров')).toBeNull();
@@ -163,7 +163,7 @@ describe('ContactPersonForm', () => {
 
         const nameInput = screen.getByLabelText('Контактное лицо:') as HTMLInputElement;
         fireEvent.focus(nameInput);
-        
+
         const searchItem = screen.getByText('Иван Иванов');
         fireEvent.click(searchItem);
 

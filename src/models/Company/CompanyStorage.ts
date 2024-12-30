@@ -1,7 +1,7 @@
-import connection, {handleDatabaseError} from "@/config/Database";
-import logger from "@/config/Logger";
+import connection, { handleDatabaseError } from "@/config/Database";
 import Company from "@/models/Company/Company";
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
+import { ContactPerson } from "./ContactPerson/ContactPerson";
 
 export default class CompanyStorage {
     static async getCompaniesWithPersons() {
@@ -10,7 +10,7 @@ export default class CompanyStorage {
             const company = new Company(row.id, row.name);
             const personsByCompanyId = await ContactPersonStorage.getContactPersonsByCompanyId(row.id);
             if (!('error' in personsByCompanyId))
-                company.contactPersons = personsByCompanyId
+                company.contactPersons = personsByCompanyId as ContactPerson[]
             return company
         }))
     }
@@ -19,8 +19,9 @@ export default class CompanyStorage {
         try {
             return (await connection.query(`INSERT INTO companies("name") values($1) RETURNING id`, [name])).rows[0].id
         } catch (e) {
-            logger.error(e)
-            return {error: "Ошибка создания организации. Возможно такая уже есть!"}
+            return handleDatabaseError(e,
+                {'23505': 'Невозможно создать организацию: такая уже есть.'},
+                'Ошибка создания организации.');
         }
     }
 
@@ -28,8 +29,9 @@ export default class CompanyStorage {
         try {
             await connection.query(`UPDATE companies SET "name" = $1 WHERE id = $2`, [name, id])
         } catch (e) {
-            logger.error(e)
-            return {error: "Ошибка обновления организации."}
+            return handleDatabaseError(e,
+                {'23505': 'Невозможно обновить организацию: такая уже есть.'},
+                'Ошибка обновления организации.');
         }
     }
 
