@@ -26,7 +26,7 @@ export async function login(loginForm: FormData) {
         const token = jwt.sign(
             user,
             process.env.JWT_SECRET!,
-            {expiresIn: '1h'}
+            {expiresIn: '7d'}
         );
         const cookiesStore = await cookies()
         cookiesStore.set('auth_token', token, {httpOnly: true, maxAge: 3600 * 24 * 7})
@@ -47,6 +47,8 @@ export async function authAction<T>(handler: (user: User) => Promise<T>) {
             return handler(decoded_token as User);
         } catch (e) {
             logger.error(e)
+            if (e instanceof jwt.TokenExpiredError)
+                return {error: "Время сессии истекло! Войдите в систему заново."}
             return {error: "Попытка неавторизованного доступа! Войдите в систему."}
         }
     } else
