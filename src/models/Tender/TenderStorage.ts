@@ -1,9 +1,9 @@
-import fs from 'fs/promises';
-import connection, {handleDatabaseError} from "../../config/Database";
-import {Tender} from "./Tender";
 import logger from "@/config/Logger";
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
+import fs from 'fs/promises';
+import connection, { handleDatabaseError } from "../../config/Database";
 import { ContactPerson } from '../Company/ContactPerson/ContactPerson';
+import { Tender } from "./Tender";
 
 class TenderStorage {
     constructor() {
@@ -19,7 +19,7 @@ class TenderStorage {
             return (await connection.query(`INSERT INTO companies("name") values($1) RETURNING id`, [name])).rows[0].id
         } catch (e) {
             logger.error(e)
-            return {error: "Ошибка создания организации. Возможно такая уже есть!"}
+            return { error: "Ошибка создания организации. Возможно такая уже есть!" }
         }
     }
 
@@ -28,7 +28,7 @@ class TenderStorage {
             return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
         } catch (e) {
             return handleDatabaseError(e,
-                {'23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!',},
+                { '23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!', },
                 'Ошибка создания тендера');
         }
     }
@@ -45,6 +45,17 @@ class TenderStorage {
 
     async update(tender: Tender) {
         try {
+            if (tender.contactPerson.id != 0) {
+                const result = await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
+                if (result?.error)
+                    return result
+            }
+            else {
+                const result = await ContactPersonStorage.createContactPerson(tender.contactPerson, tender.company.id)
+                if (result?.error)
+                    return result
+                tender.contactPerson.id = result
+            }
             tender.price = tender.price.replace(',', '.')
             tender.initialMaxPrice = tender.initialMaxPrice.replace(',', '.')
             await connection.query(`
@@ -106,12 +117,9 @@ class TenderStorage {
                 rebiddingPrice.price = rebiddingPrice.price.replace(',', '.')
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
-            if (tender.contactPerson.id != 0) {
-                await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
-            }
         } catch (e) {
             return handleDatabaseError(e,
-                {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
+                { '23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!', },
                 'Ошибка обновления тендера');
         }
     }
@@ -197,7 +205,7 @@ class TenderStorage {
             const filesId = (await connection.query('DELETE FROM file_names WHERE date_request_id = $1 returning id', [dateRequestId])).rows
             await connection.query('DELETE FROM dates_requests WHERE id = $1', [dateRequestId])
             for (const row of filesId) {
-                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, {recursive: true})
+                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
             }
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
@@ -209,7 +217,7 @@ class TenderStorage {
             const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
             await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
             for (const row of filesId) {
-                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, {recursive: true})
+                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
             }
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');

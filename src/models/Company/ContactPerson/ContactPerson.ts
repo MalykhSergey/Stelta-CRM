@@ -18,7 +18,7 @@ export class ContactPerson {
         this.email = email;
     }
 
-    setName(value: string) {
+    public setName(value: string) {
         this.name = value;
         if (value === "") {
             return {ok: false, error: 'Поле не должно быть пустым!'};
@@ -26,7 +26,7 @@ export class ContactPerson {
         return {ok: true, value: ''};
     }
 
-    setPhoneNumber(value: string) {
+    public setPhoneNumber(value: string) {
         this.phoneNumber = value;
         if (value === "") {
             return {ok: false, error: 'Поле не должно быть пустым!'};
@@ -34,7 +34,7 @@ export class ContactPerson {
         return {ok: true, value: ''};
     }
 
-    setEmail(value: string) {
+    public setEmail(value: string) {
         this.email = value;
         if (value === "") {
             return {ok: false, error: 'Поле не должно быть пустым!'};
@@ -45,11 +45,11 @@ export class ContactPerson {
         return {ok: true, value: ''};
     }
 
-    get isValid(): boolean {
+    public isValid(): boolean {
         return this.name !== '' && this.phoneNumber !== '' && this.email !== '' && this.email.includes('@');
     }
 
-    isEquals(contactPerson: ContactPerson): boolean {
+    public isEquals(contactPerson: ContactPerson): boolean {
         if (contactPerson.name != this.name) return false
         if (contactPerson.phoneNumber != this.phoneNumber) return false
         if (contactPerson.email != this.email) return false

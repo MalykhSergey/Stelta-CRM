@@ -30,7 +30,6 @@ export default class ContactPersonStorage {
             VALUES(\$1, \$2, \$3, \$4) RETURNING id`,
                 [contactPerson.name, contactPerson.phoneNumber, contactPerson.email, companyId])).rows[0].id;
         } catch (e) {
-            logger.error(e);
             return handleDatabaseError(e,   
                 {'23514': 'Невозможно создать контактное лицо: неправильный email.'},
                 'Ошибка создания контактного лица.');

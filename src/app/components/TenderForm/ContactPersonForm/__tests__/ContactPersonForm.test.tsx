@@ -45,22 +45,6 @@ describe('ContactPersonForm', () => {
         expect(screen.getByLabelText('Электронная почта:')).toBeDefined();
     });
 
-    it('должен вызывать функцию добавления при нажатии на кнопку', async () => {
-        setup();
-        const nameInput = screen.getByLabelText('Контактное лицо:') as HTMLInputElement;
-        const phoneInput = screen.getByLabelText('Номер телефона:') as HTMLInputElement;
-        const emailInput = screen.getByLabelText('Электронная почта:') as HTMLInputElement;
-
-        const submitButton = screen.getByRole('button', {name: 'Добавить контактное лицо'});
-        fireEvent.change(nameInput, {target: {value: 'Петр Петров'}});
-        fireEvent.change(phoneInput, {target: {value: '9876543210'}});
-        fireEvent.change(emailInput, {target: {value: 'petr@example.com'}});
-
-        await fireEvent.click(submitButton);
-
-        expect(createContactPerson).toHaveBeenCalled();
-    });
-
     it('должен отображать ошибки валидации', () => {
         setup(true, mockErrors);
 

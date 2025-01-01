@@ -1,10 +1,10 @@
-import {makeAutoObservable} from "mobx"
-import {Result} from "../../app/Result"
-import {DateRequest} from "./DateRequest"
+import { makeAutoObservable } from "mobx"
+import { Result } from "../../app/Result"
+import { DateRequest } from "./DateRequest"
 import FileName from "./FileName"
-import {RebiddingPrice} from "./RebiddingPrice"
+import { RebiddingPrice } from "./RebiddingPrice"
 import Company from "../Company/Company"
-import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
+import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
 
 export class Tender {
     public id: number = 0
@@ -115,9 +115,9 @@ export class Tender {
     setStatus(value: string): Result<string, string> {
         this.status = Number.parseInt(value)
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     toggleIsSpecial() {
@@ -131,73 +131,73 @@ export class Tender {
     setName(value: string): Result<string, string> {
         this.name = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setRegNumber(value: string): Result<string, string> {
         this.regNumber = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setLotNumber(value: string): Result<string, string> {
         this.lotNumber = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setInitialMaxPrice(value: string): Result<string, string> {
         this.initialMaxPrice = value.replace(',', '.')
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setPrice(value: string): Result<string, string> {
         this.price = value.replace(',', '.')
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setDate1_start(value: string) {
         this.date1_start = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setDate1_finish(value: string) {
         this.date1_finish = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setDate2_finish(value: string) {
         this.date2_finish = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setDate_finish(value: string) {
         this.date_finish = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setContactPerson(value: ContactPerson) {
@@ -207,36 +207,36 @@ export class Tender {
     setPhoneNumber(value: string): Result<string, string> {
         this.phoneNumber = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setEmail(value: string): Result<string, string> {
         this.email = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
         if (!this.email.includes('@')) {
-            return {ok: false, error: 'Email не содержит @!'}
+            return { ok: false, error: 'Email не содержит @!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setContractNumber(value: string): Result<string, string> {
         this.contractNumber = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     setContractDate(value: string): Result<string, string> {
         this.contractDate = value
         if (value == "") {
-            return {ok: false, error: 'Поле не должно быть пустым!'}
+            return { ok: false, error: 'Поле не должно быть пустым!' }
         }
-        return {ok: true, value: ''}
+        return { ok: true, value: '' }
     }
 
     public removeFileFromStagedFileNames(fileName: FileName, arrayIndex: number): void {
@@ -259,5 +259,9 @@ export class Tender {
 
     public addToStagedFileNames(fileName: FileName, arrayIndex: number): void {
         this.stagedFileNames[arrayIndex].push(fileName);
+    }
+
+    public get isValid(): boolean {
+        return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.phoneNumber != '' && this.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
     }
 }  
