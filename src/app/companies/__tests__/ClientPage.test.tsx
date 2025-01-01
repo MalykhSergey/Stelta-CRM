@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
-import ClientCompanies from '../ClientPage'
+import { AuthProvider } from '@/app/AuthContext'
 import { createCompany, deleteCompany, updateCompany } from '@/models/Company/CompanyService'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { showMessage } from '../../components/Alerts/Alert'
+import ClientCompanies from '../ClientPage'
 
 vi.mock('@/models/Company/CompanyService')
 vi.mock('../../components/Alerts/Alert')
@@ -13,13 +14,21 @@ describe('ClientCompanies', () => {
         { id: 2, name: 'Компания 2', contactPersons: [] }
     ])
 
+    const renderWithAuth = (auth = true) => {
+        return render(
+            <AuthProvider initialAuth={auth ? 'testUser' : ''}>
+                <ClientCompanies companiesProps={mockCompanies} />
+            </AuthProvider>
+        )
+    }
+
     beforeEach(() => {
         cleanup()
         vi.clearAllMocks()
     })
 
     it('должен рендерить список компаний', () => {
-        render(<ClientCompanies companiesProps={mockCompanies} />)
+        renderWithAuth(true)
         expect(screen.getByText('Компания 1')).toBeInTheDocument()
         expect(screen.getByText('Компания 2')).toBeInTheDocument()
     })
@@ -27,7 +36,7 @@ describe('ClientCompanies', () => {
     it('должен создавать новую компанию', async () => {
         vi.mocked(createCompany).mockResolvedValue('3')
 
-        render(<ClientCompanies companiesProps={mockCompanies} />)
+        renderWithAuth(true)
         const form = screen.getByRole('form', { name: 'Добавить организацию' })
         const input = form.querySelector('textarea')!
         fireEvent.change(input, { target: { value: 'Новая Компания' } })
@@ -41,7 +50,7 @@ describe('ClientCompanies', () => {
 
     it('должен обновлять существующую компанию', async () => {
 
-        render(<ClientCompanies companiesProps={mockCompanies} />)
+        renderWithAuth(true)
 
         const companyInput = screen.getAllByRole('textbox')[1] // первая компания в списке
         fireEvent.change(companyInput, { target: { value: 'Обновленная Компания' } })
@@ -56,7 +65,7 @@ describe('ClientCompanies', () => {
 
     it('должен удалять компанию', async () => {
 
-        render(<ClientCompanies companiesProps={mockCompanies} />)
+        renderWithAuth(true)
 
         const deleteButton = screen.getAllByLabelText('Удалить')[0]
 
@@ -70,7 +79,7 @@ describe('ClientCompanies', () => {
     it('должен показывать ошибку при неудачном создании', async () => {
         vi.mocked(createCompany).mockResolvedValue({ error: 'Ошибка создания' })
 
-        render(<ClientCompanies companiesProps={mockCompanies} />)
+        renderWithAuth(true)
 
         const addCompanySection = screen.getByRole('heading', { name: 'Добавить организацию' }).closest('div')
         const form = addCompanySection!.querySelector('form')!
@@ -84,5 +93,15 @@ describe('ClientCompanies', () => {
             expect(createCompany).toHaveBeenCalledWith('Новая Компания')
             expect(showMessage).toHaveBeenCalledWith('Ошибка создания')
         })
+    })
+
+    it('должен скрывать элементы управления для неавторизованного пользователя', () => {
+        renderWithAuth(false)
+
+        expect(screen.queryByRole('form', { name: 'Добавить организацию' })).not.toBeInTheDocument()
+
+
+        expect(screen.queryByRole('button', { name: 'Удалить' })).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: 'Сохранить' })).not.toBeInTheDocument()
     })
 }) 

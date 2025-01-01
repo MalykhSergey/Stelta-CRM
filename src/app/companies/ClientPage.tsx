@@ -13,7 +13,7 @@ import { useAuth } from "../AuthContext"
 import { showMessage } from "../components/Alerts/Alert"
 import styles from "./page.module.css"
 
-export default function ClientCompanies({companiesProps}: { companiesProps: string }) {
+export default function ClientCompanies({ companiesProps }: { companiesProps: string }) {
     const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
     const auth = useAuth()
     const isAuth = !!auth.userName
@@ -63,26 +63,26 @@ export default function ClientCompanies({companiesProps}: { companiesProps: stri
                 <div className={styles.addCompany + ' card'}>
                     <h3>Добавить организацию</h3>
                     <form action={createCompanyHandler} className={`row ${styles.input}`} aria-label="Добавить организацию">
-                    <textarea name="company" required/>
-                    <PrimaryButton>Добавить</PrimaryButton>
-                </form>
+                        <textarea name="company" required />
+                        <PrimaryButton>Добавить</PrimaryButton>
+                    </form>
                 </div>
             }
             <div className={styles.companies}>
                 {companies.map((row: Company) =>
                     <div key={'company' + row.id} className={styles.company + ' card'}>
                         <form action={updateHandler} className={styles.companyInputs}>
-                            <input type="hidden" name='id' defaultValue={row.id}/>
-                            <textarea name='name' defaultValue={row.name}/>
-                            {isAuth&&
-                            <>
-                                <PrimaryButton type="submit"><FontAwesomeIcon
-                                    icon={faCheck}></FontAwesomeIcon></PrimaryButton>
-                                <DeleteButton onClick={deleteHandler} type="button" value={row.id}/>
-                            </>}
+                            <input type="hidden" name='id' defaultValue={row.id} />
+                            <textarea name='name' defaultValue={row.name} />
+                            {isAuth &&
+                                <>
+                                    <PrimaryButton aria-label="Сохранить" type="submit"><FontAwesomeIcon
+                                        icon={faCheck}></FontAwesomeIcon></PrimaryButton>
+                                    <DeleteButton onClick={deleteHandler} type="button" value={row.id} />
+                                </>}
                         </form>
                         <ContactPersonForm company={row} isEditable={isAuth} errors={{}}
-                                           contactPerson={makeAutoObservable(new ContactPerson(0, '', '', ''))}/>
+                            contactPerson={makeAutoObservable(new ContactPerson(0, '', '', ''))} />
                     </div>
                 )
                 }

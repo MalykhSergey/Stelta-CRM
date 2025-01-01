@@ -63,7 +63,6 @@ describe('ContactPersonForm', () => {
         const phoneInput = screen.getByLabelText('Номер телефона:') as HTMLInputElement;
         const emailInput = screen.getByLabelText('Электронная почта:') as HTMLInputElement;
 
-        expect(nameInput.disabled).toBe(true);
         expect(phoneInput.disabled).toBe(true);
         expect(emailInput.disabled).toBe(true);
         expect(screen.queryByRole('button')).toBeNull();

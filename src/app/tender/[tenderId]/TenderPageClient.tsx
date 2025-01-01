@@ -10,7 +10,7 @@ import {deleteTender, updateTenderById} from '@/models/Tender/TenderService';
 import StageForm1 from '@/app/tender/StageForm1/StageForm1';
 import StageForm2 from '@/app/tender/StageForm2/StageForm2';
 import StageForm3 from '@/app/tender/StageForm3/StageForm3';
-import {observer} from 'mobx-react-lite';
+import {observer, useLocalObservable} from 'mobx-react-lite';
 import {useRouter} from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
 import Company from '@/models/Company/Company';
@@ -54,10 +54,17 @@ const getLooseButtonText = (status: number) => {
     }
 };
 
-const TenderPageClient = observer(({tender, companies}: { tender: Tender, companies: Company[] }) => {
+const TenderPageClient = observer((props: { tender: string, companies: string }) => {
+    const companies = useLocalObservable(() => Company.fromJSONArray(props.companies))
+    const tender = useLocalObservable(() => {
+        const temp = Tender.fromJSON(props.tender)
+        if (temp.company.id !=0)
+            temp.company = companies.find(company => company.id === temp.company.id)!
+        return temp
+    })
     const router = useRouter()
     const auth = useAuth()
-    const isAuth = !!auth.userName
+    const isAuth = auth.userName != ''
     let isEditable = {
         status: isAuth,
         isSpecial: false,
