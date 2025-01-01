@@ -1,12 +1,12 @@
-import {Inconsolata, Montserrat, Roboto} from 'next/font/google';
-import {AuthProvider} from "./AuthContext";
-import {AlertContainer} from "./components/Alerts/Alert";
-import Header from "./components/Header/Header";
-import "../static/styles/globals.css";
-import styles from "./layout.module.css";
-import {authAction} from "@/models/User/UserService";
+import { checkAuth } from "@/models/User/UserService";
 import "@/static/styles/buttons.css";
 import "@/static/styles/inputs.css";
+import { Inconsolata, Montserrat, Roboto } from 'next/font/google';
+import "../static/styles/globals.css";
+import { AuthProvider } from "./AuthContext";
+import { AlertContainer } from "./components/Alerts/Alert";
+import Header from "./components/Header/Header";
+import styles from "./layout.module.css";
 
 const MontserratFont = Montserrat({
     subsets: ['cyrillic'],
@@ -27,8 +27,7 @@ export default async function RootLayout({
                                          }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const user_result = await authAction(async (user) => user.name)
-    const auth_user = typeof user_result == 'string' ? user_result : ''
+    const auth_user = await checkAuth()
     return (
         <html lang="en">
         <body className={`${MontserratFont.variable} ${RobotoFont.variable} ${InconsolateFont.variable}`}>
