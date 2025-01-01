@@ -4,10 +4,10 @@ import tenderStorage from "./TenderStorage";
 import {authAction} from "../User/UserService";
 import {CalendarService} from "@/models/Tender/Calendar/CalendarService";
 
-export async function createTender() {
+export async function createTender(status: number) {
     return authAction(
         async () => {
-            return await tenderStorage.createTender()
+            return await tenderStorage.createTender(status)
         }
     )
 }

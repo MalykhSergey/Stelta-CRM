@@ -34,18 +34,26 @@
     }
 }
 
-.createTender {
+.createButton {
     color: white;
     display: flex;
     flex-direction: row;
-    background-color: rgb(116, 156, 204);
     border: none;
     font-size: 18px;
     font-weight: 600;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 60px;
+    font-family: var(--bold-title-font), sans-serif;
+}
+
+#createTender {
+    background-color: rgb(116, 156, 204);   
+}
+
+#createOrder {
+    background-color: rgb(85, 145, 115);
 }
 
 .createTender:hover {

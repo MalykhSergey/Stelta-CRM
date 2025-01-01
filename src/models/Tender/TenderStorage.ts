@@ -23,9 +23,9 @@ class TenderStorage {
         }
     }
 
-    async createTender() {
+    async createTender(status = 0) {
         try {
-            return (await connection.query(`INSERT into tenders DEFAULT VALUES RETURNING ID`)).rows[0].id
+            return (await connection.query(`INSERT into tenders("status") values($1) RETURNING ID`, [status])).rows[0].id
         } catch (e) {
             return handleDatabaseError(e,
                 { '23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!', },
@@ -45,16 +45,18 @@ class TenderStorage {
 
     async update(tender: Tender) {
         try {
-            if (tender.contactPerson.id != 0) {
-                const result = await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
-                if (result?.error)
-                    return result
-            }
-            else {
-                const result = await ContactPersonStorage.createContactPerson(tender.contactPerson, tender.company.id)
-                if (result?.error)
-                    return result
-                tender.contactPerson.id = result
+            if (tender.contactPerson.name != '') {
+                if (tender.contactPerson.id != 0) {
+                    const result = await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
+                    if (result?.error)
+                        return result
+                }
+                else {
+                    const result = await ContactPersonStorage.createContactPerson(tender.contactPerson, tender.company.id)
+                    if (result?.error)
+                        return result
+                    tender.contactPerson.id = result
+                }
             }
             tender.price = tender.price.replace(',', '.')
             tender.initialMaxPrice = tender.initialMaxPrice.replace(',', '.')
