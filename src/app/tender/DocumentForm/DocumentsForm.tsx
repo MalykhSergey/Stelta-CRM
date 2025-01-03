@@ -42,8 +42,9 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                                                                   className = '',
                                                                   independent,
                                                                   onDelete = () => {
-                                                                  }
-                                                              }, isOpened = false) => {
+                                                                  },
+                                                                  isOpened = false,
+                                                              }) => {
     const collapsed = useLocalObservable(() => ({
         isTrue: isOpened,
         toggle() {
@@ -79,7 +80,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                 {
                     message: `Вы действительно хотите удалить ${fileName.name}?`,
                     onConfirm: async () => {
-                        const result = await deleteHandler(tenderId, fileName.id)
+                        const result = await deleteHandler({...fileName})
                         if (result?.error) {
                             showMessage(result.error)
                         } else
@@ -92,13 +93,13 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
     for (const fileName of fileNames) {
         files.push(
             <div className={styles.fileItem} key={fileName.name + files.length}>
-                <a href={`/download/${tenderId}/${fileName.id}/${fileName.name}`} download>
+                <a href={`/download/?fileName=${FileName.getFilePath(fileName)}`} download>
                     {fileName.name}<FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
                 {isEditable && <DeleteButton onClick={deleteClickHandler(fileName)}/>}
             </div>)
     }
     return (
-        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`} data-testid="documents-container">
+        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`} aria-label="Документы">
             <div className={StageStyles.cardHeader}>
                 <h3>{title}</h3>
                 {

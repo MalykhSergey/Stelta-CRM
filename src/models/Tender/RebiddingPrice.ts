@@ -11,7 +11,7 @@ export class RebiddingPrice {
     }
 
     addFile(fileName: FileName) {
-        this.fileNames.push(new FileName(0, fileName.name))
+        this.fileNames.push(fileName)
     }
 
     removeFile(fileName: FileName) {

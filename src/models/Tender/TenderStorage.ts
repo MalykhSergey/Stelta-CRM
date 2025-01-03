@@ -3,7 +3,9 @@ import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonSt
 import fs from 'fs/promises';
 import connection, { handleDatabaseError } from "../../config/Database";
 import { ContactPerson } from '../Company/ContactPerson/ContactPerson';
+import FileName, { FileType } from "./FileName";
 import { Tender } from "./Tender";
+import { console } from "inspector";
 
 class TenderStorage {
     constructor() {
@@ -112,8 +114,8 @@ class TenderStorage {
                 tender.comments[5],
                 tender.id
             ])
-            for (const dateRequest of tender.datesRequests) {
-                await connection.query("UPDATE dates_requests SET date = $2 WHERE id =  $1", [dateRequest.id, dateRequest.date])
+            for (const documentRequest of tender.documentRequests) {
+                await connection.query("UPDATE document_requests SET date = $2 WHERE id =  $1", [documentRequest.id, documentRequest.date])
             }
             for (const rebiddingPrice of tender.rebiddingPrices) {
                 rebiddingPrice.price = rebiddingPrice.price.replace(',', '.')
@@ -150,45 +152,69 @@ class TenderStorage {
                 tender.contactPerson = contactPerson as ContactPerson
         }
         for (let i = 0; i < 6; i++) {
-            tender.stagedFileNames[i] = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id is NULL AND date_request_id is NULL AND stage = $2', [id, i])).rows
+            tender.stagedFileNames[i] = (await connection.query('SELECT * FROM tenders_files WHERE tender_id = $1 AND stage = $2', [id, i])).rows.map(row => {
+                row.fileType = FileType.Tender
+                row.tenderId = id
+                return row
+            })
         }
-        const datesRequests = (await connection.query('SELECT *, CAST(date AS CHAR(10)) FROM dates_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
-        tender.datesRequests = (await Promise.all(datesRequests.map(async dateRequest => {
-            dateRequest.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND date_request_id = $2', [id, dateRequest.id])).rows
-            return dateRequest
+        const documentRequests = (await connection.query('SELECT *, CAST(date AS CHAR(10)) FROM document_requests WHERE tender_id = $1 ORDER BY id', [id])).rows
+        tender.documentRequests = (await Promise.all(documentRequests.map(async documentRequest => {
+            documentRequest.fileNames = (await connection.query('SELECT * FROM document_requests_files WHERE document_request_id = $1', [documentRequest.id])).rows.map(row => {
+                row.fileType = FileType.DocumentRequest
+                row.tenderId = id
+                row.parentId = documentRequest.id
+                return row
+            })
+            return documentRequest
         })))
         const rebiddingPrices = (await connection.query('SELECT * FROM rebidding_prices WHERE tender_id = $1', [id])).rows
         tender.rebiddingPrices = (await Promise.all(rebiddingPrices.map(async rebiddingPrice => {
-            rebiddingPrice.fileNames = (await connection.query('SELECT * FROM file_names WHERE tender_id = $1 AND rebidding_price_id =$2', [id, rebiddingPrice.id])).rows
+            rebiddingPrice.fileNames = (await connection.query('SELECT * FROM rebidding_prices_files WHERE rebidding_price_id =$1', [rebiddingPrice.id])).rows.map(row => {
+                row.fileType = FileType.RebiddingPrice
+                row.tenderId = id
+                row.parentId = rebiddingPrice.id
+                return row
+            })
             return rebiddingPrice
         })))
         return tender
     }
 
-    async addFile(tenderId: number, fileName: string, stage: number, dateRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
+    async addFile(tenderId: number, fileName: string, stage: number, documentRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
         try {
-            if (dateRequestId)
-                return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, date_request_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, dateRequestId])).rows[0].id;
+            if (documentRequestId)
+                return (await connection.query('INSERT INTO document_requests_files("name", document_request_id) VALUES ($1,$2) RETURNING id', [fileName, documentRequestId])).rows[0].id;
             else if (rebiddingPriceId)
-                return (await connection.query('INSERT INTO file_names(tender_id, "name", stage, rebidding_price_id) VALUES ($1,$2,$3,$4) RETURNING id', [tenderId, fileName, stage, rebiddingPriceId])).rows[0].id;
+                return (await connection.query('INSERT INTO rebidding_prices_files("name", rebidding_price_id) VALUES ($1,$2) RETURNING id', [fileName, rebiddingPriceId])).rows[0].id;
             else
-                return (await connection.query('INSERT INTO file_names(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
+                return (await connection.query('INSERT INTO tenders_files(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка добавления файла!');
         }
     }
 
-    async deleteFile(id: number) {
+    async deleteFile(fileName: FileName) {
         try {
-            await connection.query('DELETE FROM file_names WHERE id = $1', [id]);
+            switch (fileName.fileType) {
+                case FileType.Tender:
+                    await connection.query('DELETE FROM tenders_files WHERE id = $1', [fileName.id]);
+                    break;
+                case FileType.RebiddingPrice:
+                    await connection.query('DELETE FROM rebidding_prices_files WHERE id = $1', [fileName.id]);
+                    break;
+                case FileType.DocumentRequest:
+                    await connection.query('DELETE FROM document_requests_files WHERE id = $1', [fileName.id]);
+                    break;
+            }
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления файла!');
         }
     }
 
-    async addDateRequest(tenderId: number) {
+    async addDocumentRequest(tenderId: number) {
         try {
-            return (await connection.query('INSERT INTO dates_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+            return (await connection.query('INSERT INTO document_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка создания дозапроса документов!');
         }
@@ -202,13 +228,11 @@ class TenderStorage {
         }
     }
 
-    async deleteDateRequest(tenderId: number, dateRequestId: number) {
+    async deleteDocumentRequest(tenderId: number, documentRequestId: number) {
         try {
-            const filesId = (await connection.query('DELETE FROM file_names WHERE date_request_id = $1 returning id', [dateRequestId])).rows
-            await connection.query('DELETE FROM dates_requests WHERE id = $1', [dateRequestId])
-            for (const row of filesId) {
-                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
-            }
+            const filesId = (await connection.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])).rows
+            await connection.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
+            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, { recursive: true })
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
         }
@@ -216,11 +240,9 @@ class TenderStorage {
 
     async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
         try {
-            const filesId = (await connection.query('DELETE FROM file_names WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
+            const filesId = (await connection.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
             await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
-            for (const row of filesId) {
-                await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${row.id}`, { recursive: true })
-            }
+            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, { recursive: true })
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');
         }

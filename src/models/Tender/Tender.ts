@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx"
 import { Result } from "../../app/Result"
-import { DateRequest } from "./DateRequest"
+import { DocumentRequest } from "./DocumentRequest"
 import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
 import Company from "../Company/Company"
@@ -30,7 +30,7 @@ export class Tender {
     public comments: string[] = ['', '', '', '', '', '']
     public stagedFileNames: FileName[][] = [[], [], [], [], [], [], []]
     public rebiddingPrices: RebiddingPrice[] = []
-    public datesRequests: DateRequest[] = []
+    public documentRequests: DocumentRequest[] = []
 
     constructor() {
     }
@@ -79,9 +79,6 @@ export class Tender {
         tender.status = obj.status
         tender.isSpecial = obj.isSpecial
         const company = new Company(obj.company.id, obj.company.name)
-        company.contactPersons = obj.company.contactPersons.map((contactPerson: ContactPerson) => {
-            return new ContactPerson(contactPerson.id, contactPerson.name, contactPerson.phoneNumber, contactPerson.email)
-        })
         tender.company = makeAutoObservable(company)
         tender.name = obj.name
         tender.regNumber = obj.regNumber
@@ -104,11 +101,11 @@ export class Tender {
             price: string;
             fileNames: FileName[]
         }) => makeAutoObservable(new RebiddingPrice(value.id, value.price, value.fileNames)))
-        tender.datesRequests = obj.datesRequests.map((value: {
+        tender.documentRequests = obj.documentRequests.map((value: {
             id: number;
             date: string;
             fileNames: FileName[]
-        }) => makeAutoObservable(new DateRequest(value.id, value.date, value.fileNames)))
+        }) => makeAutoObservable(new DocumentRequest(value.id, value.date, value.fileNames)))
         return makeAutoObservable(tender)
     }
 
@@ -245,10 +242,10 @@ export class Tender {
             this.stagedFileNames[arrayIndex].splice(index, 1);
     }
 
-    public deleteDateRequest(dateRequest: DateRequest): void {
-        const index = this.datesRequests.findIndex(item => item.id == dateRequest.id);
+    public deleteDocumentRequest(documentRequest: DocumentRequest): void {
+        const index = this.documentRequests.findIndex(item => item.id == documentRequest.id);
         if (index > -1)
-            this.datesRequests.splice(index, 1);
+            this.documentRequests.splice(index, 1);
     }
 
     public deleteRebiddingPrice(rebiddingPrice: RebiddingPrice): void {

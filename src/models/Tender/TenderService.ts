@@ -26,9 +26,9 @@ export async function getTenderById(id: number): Promise<string> {
     return JSON.stringify(await tenderStorage.getById(id));
 }
 
-export async function addDateRequest(tenderId: number) {
+export async function addDocumentRequest(tenderId: number) {
     return authAction(async () => {
-        return tenderStorage.addDateRequest(tenderId)
+        return tenderStorage.addDocumentRequest(tenderId)
     })
 }
 
@@ -38,9 +38,9 @@ export async function addRebiddingPrice(tenderId: number) {
     })
 }
 
-export async function deleteDateRequestById(tenderId: number, dateRequestId: number) {
+export async function deleteDocumentRequestById(tenderId: number, documentRequestId: number) {
     return authAction(async () => {
-        return tenderStorage.deleteDateRequest(tenderId, dateRequestId)
+        return tenderStorage.deleteDocumentRequest(tenderId, documentRequestId)
     })
 }
 

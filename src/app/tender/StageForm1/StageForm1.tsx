@@ -1,11 +1,11 @@
-import {DateRequest} from '@/models/Tender/DateRequest';
+import {DocumentRequest} from '@/models/Tender/DocumentRequest';
 import FileName from '@/models/Tender/FileName';
-import {addDateRequest} from '@/models/Tender/TenderService';
+import {addDocumentRequest} from '@/models/Tender/TenderService';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
 import {Tender} from '@/models/Tender/Tender';
 import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
-import DateRequestForm from './DateRequest';
+import DocumentRequestForm from './DocumentRequestForm';
 import StageStyles from '../StageForms.module.css'
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 
@@ -22,15 +22,15 @@ const StageForm1: React.FC<StageFormProps> = observer(({tender, isEditable}) => 
         }
     }));
     const handleClick = async () => {
-        tender.datesRequests.push(makeAutoObservable(new DateRequest(await addDateRequest(tender.id), new Date(Date.now()).toISOString().slice(0, 10), [])))
+        tender.documentRequests.push(makeAutoObservable(new DocumentRequest(await addDocumentRequest(tender.id), new Date(Date.now()).toISOString().slice(0, 10), [])))
     }
-    const datesRequests = tender.datesRequests.map((dateRequest, index) => {
-        return <DateRequestForm
-            dateRequest={dateRequest}
-            deleteDateRequest={() => tender.deleteDateRequest(dateRequest)}
+    const datesRequests = tender.documentRequests.map((documentRequest, index) => {
+        return <DocumentRequestForm
+            documentRequest={documentRequest}
+            deleteDocumentRequest={() => tender.deleteDocumentRequest(documentRequest)}
             tenderId={tender.id} orderNumber={index + 1}
-            isEditable={(index + 1 == tender.datesRequests.length) && isEditable}
-            key={index}></DateRequestForm>
+            isEditable={(index + 1 == tender.documentRequests.length) && isEditable}
+            key={index}></DocumentRequestForm>
     })
     return (
         <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>

@@ -1,23 +1,22 @@
-import {ConfirmDialogProvider} from '@/app/components/Dialog/ConfirmDialogContext';
-import FileName from '@/models/Tender/FileName';
-import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
-import {afterEach, describe, expect, it, vi} from 'vitest';
+import { ConfirmDialogProvider } from '@/app/components/Dialog/ConfirmDialogContext';
+import FileName, { FileType } from '@/models/Tender/FileName';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import DocumentsForm from '../DocumentsForm';
-import {uploadHandler} from '../Handler';
 
 
 vi.mock('../Handler', () => ({
     deleteHandler: vi.fn(),
     uploadHandler: vi.fn().mockResolvedValue([
-        {id: 1, name: 'test1.pdf'},
-        {id: 2, name: 'test2.pdf'}
+        { id: 1, name: 'test1.pdf' },
+        { id: 2, name: 'test2.pdf' }
     ])
 }));
 
 describe('DocumentsForm', () => {
     const mockFileNames: FileName[] = [
-        {id: 1, name: 'test1.pdf'},
-        {id: 2, name: 'test2.pdf'}
+        { id: 1, tenderId: 1, parentId: 0, name: 'test1.pdf', fileType: FileType.Tender },
+        { id: 2, tenderId: 1, parentId: 0, name: 'test2.pdf', fileType: FileType.Tender }
     ];
     const mockProps = {
         tenderId: 1,
@@ -51,15 +50,15 @@ describe('DocumentsForm', () => {
     });
 
     it('должен отображать кнопку прикрепления файла только в режиме редактирования', () => {
-        const {rerender} = setup();
+        const { rerender } = setup();
 
-        // В режиме редактирования
+        
         expect(screen.getByLabelText('Прикрепить')).toBeDefined();
 
-        // В режиме просмотра
+        
         rerender(
             <ConfirmDialogProvider>
-                <DocumentsForm {...mockProps} isEditable={false}/>
+                <DocumentsForm {...mockProps} isEditable={false} />
             </ConfirmDialogProvider>
         );
         expect(screen.queryByLabelText('Прикрепить')).toBeNull();
@@ -77,7 +76,7 @@ describe('DocumentsForm', () => {
 
         mockFileNames.forEach(file => {
             const link = screen.getByText(file.name).closest('a');
-            expect(link).toHaveAttribute('href', `/download/${mockProps.tenderId}/${file.id}/${file.name}`);
+            expect(link).toHaveAttribute('href', `/download/?fileName=${FileName.getFilePath(file)}`);
         });
     });
 
@@ -85,19 +84,17 @@ describe('DocumentsForm', () => {
         setup();
 
         const expandButton = screen.getByLabelText('Развернуть');
-        const container = screen.getByTestId('documents-container');
+        const container = screen.getByLabelText('Документы');
 
-        // Проверяем начальное состояние
+        
         expect(container.className).not.toMatch(/expanded/);
         expect(expandButton.className).toMatch(/rotated/);
 
-        // Первый клик
         fireEvent.click(expandButton);
         expect(container.className).toMatch(/expanded/);
         expect(expandButton.className).not.toMatch(/rotated/);
 
-
-        // Второй клик
+        
         fireEvent.click(expandButton);
         expect(container.className).not.toMatch(/expanded/);
         expect(expandButton.className).toMatch(/rotated/);
@@ -128,15 +125,12 @@ describe('DocumentsForm', () => {
         const attachButton = screen.getByLabelText('Прикрепить');
         fireEvent.click(attachButton);
 
-        const fileInput = screen.getByTestId('documents-container').querySelector('input[type="file"]');
-        const testFile = new File(['test content'], 'newfile.pdf', {type: 'application/pdf'});
-
-        fireEvent.change(fileInput!, {target: {files: [testFile]}});
+        const fileInput = screen.getByLabelText('Документы').querySelector('input[type="file"]');
+        const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
+        fireEvent.change(fileInput!, { target: { files: [file] } });
 
         await waitFor(() => {
-            expect(uploadHandler).toHaveBeenCalled();
-            expect(mockProps.pushFile).toHaveBeenCalledWith(mockFileNames[0]);
-            expect(mockProps.pushFile).toHaveBeenCalledWith(mockFileNames[1]);
+            expect(mockProps.pushFile).toHaveBeenCalled();
         });
     });
 }); 

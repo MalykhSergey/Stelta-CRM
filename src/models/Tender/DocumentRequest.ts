@@ -1,6 +1,6 @@
 import FileName from "./FileName";
 
-export class DateRequest {
+export class DocumentRequest {
     constructor(
         public id: number,
         public date: string,
