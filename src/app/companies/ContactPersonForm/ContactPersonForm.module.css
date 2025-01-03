@@ -20,7 +20,7 @@
     border-radius: 4px;
     overflow: auto;
     position: absolute;
-    max-height: 130px;
+    max-height: 300px;
     width: 100%;
     visibility: hidden;
     opacity: 0;
