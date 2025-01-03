@@ -2,17 +2,45 @@
 import connection from "../../config/Database";
 
 export async function loadCommonAnalytics() {
-    return (await connection.query(`SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(tenders.price)::numeric FROM tenders GROUP BY status, is_special`)).rows
+    return (await connection.query(`
+        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(COALESCE(reb_price, tenders.price))::numeric
+        FROM tenders
+        LEFT JOIN (
+            SELECT DISTINCT ON (tender_id) 
+                tender_id, 
+                price AS reb_price
+            FROM rebidding_prices
+            ORDER BY tender_id, id DESC
+        ) AS reb_prices ON reb_prices.tender_id = tenders.id
+        GROUP BY status, is_special`)).rows
 }
 
 export async function loadStatusAnalyticsByCompany(company_id: number) {
-    return (await connection.query(`SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(tenders.price)::numeric FROM tenders WHERE company_id = $1 GROUP BY status, is_special`, [company_id])).rows
+    return (await connection.query(`
+        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(COALESCE(reb_price, tenders.price))::numeric 
+        FROM tenders 
+        LEFT JOIN (
+            SELECT DISTINCT ON (tender_id) 
+                tender_id, 
+                price AS reb_price
+            FROM rebidding_prices
+            ORDER BY tender_id, id DESC
+        ) AS reb_prices ON reb_prices.tender_id = tenders.id
+        WHERE company_id = $1 
+        GROUP BY status, is_special`, [company_id])).rows
 }
 
 export async function loadStatusAnalyticsByDate(start_date: string, finish_date: string) {
     return (await connection.query(`
-        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(tenders.price)::numeric 
+        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(COALESCE(reb_price, tenders.price))::numeric
         FROM tenders 
+        LEFT JOIN (
+            SELECT DISTINCT ON (tender_id) 
+                tender_id, 
+                price AS reb_price
+            FROM rebidding_prices
+            ORDER BY tender_id, id DESC
+        ) AS reb_prices ON reb_prices.tender_id = tenders.id
         WHERE 
             (date1_start >= $1::timestamp AND date1_start <= $2::timestamp OR 
              date1_finish >= $1::timestamp AND date1_finish <= $2::timestamp OR 
@@ -25,14 +53,30 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
 export async function loadCompanyAnalyticsByStatus(status: number) {
     if (status == -1)
         return (await connection.query(`
-        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count, sum(tenders.price)::numeric FROM tenders 
+        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count, sum(COALESCE(reb_price, tenders.price))::numeric
+        FROM tenders 
         JOIN companies ON tenders.company_id = companies.id 
+        LEFT JOIN (
+            SELECT DISTINCT ON (tender_id) 
+                tender_id, 
+                price AS reb_price
+            FROM rebidding_prices
+            ORDER BY tender_id, id DESC
+        ) AS reb_prices ON reb_prices.tender_id = tenders.id
         WHERE status != -4 AND status < 0
         GROUP BY companies.id, companies.name `)).rows
     else
         return (await connection.query(`
-        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count, sum(tenders.price)::numeric FROM tenders 
+        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count, sum(COALESCE(reb_price, tenders.price))::numeric
+        FROM tenders 
         JOIN companies ON tenders.company_id = companies.id 
+        LEFT JOIN (
+            SELECT DISTINCT ON (tender_id) 
+                tender_id, 
+                price AS reb_price
+            FROM rebidding_prices
+            ORDER BY tender_id, id DESC
+        ) AS reb_prices ON reb_prices.tender_id = tenders.id
         WHERE status = $1
         GROUP BY companies.id, companies.name `, [status])).rows
 }
