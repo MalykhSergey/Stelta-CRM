@@ -2,10 +2,10 @@ import {DatabaseError, Pool} from "pg";
 import logger from "@/config/Logger";
 
 const conn = new Pool({
-    user: 'postgres',
-    password: 'root',
+    user: process.env.PGSQL_USER,
+    password: process.env.PGSQL_PASSWORD,
     host: process.env.PGSQL_HOST,
-    port: 5432,
+    port: Number(process.env.PGSQL_PORT),
     database: process.env.PGSQL_DATABASE,
 });
 conn.on('connect', (client) => {

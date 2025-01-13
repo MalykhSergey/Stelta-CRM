@@ -99,7 +99,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
             </div>)
     }
     return (
-        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`} aria-label="Документы">
+        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`} aria-label={title}>
             <div className={StageStyles.cardHeader}>
                 <h3>{title}</h3>
                 {

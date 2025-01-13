@@ -1,10 +1,9 @@
-import {afterEach, describe, expect, it, vi} from 'vitest';
-import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {ContactPersonForm} from '../ContactPersonForm';
-import {createContactPerson} from '@/models/Company/ContactPerson/ContactPersonService';
 import Company from '@/models/Company/Company';
-import {ContactPerson} from '@/models/Company/ContactPerson/ContactPerson';
-import {makeAutoObservable} from 'mobx';
+import { ContactPerson } from '@/models/Company/ContactPerson/ContactPerson';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { makeAutoObservable } from 'mobx';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ContactPersonForm } from '../ContactPersonForm';
 
 vi.mock('@/models/Company/ContactPerson/ContactPersonService', () => ({
     createContactPerson: vi.fn().mockResolvedValue(42),

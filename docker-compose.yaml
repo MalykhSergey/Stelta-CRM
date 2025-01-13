@@ -1,0 +1,23 @@
+name: stelta-crm-test
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./test-db-dump.sql:/docker-entrypoint-initdb.d/init.sql
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  nextjs:
+    build:
+      dockerfile: ./next.dockerfile
+    container_name: nextjs_container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres

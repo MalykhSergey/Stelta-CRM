@@ -5,5 +5,6 @@ const nextConfig = {
             bodySizeLimit: '10gb',
         },
     },
+    output: 'standalone',
 };
 export default nextConfig;

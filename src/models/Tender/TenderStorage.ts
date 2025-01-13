@@ -5,7 +5,6 @@ import connection, { handleDatabaseError } from "../../config/Database";
 import { ContactPerson } from '../Company/ContactPerson/ContactPerson';
 import FileName, { FileType } from "./FileName";
 import { Tender } from "./Tender";
-import { console } from "inspector";
 
 class TenderStorage {
     constructor() {
@@ -230,7 +229,7 @@ class TenderStorage {
 
     async deleteDocumentRequest(tenderId: number, documentRequestId: number) {
         try {
-            const filesId = (await connection.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])).rows
+            await connection.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])
             await connection.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
             await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, { recursive: true })
         } catch (e) {
@@ -240,7 +239,7 @@ class TenderStorage {
 
     async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
         try {
-            const filesId = (await connection.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])).rows
+            await connection.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])
             await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
             await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, { recursive: true })
         } catch (e) {

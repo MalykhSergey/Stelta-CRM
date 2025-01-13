@@ -59,7 +59,6 @@ describe('ContactPersonForm', () => {
     it('должен быть недоступным для редактирования, когда isEditable=false', () => {
         setup(false);
 
-        const nameInput = screen.getByLabelText('Контактное лицо:') as HTMLInputElement;
         const phoneInput = screen.getByLabelText('Номер телефона:') as HTMLInputElement;
         const emailInput = screen.getByLabelText('Электронная почта:') as HTMLInputElement;
 

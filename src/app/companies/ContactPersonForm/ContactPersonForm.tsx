@@ -133,7 +133,7 @@ const ContactPersonForm = observer(
                     {props.isEditable && (
                         <>
                             <div></div>
-                            {store.isNew && store.contactPerson.isValid && <button disabled={false} onClick={saveContactPersonHandler}>
+                            {store.isNew && store.contactPerson.isValid() && <button disabled={false} onClick={saveContactPersonHandler}>
                                 Сохранить
                             </button>}
                             <div></div>
