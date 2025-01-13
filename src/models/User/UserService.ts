@@ -10,14 +10,14 @@ export async function register(registerForm: FormData) {
     const name = registerForm.get('name') as string
     const password = registerForm.get('password') as string
     return authAction(async (user) => {
-        if (user.name != "SuperUser") return { error: "Вы не можете регистрировать пользователей!" }
+        if (user.name != process.env.ADMIN_LOGIN) return { error: "Вы не можете регистрировать пользователей!" }
         return createUser(name, password)
     })
 }
 
 export async function deleteUser(id: number) {
     return authAction(async (user) => {
-        if (user.name != "SuperUser") return { error: "Вы не можете удалять пользователей!" }
+        if (user.name != process.env.ADMIN_LOGIN) return { error: "Вы не можете удалять пользователей!" }
         return UserStorage_deleteUser(id)
     })
 }
