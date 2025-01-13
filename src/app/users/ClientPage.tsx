@@ -1,9 +1,11 @@
 "use client"
-import {faUser} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {FormEvent, useRef, useState} from "react";
-import {showMessage} from "../components/Alerts/Alert";
-import {register} from "../../models/User/UserService";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FormEvent, useRef, useState } from "react";
+import { deleteUser, register } from "../../models/User/UserService";
+import { showMessage } from "../components/Alerts/Alert";
+import { DeleteButton } from "../components/Buttons/DeleteButton/DeleteButton";
+import { useConfirmDialog } from "../components/Dialog/ConfirmDialogContext";
 import styles from "./ClientPage.module.css";
 
 function generatePassword(length: number) {
@@ -16,9 +18,10 @@ function generatePassword(length: number) {
     return password;
 }
 
-export function UsersPage({userProps}: { userProps: { name: string }[] }) {
+export function UsersPage({ userProps }: { userProps: { name: string, id: number }[] }) {
     const [users, setUsers] = useState(userProps)
     const password = useRef<HTMLInputElement | null>(null)
+    const { showConfirmDialog } = useConfirmDialog();
     const genClickHandler = () => {
         if (password.current)
             password.current.value = generatePassword(12)
@@ -28,31 +31,53 @@ export function UsersPage({userProps}: { userProps: { name: string }[] }) {
         const registerForm = new FormData(e.currentTarget);
         const result = await register(registerForm)
         if (!result?.error) {
-            setUsers([...users, {name: registerForm.get('name') as string}])
+            setUsers([...users, { name: registerForm.get('name') as string, id: result }])
             showMessage("Пользователь успешно добавлен!", "successful")
         } else
             showMessage(result.error)
     }
+
+    function deleteHandler(user: { name: string; id: number }): void {
+        showConfirmDialog(
+            {
+                message: `Вы действительно хотите удалить ${user.name}?`,
+                onConfirm: async () => {
+                    const result = await deleteUser(user.id)
+                    if (result?.error) {
+                        showMessage(result.error)
+                    } else {
+                        setUsers(users.filter(u => u.id !== user.id))
+                        showMessage("Пользователь успешно удален!", "successful")
+                    }
+                }
+            })
+    }
+
     return (
         <main className={`${styles.main}`}>
             <form onSubmit={registerHandler} className={`card ${styles.login}`}>
                 <h1 className={`${styles.header}`}>Добавить пользователя</h1>
                 <div>
                     <label className={styles.label} htmlFor="name">Имя пользователя:</label>
-                    <input type="text" id="name" name="name" placeholder="Имя пользователя" required minLength={5}/>
+                    <input type="text" id="name" name="name" placeholder="Имя пользователя" required minLength={5} />
                 </div>
                 <div>
                     <label className={styles.label} htmlFor="name">Пароль:</label>
                     <input ref={password} type="text" id="password" name="password" placeholder="Пароль" required
-                           minLength={8}/>
+                        minLength={8} />
                     <div className={`${styles.genSpan}`} onClick={genClickHandler}>Сгенерировать пароль</div>
                 </div>
                 <button className={`${styles.submit} BlueButton`}>Добавить</button>
             </form>
             <div className={`${styles.userList}`}>
                 {users.map(user =>
-                    <div className={`${styles.userItem} card`} key={user.name}><FontAwesomeIcon icon={faUser}/>
-                        <h2>{user.name}</h2></div>
+                    <div className={`${styles.userItem} card`} key={user.name}>
+                        <div className={styles.user}>
+                            <FontAwesomeIcon icon={faUser} />
+                            <h2>{user.name}</h2>
+                        </div>
+                        <DeleteButton onClick={() => deleteHandler(user)} />
+                    </div>
                 )}
             </div>
         </main>

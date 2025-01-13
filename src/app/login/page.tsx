@@ -8,12 +8,12 @@ import styles from "./page.module.css"
 
 export default function LoginPage() {
     const router = useRouter()
-    const authContext = useAuth()
+    // const authContext = useAuth()
     useEffect(() => {
-        if (authContext.userName) {
-            showMessage(`Добро пожаловать ${authContext.userName}!`, "successful")
-            router.push('/')
-        }
+        // if (authContext.userName) {
+        //     showMessage(`Добро пожаловать ${authContext.userName}!`, "successful")
+        //     router.push('/')
+        // }
     }, []);
     const loginHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -22,7 +22,7 @@ export default function LoginPage() {
         if (!result?.error) {
             const name = loginForm.get("name") as string
             showMessage(`Добро пожаловать ${name}!`, "successful")
-            authContext.setUserName(name)
+            // authContext.setUserName(name)
             router.push('/')
         } else {
             showMessage(result.error, "error");

@@ -1,9 +1,9 @@
 import crypto from "crypto";
-import connection, {handleDatabaseError} from "../../config/Database";
-import {User} from "./User";
+import connection, { handleDatabaseError } from "../../config/Database";
+import { User } from "./User";
 
 
-export function generateSalt(length = 16) {
+function generateSalt(length = 16) {
     return crypto.randomBytes(length).toString('hex')
 }
 
@@ -15,16 +15,23 @@ export async function createUser(name: string, password: string) {
     const salt = generateSalt()
     const hashed_password = hash_password(password, salt)
     try {
-        await connection.query("INSERT INTO users(name, password, salt) VALUES ($1,$2,$3)", [name, hashed_password, salt]);
+        return (await connection.query("INSERT INTO users(name, password, salt) VALUES ($1,$2,$3) RETURNING id", [name, hashed_password, salt])).rows[0].id;
     } catch (e) {
         return handleDatabaseError(e,
-            {'23505': 'Пользователь с таким именем уже есть!'},
+            { '23505': 'Пользователь с таким именем уже есть!' },
             'Ошибка создания пользователя!')
     }
 }
 
-export async function getUserNames(): Promise<{ name: string }[]> {
-    return (await connection.query("SELECT name FROM users")).rows;
+export async function deleteUser(id: number) {
+    try {
+        await connection.query("DELETE FROM users WHERE id = $1", [id]);
+    } catch (e) {
+        return handleDatabaseError(e, {}, 'Ошибка удаления пользователя!');
+    }
+}
+export async function getUsers() {
+    return (await connection.query("SELECT id, name FROM users")).rows;
 }
 
 export async function getUserByName(name: string): Promise<User | null> {
