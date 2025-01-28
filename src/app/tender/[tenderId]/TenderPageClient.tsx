@@ -3,7 +3,7 @@
 import CommentsForm from '@/app/tender/CommentsForm/CommentsForm';
 import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import {showMessage} from '@/app/components/Alerts/Alert';
-import TenderForm from '@/app/components/TenderForm/TenderForm';
+import TenderForm from '@/app/tender/TenderForm/TenderForm';
 import FileName from '@/models/Tender/FileName';
 import {Tender} from '@/models/Tender/Tender';
 import {deleteTender, updateTenderById} from '@/models/Tender/TenderService';
@@ -64,7 +64,7 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
     })
     const router = useRouter()
     const auth = useAuth()
-    const isAuth = auth.userName != ''
+    const isAuth = auth.user.name != ''
     let isEditable = {
         status: isAuth,
         isSpecial: false,

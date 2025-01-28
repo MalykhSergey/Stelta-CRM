@@ -12,8 +12,8 @@
 
 @media only screen and (max-width: 600px) {
     .inputGroup {
-        align-items: start;
         display: flex;
+        align-items: flex-start;
         flex-direction: column;
         gap: 0;
     }

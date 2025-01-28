@@ -4,9 +4,18 @@ import { NextRequest } from "next/server";
 import path from "path";
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
+
     const fileName = searchParams.get('fileName')
-    const filePath = `${process.env.FILE_UPLOAD_PATH}/${fileName}`
+    if (!fileName) {
+        return new Response('Имя файла не указано!', { status: 400 });
+    }
+    const baseDirectory = process.env.FILE_UPLOAD_PATH || '/var/www/stelta-crm/uploads';
+    const filePath = path.join(baseDirectory, fileName);
+
     try {
+        if (!filePath.startsWith(path.resolve(baseDirectory))) {
+            return new Response('Доступ запрещён!', { status: 403 });
+        }
         await fs.access(filePath)
         const file = await fs.readFile(filePath)
         return new Response(file, {

@@ -16,7 +16,7 @@ import styles from "./page.module.css"
 export default function ClientCompanies({ companiesProps }: { companiesProps: string }) {
     const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
     const auth = useAuth()
-    const isAuth = !!auth.userName
+    const isAuth = !!auth.user
     async function createCompanyHandler(formData: FormData) {
         const company_name = formData.get('company') as string
         const result = await createCompany(company_name)

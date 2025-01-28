@@ -28,6 +28,7 @@ interface DocumentsFormProps {
     isOpened?: boolean,
     onDelete?: () => void
 }
+const MAX_FILE_SIZE = 30 * 1024 * 1024
 
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                                                                   tenderId,
@@ -60,6 +61,10 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
         if (e.target.files)
             for (let i = 0; i < e.target.files.length; i++) {
                 const file_name = encodeURI(e.target.files[i].name)
+                if (e.target.files[i].size > MAX_FILE_SIZE) {
+                    showMessage(`Файл ${file_name} превышает допустимый размер в 30 МБ.`);
+                    continue;
+                }
                 formData.append('file', e.target.files[i], file_name);
             }
         formData.append('stage', stage.toString());

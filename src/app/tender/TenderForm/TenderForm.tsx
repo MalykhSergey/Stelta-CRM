@@ -6,8 +6,8 @@ import {observer, useLocalObservable} from 'mobx-react-lite'
 import {Tender} from '@/models/Tender/Tender'
 import styles from './TenderForm.module.css'
 import CurrencyInput from "react-currency-input-field";
-import {TenderFormField} from "@/app/components/TenderForm/TenderFormField";
-import {ContactPersonForm} from "@/app/components/TenderForm/ContactPersonForm/ContactPersonForm";
+import {TenderFormField} from "@/app/tender/TenderForm/TenderFormField";
+import {ContactPersonForm} from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonForm";
 
 interface TenderFormProps {
     tender: Tender,

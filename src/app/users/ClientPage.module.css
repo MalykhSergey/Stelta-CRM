@@ -58,6 +58,15 @@
     gap: 20px;
     align-items: center;
 }
+
+.viewer{}
+.editor{
+    color: rgb(16, 85, 0);
+}
+.admin{
+    color: rgb(255, 228, 26);
+    text-shadow:#000 1px 0 1px, #000 0 1px 1px, #000 -1px 0 1px, #000 0 -1px 1px;
+}
 @media only screen and (max-width: 600px) {
     .login {
         width: 100%;

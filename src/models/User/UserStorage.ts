@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import connection, { handleDatabaseError } from "../../config/Database";
-import { User } from "./User";
+import { Role, User } from "./User";
 
 
 function generateSalt(length = 16) {
@@ -11,11 +11,11 @@ export function hash_password(password: crypto.BinaryLike, salt: crypto.BinaryLi
     return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha256').toString('hex');
 }
 
-export async function createUser(name: string, password: string) {
+export async function createUser(name: string, password: string, role:Role) {
     const salt = generateSalt()
     const hashed_password = hash_password(password, salt)
     try {
-        return (await connection.query("INSERT INTO users(name, password, salt) VALUES ($1,$2,$3) RETURNING id", [name, hashed_password, salt])).rows[0].id;
+        return (await connection.query("INSERT INTO users(name, password, salt, role) VALUES ($1,$2,$3,$4) RETURNING id", [name, hashed_password, salt, role])).rows[0].id;
     } catch (e) {
         return handleDatabaseError(e,
             { '23505': 'Пользователь с таким именем уже есть!' },
@@ -31,7 +31,7 @@ export async function deleteUser(id: number) {
     }
 }
 export async function getUsers() {
-    return (await connection.query("SELECT id, name FROM users")).rows;
+    return (await connection.query("SELECT id, name, role FROM users")).rows;
 }
 
 export async function getUserByName(name: string): Promise<User | null> {

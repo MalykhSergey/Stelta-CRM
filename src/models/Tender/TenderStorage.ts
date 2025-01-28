@@ -7,10 +7,6 @@ import FileName, { FileType } from "./FileName";
 import { Tender } from "./Tender";
 
 class TenderStorage {
-    constructor() {
-        logger.info('Created Tender storage')
-    }
-
     async getCompanies() {
         return (await connection.query(`SELECT * FROM companies`)).rows
     }

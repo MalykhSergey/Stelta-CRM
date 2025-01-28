@@ -1,15 +1,15 @@
 import React from "react";
 import {observer, useLocalObservable} from "mobx-react-lite";
-import {TenderFormField} from "@/app/components/TenderForm/TenderFormField";
+import {TenderFormField} from "@/app/tender/TenderForm/TenderFormField";
 import style from './ContactPersonForm.module.css'
-import styles from "@/app/components/TenderForm/TenderForm.module.css";
+import styles from "@/app/tender/TenderForm/TenderForm.module.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronUp} from "@fortawesome/free-solid-svg-icons";
 import Company from "@/models/Company/Company";
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 import {deleteContactPerson, updateContactPerson} from "@/models/Company/ContactPerson/ContactPersonService";
 import {showMessage} from "@/app/components/Alerts/Alert";
-import {ContactPersonStore} from "@/app/components/TenderForm/ContactPersonForm/ContactPersonStore";
+import {ContactPersonStore} from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonStore";
 
 interface ContactPersonFormProps {
     company: Company

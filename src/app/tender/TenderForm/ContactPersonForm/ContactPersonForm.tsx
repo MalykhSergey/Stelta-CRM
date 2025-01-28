@@ -1,6 +1,6 @@
-import { ContactPersonStore } from "@/app/components/TenderForm/ContactPersonForm/ContactPersonStore";
-import styles from "@/app/components/TenderForm/TenderForm.module.css";
-import { TenderFormField } from "@/app/components/TenderForm/TenderFormField";
+import { ContactPersonStore } from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonStore";
+import styles from "@/app/tender/TenderForm/TenderForm.module.css";
+import { TenderFormField } from "@/app/tender/TenderForm/TenderFormField";
 import Company from "@/models/Company/Company";
 import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";

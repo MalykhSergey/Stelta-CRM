@@ -1,4 +1,5 @@
 "use client"
+import { Role, User } from "@/models/User/User";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormEvent, useRef, useState } from "react";
@@ -18,7 +19,7 @@ function generatePassword(length: number) {
     return password;
 }
 
-export function UsersPage({ userProps }: { userProps: { name: string, id: number }[] }) {
+export function UsersPage({ userProps }: { userProps: { name: string, id: number, role: string }[] }) {
     const [users, setUsers] = useState(userProps)
     const password = useRef<HTMLInputElement | null>(null)
     const { showConfirmDialog } = useConfirmDialog();
@@ -31,7 +32,7 @@ export function UsersPage({ userProps }: { userProps: { name: string, id: number
         const registerForm = new FormData(e.currentTarget);
         const result = await register(registerForm)
         if (!result?.error) {
-            setUsers([...users, { name: registerForm.get('name') as string, id: result }])
+            setUsers([...users, { name: registerForm.get('name') as string, id: result, role: registerForm.get("role") as string }])
             showMessage("Пользователь успешно добавлен!", "successful")
         } else
             showMessage(result.error)
@@ -67,6 +68,14 @@ export function UsersPage({ userProps }: { userProps: { name: string, id: number
                         minLength={8} />
                     <div className={`${styles.genSpan}`} onClick={genClickHandler}>Сгенерировать пароль</div>
                 </div>
+                <div>
+                    <label className={styles.label} htmlFor="role">Роль:</label>
+                    <select name="role" id="role">
+                        <option value={Role.Viewer}>Просмотр</option>
+                        <option value={Role.Editor}>Редактирование</option>
+                        <option value={Role.Admin}>Администрирование</option>
+                    </select>
+                </div>
                 <button className={`${styles.submit} BlueButton`}>Добавить</button>
             </form>
             <div className={`${styles.userList}`}>
@@ -74,7 +83,10 @@ export function UsersPage({ userProps }: { userProps: { name: string, id: number
                     <div className={`${styles.userItem} card`} key={user.name}>
                         <div className={styles.user}>
                             <FontAwesomeIcon icon={faUser} />
-                            <h2>{user.name}</h2>
+                            <div>
+                                <h2>{user.name}</h2>
+                                <h3 className={styles[user.role]}>{User.printRole(user.role)}</h3>
+                            </div>
                         </div>
                         <DeleteButton onClick={() => deleteHandler(user)} />
                     </div>

@@ -14,6 +14,7 @@ export async function createTender(status: number) {
 
 export async function deleteTender(tenderId: number) {
     return authAction(async () => {
+        CalendarService.deleteTenderEvents(tenderId);
         return tenderStorage.deleteTender(tenderId)
     })
 }

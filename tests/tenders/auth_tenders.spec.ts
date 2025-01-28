@@ -1,14 +1,6 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from "../login-fixture";
 
 test.describe('Авторизованные тесты', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/login');
-    await page.fill('input[name="name"]', '123');
-    await page.fill('input[name="password"]', '123');
-    await page.click('button:has-text("Войти")');
-    await page.waitForURL('http://127.0.0.1:3000/');
-  });
-
   test('Создать новый тендер', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
     await page.getByRole('button', { name: 'Добавить тендер' }).click();
@@ -120,7 +112,7 @@ test.describe('Авторизованные тесты', () => {
          - button "Удалить"
          `);
   });
-  test('Проверить работу форму комментариев', async ({ page }) => {
+  test('Проверить работу формы комментариев', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
     const page1Promise = page.waitForEvent('popup');
     await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
@@ -232,8 +224,8 @@ test.describe('Авторизованные тесты', () => {
   });
   test('Проверка формы 1-го этапа', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
-    const page1Promise = page.waitForEvent('popup');
     await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽ Начало подачи: 1/9/' }).click();
+    const page1Promise = page.waitForEvent('popup');
     const page1 = await page1Promise;
     page1.locator('input[type="file"]').setInputFiles([
       './tests/tenders/files_for_upload/4.png',

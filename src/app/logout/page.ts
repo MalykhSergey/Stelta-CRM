@@ -4,6 +4,7 @@ import {useEffect} from "react";
 import {useAuth} from "../AuthContext";
 import {showMessage} from "../components/Alerts/Alert";
 import {logout} from "../../models/User/UserService";
+import { User } from "@/models/User/User";
 
 
 export default function LogOutPage() {
@@ -11,10 +12,10 @@ export default function LogOutPage() {
     const authContext = useAuth()
     useEffect(() => {
         const performLogout = async () => {
-            authContext.setUserName('')
+            authContext.setUser(new User())
             await logout();
             showMessage("Вы вышли из системы!");
-            router.push("/");
+            router.push("/login");
         };
         performLogout();
     }, []);

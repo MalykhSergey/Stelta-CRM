@@ -23,23 +23,23 @@ const InconsolateFont = Inconsolata({
 })
 
 export default async function RootLayout({
-                                             children,
-                                         }: Readonly<{
+    children,
+}: Readonly<{
     children: React.ReactNode;
 }>) {
     const auth_user = await checkAuth()
     return (
         <html lang="en">
-        <body className={`${MontserratFont.variable} ${RobotoFont.variable} ${InconsolateFont.variable}`}>
-        <div className='background'></div>
-        <AlertContainer></AlertContainer>
-        <AuthProvider initialAuth={auth_user}>
-            <Header></Header>
-            <div className={styles.content}>
-                {children}
-            </div>
-        </AuthProvider>
-        </body>
+            <body className={`${MontserratFont.variable} ${RobotoFont.variable} ${InconsolateFont.variable}`}>
+                <div className='background'></div>
+                <AlertContainer></AlertContainer>
+                <AuthProvider initialAuth={{ ...auth_user }}>
+                    <Header></Header>
+                    <div className={styles.content}>
+                        {children}
+                    </div>
+                </AuthProvider>
+            </body>
         </html>
     );
 }

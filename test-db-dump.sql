@@ -1,72 +1,11 @@
 --
--- PostgreSQL database cluster dump
---
-
--- Started on 2025-01-07 00:57:24
-
-SET default_transaction_read_only = off;
-
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-
---
--- User Configurations
---
-
-
-
-
-
-
---
--- Databases
---
-
---
--- Database "template1" dump
---
-
-\connect template1
-
---
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17rc1
+-- Dumped from database version 17.2 (Debian 17.2-1.pgdg120+1)
 -- Dumped by pg_dump version 17rc1
 
--- Started on 2025-01-07 00:57:25
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
--- Completed on 2025-01-07 00:57:26
-
---
--- PostgreSQL database dump complete
---
-
---
--- Database "stelta_crm" dump
---
-
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 17rc1
--- Dumped by pg_dump version 17rc1
-
--- Started on 2025-01-07 00:57:26
+-- Started on 2025-01-27 17:56:12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -81,11 +20,11 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 5007 (class 1262 OID 16511)
+-- TOC entry 3479 (class 1262 OID 16384)
 -- Name: stelta_crm; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE stelta_crm;
+CREATE DATABASE stelta_crm WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'en_US.utf8';
 
 
 \connect stelta_crm
@@ -102,12 +41,39 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- TOC entry 4 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+
+--
+-- TOC entry 3480 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- TOC entry 890 (class 1247 OID 16530)
+-- Name: user_role; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.user_role AS ENUM (
+    'admin',
+    'editor',
+    'viewer'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- TOC entry 223 (class 1259 OID 16696)
+-- TOC entry 217 (class 1259 OID 16385)
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -118,7 +84,7 @@ CREATE TABLE public.companies (
 
 
 --
--- TOC entry 222 (class 1259 OID 16695)
+-- TOC entry 218 (class 1259 OID 16390)
 -- Name: companies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -133,7 +99,7 @@ ALTER TABLE public.companies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 227 (class 1259 OID 16827)
+-- TOC entry 219 (class 1259 OID 16391)
 -- Name: contact_persons; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -148,7 +114,7 @@ CREATE TABLE public.contact_persons (
 
 
 --
--- TOC entry 226 (class 1259 OID 16826)
+-- TOC entry 220 (class 1259 OID 16400)
 -- Name: contact_persons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -163,7 +129,7 @@ ALTER TABLE public.contact_persons ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 221 (class 1259 OID 16538)
+-- TOC entry 221 (class 1259 OID 16401)
 -- Name: document_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -175,7 +141,7 @@ CREATE TABLE public.document_requests (
 
 
 --
--- TOC entry 220 (class 1259 OID 16537)
+-- TOC entry 222 (class 1259 OID 16405)
 -- Name: date_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -189,8 +155,8 @@ CREATE SEQUENCE public.date_requests_id_seq
 
 
 --
--- TOC entry 5008 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3481 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: date_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -198,7 +164,7 @@ ALTER SEQUENCE public.date_requests_id_seq OWNED BY public.document_requests.id;
 
 
 --
--- TOC entry 231 (class 1259 OID 16880)
+-- TOC entry 223 (class 1259 OID 16406)
 -- Name: document_requests_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -210,7 +176,7 @@ CREATE TABLE public.document_requests_files (
 
 
 --
--- TOC entry 230 (class 1259 OID 16879)
+-- TOC entry 224 (class 1259 OID 16411)
 -- Name: document_requests_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -225,7 +191,7 @@ ALTER TABLE public.document_requests_files ALTER COLUMN id ADD GENERATED ALWAYS 
 
 
 --
--- TOC entry 219 (class 1259 OID 16526)
+-- TOC entry 225 (class 1259 OID 16412)
 -- Name: rebidding_prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -237,7 +203,7 @@ CREATE TABLE public.rebidding_prices (
 
 
 --
--- TOC entry 233 (class 1259 OID 16893)
+-- TOC entry 226 (class 1259 OID 16416)
 -- Name: rebidding_prices_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -249,7 +215,7 @@ CREATE TABLE public.rebidding_prices_files (
 
 
 --
--- TOC entry 232 (class 1259 OID 16892)
+-- TOC entry 227 (class 1259 OID 16421)
 -- Name: rebidding_prices_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -264,7 +230,7 @@ ALTER TABLE public.rebidding_prices_files ALTER COLUMN id ADD GENERATED ALWAYS A
 
 
 --
--- TOC entry 218 (class 1259 OID 16525)
+-- TOC entry 228 (class 1259 OID 16422)
 -- Name: request_prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -278,8 +244,8 @@ CREATE SEQUENCE public.request_prices_id_seq
 
 
 --
--- TOC entry 5009 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3482 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: request_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -287,7 +253,7 @@ ALTER SEQUENCE public.request_prices_id_seq OWNED BY public.rebidding_prices.id;
 
 
 --
--- TOC entry 229 (class 1259 OID 16857)
+-- TOC entry 229 (class 1259 OID 16423)
 -- Name: tenders_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -300,7 +266,7 @@ CREATE TABLE public.tenders_files (
 
 
 --
--- TOC entry 228 (class 1259 OID 16856)
+-- TOC entry 230 (class 1259 OID 16429)
 -- Name: tender_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -315,7 +281,7 @@ ALTER TABLE public.tenders_files ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
--- TOC entry 217 (class 1259 OID 16513)
+-- TOC entry 231 (class 1259 OID 16430)
 -- Name: tenders; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -349,7 +315,7 @@ CREATE TABLE public.tenders (
 
 
 --
--- TOC entry 234 (class 1259 OID 16929)
+-- TOC entry 232 (class 1259 OID 16449)
 -- Name: tenders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -364,7 +330,7 @@ ALTER TABLE public.tenders ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 225 (class 1259 OID 16713)
+-- TOC entry 233 (class 1259 OID 16450)
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -372,12 +338,13 @@ CREATE TABLE public.users (
     id integer NOT NULL,
     name character varying NOT NULL,
     password character varying NOT NULL,
-    salt character varying NOT NULL
+    salt character varying NOT NULL,
+    role public.user_role DEFAULT 'viewer'::public.user_role NOT NULL
 );
 
 
 --
--- TOC entry 224 (class 1259 OID 16712)
+-- TOC entry 234 (class 1259 OID 16455)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -392,7 +359,7 @@ ALTER TABLE public.users ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 4798 (class 2604 OID 16541)
+-- TOC entry 3256 (class 2604 OID 16456)
 -- Name: document_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -400,7 +367,7 @@ ALTER TABLE ONLY public.document_requests ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
--- TOC entry 4797 (class 2604 OID 16529)
+-- TOC entry 3259 (class 2604 OID 16457)
 -- Name: rebidding_prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -408,8 +375,8 @@ ALTER TABLE ONLY public.rebidding_prices ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 4990 (class 0 OID 16696)
--- Dependencies: 223
+-- TOC entry 3456 (class 0 OID 16385)
+-- Dependencies: 217
 -- Data for Name: companies; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -437,8 +404,8 @@ COPY public.companies (id, name) FROM stdin;
 
 
 --
--- TOC entry 4994 (class 0 OID 16827)
--- Dependencies: 227
+-- TOC entry 3458 (class 0 OID 16391)
+-- Dependencies: 219
 -- Data for Name: contact_persons; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -539,7 +506,7 @@ COPY public.contact_persons (id, name, phone_number, email, company_id) FROM std
 
 
 --
--- TOC entry 4988 (class 0 OID 16538)
+-- TOC entry 3460 (class 0 OID 16401)
 -- Dependencies: 221
 -- Data for Name: document_requests; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -610,8 +577,8 @@ COPY public.document_requests (id, date, tender_id) FROM stdin;
 
 
 --
--- TOC entry 4998 (class 0 OID 16880)
--- Dependencies: 231
+-- TOC entry 3462 (class 0 OID 16406)
+-- Dependencies: 223
 -- Data for Name: document_requests_files; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -620,8 +587,8 @@ COPY public.document_requests_files (id, name, document_request_id) FROM stdin;
 
 
 --
--- TOC entry 4986 (class 0 OID 16526)
--- Dependencies: 219
+-- TOC entry 3464 (class 0 OID 16412)
+-- Dependencies: 225
 -- Data for Name: rebidding_prices; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -679,8 +646,8 @@ COPY public.rebidding_prices (tender_id, price, id) FROM stdin;
 
 
 --
--- TOC entry 5000 (class 0 OID 16893)
--- Dependencies: 233
+-- TOC entry 3465 (class 0 OID 16416)
+-- Dependencies: 226
 -- Data for Name: rebidding_prices_files; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -689,8 +656,8 @@ COPY public.rebidding_prices_files (id, name, rebidding_price_id) FROM stdin;
 
 
 --
--- TOC entry 4984 (class 0 OID 16513)
--- Dependencies: 217
+-- TOC entry 3470 (class 0 OID 16430)
+-- Dependencies: 231
 -- Data for Name: tenders; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -724,7 +691,7 @@ COPY public.tenders (id, status, name, lot_number, register_number, initial_max_
 
 
 --
--- TOC entry 4996 (class 0 OID 16857)
+-- TOC entry 3468 (class 0 OID 16423)
 -- Dependencies: 229
 -- Data for Name: tenders_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -734,21 +701,21 @@ COPY public.tenders_files (id, name, stage, tender_id) FROM stdin;
 
 
 --
--- TOC entry 4992 (class 0 OID 16713)
--- Dependencies: 225
+-- TOC entry 3472 (class 0 OID 16450)
+-- Dependencies: 233
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.users (id, name, password, salt) FROM stdin;
-1	123	2adae0915d90256a9b351bbb1fc424c8051dbc9e50aa0142795cf7c6313679c9fa9e5d2084dc15df1178b8e8ae609d1da4828e9e2ae39a45bcd6e7baf7d865a7	4bbc21b5c220a97d64eedb2d5d2d1845
-3	admin	a4c7ff39e5c5d3c6689678a7bcee31fc5f600b8fc56b8aa589ae8bfdf3b25878ea0756ddbbec49ce7074a6fd890694e5a01ff00ba3b6598b6fc008d9b436f851	cd7231205416841d9c012f17208c8816
-5	345678	7f820fc07428cb5a163b5b0ab240105a60255f315b7c67d0531043f906699f1b4704f453795f448f41e344bf2df16459d3474bc7ad5ee51da44fb71f8497bcdc	83fc6118709cf9930f35e03692310a24
+COPY public.users (id, name, password, salt, role) FROM stdin;
+5	345678	7f820fc07428cb5a163b5b0ab240105a60255f315b7c67d0531043f906699f1b4704f453795f448f41e344bf2df16459d3474bc7ad5ee51da44fb71f8497bcdc	83fc6118709cf9930f35e03692310a24	viewer
+1	123	2adae0915d90256a9b351bbb1fc424c8051dbc9e50aa0142795cf7c6313679c9fa9e5d2084dc15df1178b8e8ae609d1da4828e9e2ae39a45bcd6e7baf7d865a7	4bbc21b5c220a97d64eedb2d5d2d1845	editor
+3	admin	a4c7ff39e5c5d3c6689678a7bcee31fc5f600b8fc56b8aa589ae8bfdf3b25878ea0756ddbbec49ce7074a6fd890694e5a01ff00ba3b6598b6fc008d9b436f851	cd7231205416841d9c012f17208c8816	admin
 \.
 
 
 --
--- TOC entry 5010 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 3483 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -756,8 +723,8 @@ SELECT pg_catalog.setval('public.companies_id_seq', 55, true);
 
 
 --
--- TOC entry 5011 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 3484 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: contact_persons_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -765,8 +732,8 @@ SELECT pg_catalog.setval('public.contact_persons_id_seq', 182, true);
 
 
 --
--- TOC entry 5012 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3485 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: date_requests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -774,8 +741,8 @@ SELECT pg_catalog.setval('public.date_requests_id_seq', 824, true);
 
 
 --
--- TOC entry 5013 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 3486 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: document_requests_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -783,8 +750,8 @@ SELECT pg_catalog.setval('public.document_requests_files_id_seq', 72, true);
 
 
 --
--- TOC entry 5014 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 3487 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: rebidding_prices_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -792,8 +759,8 @@ SELECT pg_catalog.setval('public.rebidding_prices_files_id_seq', 15, true);
 
 
 --
--- TOC entry 5015 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3488 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: request_prices_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -801,8 +768,8 @@ SELECT pg_catalog.setval('public.request_prices_id_seq', 717, true);
 
 
 --
--- TOC entry 5016 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 3489 (class 0 OID 0)
+-- Dependencies: 230
 -- Name: tender_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -810,8 +777,8 @@ SELECT pg_catalog.setval('public.tender_files_id_seq', 77, true);
 
 
 --
--- TOC entry 5017 (class 0 OID 0)
--- Dependencies: 234
+-- TOC entry 3490 (class 0 OID 0)
+-- Dependencies: 232
 -- Name: tenders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -819,8 +786,8 @@ SELECT pg_catalog.setval('public.tenders_id_seq', 26, true);
 
 
 --
--- TOC entry 5018 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 3491 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -828,7 +795,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 6, true);
 
 
 --
--- TOC entry 4816 (class 2606 OID 16702)
+-- TOC entry 3278 (class 2606 OID 16459)
 -- Name: companies companies_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -837,7 +804,7 @@ ALTER TABLE ONLY public.companies
 
 
 --
--- TOC entry 4818 (class 2606 OID 16704)
+-- TOC entry 3280 (class 2606 OID 16461)
 -- Name: companies companies_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -846,7 +813,7 @@ ALTER TABLE ONLY public.companies
 
 
 --
--- TOC entry 4824 (class 2606 OID 16837)
+-- TOC entry 3282 (class 2606 OID 16463)
 -- Name: contact_persons contact_persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -855,7 +822,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 4828 (class 2606 OID 16886)
+-- TOC entry 3286 (class 2606 OID 16465)
 -- Name: document_requests_files document_requests_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -864,7 +831,7 @@ ALTER TABLE ONLY public.document_requests_files
 
 
 --
--- TOC entry 4812 (class 2606 OID 16531)
+-- TOC entry 3288 (class 2606 OID 16467)
 -- Name: rebidding_prices prices_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -873,7 +840,7 @@ ALTER TABLE ONLY public.rebidding_prices
 
 
 --
--- TOC entry 4830 (class 2606 OID 16899)
+-- TOC entry 3290 (class 2606 OID 16469)
 -- Name: rebidding_prices_files rebidding_prices_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -882,7 +849,7 @@ ALTER TABLE ONLY public.rebidding_prices_files
 
 
 --
--- TOC entry 4814 (class 2606 OID 16543)
+-- TOC entry 3284 (class 2606 OID 16471)
 -- Name: document_requests requests_dates_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -891,7 +858,7 @@ ALTER TABLE ONLY public.document_requests
 
 
 --
--- TOC entry 4826 (class 2606 OID 16864)
+-- TOC entry 3292 (class 2606 OID 16473)
 -- Name: tenders_files tender_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -900,7 +867,7 @@ ALTER TABLE ONLY public.tenders_files
 
 
 --
--- TOC entry 4806 (class 2606 OID 16907)
+-- TOC entry 3294 (class 2606 OID 16475)
 -- Name: tenders tenders_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -909,7 +876,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 4808 (class 2606 OID 16522)
+-- TOC entry 3296 (class 2606 OID 16477)
 -- Name: tenders tenders_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -918,7 +885,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 4810 (class 2606 OID 16524)
+-- TOC entry 3298 (class 2606 OID 16479)
 -- Name: tenders tenders_unique_1; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -927,7 +894,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 4820 (class 2606 OID 16719)
+-- TOC entry 3300 (class 2606 OID 16481)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -936,7 +903,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4822 (class 2606 OID 16721)
+-- TOC entry 3302 (class 2606 OID 16483)
 -- Name: users users_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -945,7 +912,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4835 (class 2606 OID 16838)
+-- TOC entry 3303 (class 2606 OID 16484)
 -- Name: contact_persons contact_persons_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -954,7 +921,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 4837 (class 2606 OID 16887)
+-- TOC entry 3305 (class 2606 OID 16489)
 -- Name: document_requests_files document_requests_files_document_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -963,7 +930,7 @@ ALTER TABLE ONLY public.document_requests_files
 
 
 --
--- TOC entry 4833 (class 2606 OID 16908)
+-- TOC entry 3306 (class 2606 OID 16494)
 -- Name: rebidding_prices prices_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -972,7 +939,7 @@ ALTER TABLE ONLY public.rebidding_prices
 
 
 --
--- TOC entry 4838 (class 2606 OID 16900)
+-- TOC entry 3307 (class 2606 OID 16499)
 -- Name: rebidding_prices_files rebidding_prices_files_rebidding_prices_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -981,7 +948,7 @@ ALTER TABLE ONLY public.rebidding_prices_files
 
 
 --
--- TOC entry 4834 (class 2606 OID 16913)
+-- TOC entry 3304 (class 2606 OID 16504)
 -- Name: document_requests requests_dates_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -990,7 +957,7 @@ ALTER TABLE ONLY public.document_requests
 
 
 --
--- TOC entry 4836 (class 2606 OID 16923)
+-- TOC entry 3308 (class 2606 OID 16509)
 -- Name: tenders_files tender_files_tender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -999,7 +966,7 @@ ALTER TABLE ONLY public.tenders_files
 
 
 --
--- TOC entry 4831 (class 2606 OID 16705)
+-- TOC entry 3309 (class 2606 OID 16514)
 -- Name: tenders tenders_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1008,7 +975,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 4832 (class 2606 OID 16847)
+-- TOC entry 3310 (class 2606 OID 16519)
 -- Name: tenders tenders_contact_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1016,15 +983,9 @@ ALTER TABLE ONLY public.tenders
     ADD CONSTRAINT tenders_contact_person_id_fkey FOREIGN KEY (contact_person_id) REFERENCES public.contact_persons(id);
 
 
--- Completed on 2025-01-07 00:57:26
+-- Completed on 2025-01-27 17:56:12
 
 --
 -- PostgreSQL database dump complete
---
-
--- Completed on 2025-01-07 00:57:26
-
---
--- PostgreSQL database cluster dump complete
 --
 
