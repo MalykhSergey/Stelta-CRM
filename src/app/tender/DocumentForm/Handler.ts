@@ -1,12 +1,14 @@
 "use server";
 import { handleDatabaseError } from '@/config/Database';
+import logger from '@/config/Logger';
 import FileName, { FileType } from '@/models/Tender/FileName';
 import tenderStorage from '@/models/Tender/TenderStorage';
+import { User } from '@/models/User/User';
 import { authAction } from "@/models/User/UserService";
 import fs from 'fs/promises';
 
 export async function uploadHandler(formData: FormData) {
-    return authAction(async () => {
+    return authAction(async (user: User) => {
         const files = formData.getAll('file') as File[]
         const tenderId = formData.get('tenderId')?.toString()
         const stage = formData.get('stage')?.toString()
@@ -31,6 +33,7 @@ export async function uploadHandler(formData: FormData) {
                 const folderPath = `${process.env.FILE_UPLOAD_PATH}/${FileName.getFolderPath(newFile)}`
                 await fs.mkdir(folderPath, { recursive: true })
                 await fs.writeFile(`${folderPath}/${fileName}`, Buffer.from(await file.arrayBuffer()));
+                logger.info(`${user.name} upload file ${fileName} in tender ${tenderId} parent ${parentId} type ${fileType}`);
                 fileNames.push({ ...newFile })
             }
         }
@@ -39,8 +42,9 @@ export async function uploadHandler(formData: FormData) {
 }
 
 export async function deleteHandler(fileName: FileName) {
-    return authAction(async () => {
+    return authAction(async (user: User) => {
         try {
+            logger.info(`${user.name} delete file ${fileName.name} in tender ${fileName.tenderId} parent ${fileName.parentId} type ${fileName.fileType}`);
             await tenderStorage.deleteFile(fileName)
             await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${FileName.getFolderPath(fileName)}`, { recursive: true })
         } catch (e) {

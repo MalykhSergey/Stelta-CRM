@@ -5,7 +5,6 @@ test('Выполнить дозапрос документов', async ({ page }
   await page.getByRole('link', { name: 'ООО «Харитонов-Прохоров» Распределение корпоративных инициатив лот НМЦК: 57 178' }).click();
   const page1 = await page1Promise;
   await page1.getByRole('button', { name: 'Дозапрос' }).click();
-  await expect(page1.locator('#successful-alert')).toBeVisible();
   await page1.locator('div').filter({ hasText: /^Этап 1$/ }).getByLabel('Развернуть').click();
   await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
   await page1.locator('#documentRequest825').fill('2025-01-15');

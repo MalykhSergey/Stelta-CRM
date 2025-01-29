@@ -12,6 +12,11 @@ services:
       - ./test-db-dump.sql:/docker-entrypoint-initdb.d/init.sql
     tmpfs:
       - /var/lib/postgresql/data
+    healthcheck: # Добавьте проверку готовности PostgreSQL
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 5s
+      retries: 10
 
   nextjs:
     build:
@@ -20,4 +25,5 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy

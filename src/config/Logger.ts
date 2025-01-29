@@ -22,10 +22,10 @@ if (process.env.LOG_TO_FILE === 'true') {
     transports.push(
         new DailyRotateFile({
             filename: `${logDir}/%DATE%-results.log`,
-            datePattern: 'YYYY-MM-DD',
+            datePattern: 'DD-MM-YYYY',
             zippedArchive: true,
             maxSize: '20m',
-            maxFiles: '7d',
+            maxFiles: '14d',
             format: winston.format.combine(
                 winston.format.timestamp(),
                 winston.format.json()
@@ -33,6 +33,22 @@ if (process.env.LOG_TO_FILE === 'true') {
         })
     );
 }
+
+console.log = (...args) => {
+    logger.info(...args);
+};
+
+console.error = (...args) => {
+    logger.error(...args);
+};
+
+console.warn = (...args) => {
+    logger.warn(...args);
+};
+
+console.info = (...args) => {
+    logger.info(...args);
+};
 
 const logger = winston.createLogger({
     level: process.env.LOG_LEVEL,
