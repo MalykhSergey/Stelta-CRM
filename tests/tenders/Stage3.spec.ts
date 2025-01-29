@@ -1,4 +1,5 @@
 import { expect, test } from "../login-fixture";
+import {files_for_upload} from "./files_for_upload/files_path";
 
 test('Проверить форму этапа 3', async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/tender/24")
@@ -6,9 +7,7 @@ test('Проверить форму этапа 3', async ({ page }) => {
     await expect(page.getByLabel('Номер заключения договора:')).toHaveValue('Контракт 329');
     await page.getByLabel('Прикрепить').click();
     await page.locator('input[type="file"]').setInputFiles([
-        './tests/tenders/files_for_upload/4.png',
-        './tests/tenders/files_for_upload/5.png',
-        './tests/tenders/files_for_upload/6.png'
+        files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
     await page.getByLabel('Дата заключения договора:').fill('2025-01-01');
     await page.getByLabel('Номер заключения договора:').click();

@@ -1,4 +1,5 @@
 import { expect, test } from "../login-fixture";
+import {files_for_upload} from "./files_for_upload/files_path";
 
 test.describe('Авторизованные тесты', () => {
   test('Создать новый тендер', async ({ page }) => {
@@ -51,9 +52,7 @@ test.describe('Авторизованные тесты', () => {
     const documentsForm = page1.getByLabel('Документы тендера');
     await documentsForm.getByLabel('Прикрепить').click();
     await documentsForm.locator('input[type="file"]').setInputFiles([
-      './tests/tenders/files_for_upload/4.png',
-      './tests/tenders/files_for_upload/5.png',
-      './tests/tenders/files_for_upload/6.png'
+      files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
     await expect(documentsForm).toMatchAriaSnapshot(`
          - heading "Документы тендера" [level=3]
@@ -228,15 +227,11 @@ test.describe('Авторизованные тесты', () => {
     const page1Promise = page.waitForEvent('popup');
     const page1 = await page1Promise;
     page1.locator('input[type="file"]').setInputFiles([
-      './tests/tenders/files_for_upload/4.png',
-      './tests/tenders/files_for_upload/5.png',
-      './tests/tenders/files_for_upload/6.png'
+      files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
     await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
     await page1.getByLabel('Дозапрос документов 1').locator('input[type="file"]').setInputFiles([
-      './tests/tenders/files_for_upload/4.png',
-      './tests/tenders/files_for_upload/5.png',
-      './tests/tenders/files_for_upload/6.png'
+      files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
     await page1.getByLabel('Дата предоставления ответа').fill('2025-01-01');
     await page1.getByRole('button', { name: 'Дозапрос документов' }).click();

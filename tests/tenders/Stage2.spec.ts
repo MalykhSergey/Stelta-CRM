@@ -1,4 +1,5 @@
 import { expect, test } from "../login-fixture";
+import {files_for_upload} from "./files_for_upload/files_path";
 
 test('Выполнить дозапрос документов', async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/tender/15")
@@ -18,17 +19,15 @@ test('Проверить форму этапа 2', async ({ page }) => {
     await expect(page.locator('#Price')).toHaveValue('9,625.71₽');
     await page.getByLabel('Документы 2 этапа').getByLabel('Прикрепить').click();
     await page.getByLabel('Документы 2 этапа').locator('input[type="file"]').setInputFiles([
-        './tests/tenders/files_for_upload/4.png',
-        './tests/tenders/files_for_upload/5.png',
-        './tests/tenders/files_for_upload/6.png'
+        files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
     await page.getByLabel('Переторжка').getByLabel('Прикрепить').click();
     await page.getByLabel('Переторжка').locator('input[type="file"]').setInputFiles([
-        './tests/tenders/files_for_upload/5.png',
+        files_for_upload[1]
     ]);
     await page.getByLabel('Формы 2 этапа').getByLabel('Прикрепить').click();
     await page.getByLabel('Формы 2 этапа').locator('input[type="file"]').setInputFiles([
-        './tests/tenders/files_for_upload/6.png'
+        files_for_upload[2]
     ]);
     await page.locator('#RebPrice707').click();
     await page.locator('#RebPrice707').fill('100.12₽');
