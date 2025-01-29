@@ -33,6 +33,7 @@ class TenderStorage {
     async deleteTender(tenderId: number) {
         try {
             await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}`, { recursive: true })
         } catch (e) {
             return handleDatabaseError(e, {
                 '23503': 'Невозможно удалить тендер: имеются связанные данные (дозапросы, переторжки, файлы)!',
