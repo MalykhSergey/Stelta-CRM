@@ -1,18 +1,18 @@
 "use server"
-import tenderStorage from "../Tender/TenderStorage";
 import {authAction} from "../User/UserService";
 import CompanyStorage from "@/models/Company/CompanyStorage";
 
 export async function getCompaniesWithPersons() {
     return JSON.stringify(await CompanyStorage.getCompaniesWithPersons());
 }
+
 export async function getCompanies() {
     return await CompanyStorage.getCompanies();
 }
 
 export async function createCompany(name: string) {
     return authAction(async () => {
-        return await tenderStorage.createCompany(name)
+        return await CompanyStorage.createCompany(name)
     });
 }
 

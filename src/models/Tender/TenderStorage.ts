@@ -1,31 +1,18 @@
-import logger from "@/config/Logger";
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 import fs from 'fs/promises';
-import connection, { handleDatabaseError } from "../../config/Database";
-import { ContactPerson } from '../Company/ContactPerson/ContactPerson';
-import FileName, { FileType } from "./FileName";
-import { Tender } from "./Tender";
+import connection, {handleDatabaseError} from "../../config/Database";
+import {ContactPerson} from '../Company/ContactPerson/ContactPerson';
+import FileName, {FileType} from "./FileName";
+import {Tender} from "./Tender";
 
 class TenderStorage {
-    async getCompanies() {
-        return (await connection.query(`SELECT * FROM companies`)).rows
-    }
-
-    async createCompany(name: string) {
-        try {
-            return (await connection.query(`INSERT INTO companies("name") values($1) RETURNING id`, [name])).rows[0].id
-        } catch (e) {
-            logger.error(e)
-            return { error: "Ошибка создания организации. Возможно такая уже есть!" }
-        }
-    }
 
     async createTender(status = 0) {
         try {
             return (await connection.query(`INSERT into tenders("status") values($1) RETURNING ID`, [status])).rows[0].id
         } catch (e) {
             return handleDatabaseError(e,
-                { '23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!', },
+                {'23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!',},
                 'Ошибка создания тендера');
         }
     }
@@ -33,7 +20,7 @@ class TenderStorage {
     async deleteTender(tenderId: number) {
         try {
             await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
-            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}`, { recursive: true })
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}`, {recursive: true})
         } catch (e) {
             return handleDatabaseError(e, {
                 '23503': 'Невозможно удалить тендер: имеются связанные данные (дозапросы, переторжки, файлы)!',
@@ -48,8 +35,7 @@ class TenderStorage {
                     const result = await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
                     if (result?.error)
                         return result
-                }
-                else {
+                } else {
                     const result = await ContactPersonStorage.createContactPerson(tender.contactPerson, tender.company.id)
                     if (result?.error)
                         return result
@@ -119,7 +105,7 @@ class TenderStorage {
             }
         } catch (e) {
             return handleDatabaseError(e,
-                { '23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!', },
+                {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
                 'Ошибка обновления тендера');
         }
     }
@@ -228,7 +214,7 @@ class TenderStorage {
         try {
             await connection.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])
             await connection.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
-            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, { recursive: true })
+            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, {recursive: true})
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
         }
@@ -238,7 +224,7 @@ class TenderStorage {
         try {
             await connection.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])
             await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
-            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, { recursive: true })
+            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, {recursive: true})
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');
         }
