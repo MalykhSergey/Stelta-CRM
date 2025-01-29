@@ -12,11 +12,12 @@ import { useState } from "react"
 import { useAuth } from "../AuthContext"
 import { showMessage } from "../components/Alerts/Alert"
 import styles from "./page.module.css"
+import {Role} from "@/models/User/User";
 
 export default function ClientCompanies({ companiesProps }: { companiesProps: string }) {
     const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
     const auth = useAuth()
-    const isAuth = !!auth.user
+    const isAuth = auth.user.name != "" && auth.user.role != Role.Viewer
     async function createCompanyHandler(formData: FormData) {
         const company_name = formData.get('company') as string
         const result = await createCompany(company_name)

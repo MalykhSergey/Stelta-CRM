@@ -16,6 +16,7 @@ import styles from "./TenderPageClient.module.css";
 import Company from '@/models/Company/Company';
 import {useAuth} from "@/app/AuthContext";
 import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
+import {Role} from "@/models/User/User";
 
 const getGreenButtonText = (status: number) => {
     switch (status) {
@@ -58,13 +59,13 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
     const companies = useLocalObservable(() => Company.fromJSONArray(props.companies))
     const tender = useLocalObservable(() => {
         const temp = Tender.fromJSON(props.tender)
-        if (temp.company.id !=0)
+        if (temp.company.id != 0)
             temp.company = companies.find(company => company.id === temp.company.id)!
         return temp
     })
     const router = useRouter()
     const auth = useAuth()
-    const isAuth = auth.user.name != ''
+    const isAuth = auth.user.name != '' && auth.user.role != Role.Viewer
     let isEditable = {
         status: isAuth,
         isSpecial: false,
@@ -137,10 +138,14 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
                 <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                               title='Документы тендера' isEditable={tender.status == 0} className='card' isOpened={isEditable.company}/>
-                {Math.abs(tender.status) >= 1 && <StageForm1 tender={tender} isEditable={tender.status == 1 && isAuth}/>}
-                {Math.abs(tender.status) >= 3 && <StageForm2 tender={tender} isEditable={tender.status == 3 && isAuth}/>}
-                {Math.abs(tender.status) >= 5 && <StageForm3 tender={tender} isEditable={tender.status == 5 && isAuth}/>}
+                               title='Документы тендера' isEditable={tender.status == 0} className='card'
+                               isOpened={isEditable.company}/>
+                {Math.abs(tender.status) >= 1 &&
+                    <StageForm1 tender={tender} isEditable={tender.status == 1 && isAuth}/>}
+                {Math.abs(tender.status) >= 3 &&
+                    <StageForm2 tender={tender} isEditable={tender.status == 3 && isAuth}/>}
+                {Math.abs(tender.status) >= 5 &&
+                    <StageForm3 tender={tender} isEditable={tender.status == 5 && isAuth}/>}
                 <CommentsForm tender={tender}/>
                 {isAuth && <div className={styles.buttonRow}>
                     {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) &&
