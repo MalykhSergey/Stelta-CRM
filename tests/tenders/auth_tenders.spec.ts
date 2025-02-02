@@ -15,20 +15,22 @@ test.describe('Авторизованные тесты', () => {
     await page.getByLabel('Организация:').selectOption('54');
     await page.getByLabel('Контактное лицо:').click();
     await page.getByText('Жуков Якуб Ефимьевич').click();
+    await page.getByLabel('Полное наименование:').fill('Тестовое наименование тендера');
+    await page.getByLabel('Реестровый номер :').fill('Тестовый Реестровый №');
+    await page.getByLabel('Лот номер:').fill('Тестовый Лот №');
+    await page.getByLabel('Дата начала 1-го этапа:').fill('2025-01-09T00:00');
     await expect(page.getByLabel('Контактное лицо:')).toHaveValue('Жуков Якуб Ефимьевич');
     await expect(page.getByLabel('Номер телефона:')).toHaveValue('+72172830985');
     await expect(page.getByLabel('Электронная почта:')).toHaveValue('vlasvinogradov@example.org');
     await expect(page.getByLabel('Организация:')).toHaveValue('54');
-    await page.getByLabel('Полное наименование:').click();
-    await page.getByLabel('Полное наименование:').fill('Тестовое наименование тендера');
-    await page.getByLabel('Реестровый номер :').click();
-    await page.getByLabel('Реестровый номер :').fill('Тестовый Реестровый №');
-    await page.getByLabel('Лот номер:').click();
-    await page.getByLabel('Лот номер:').fill('Тестовый Лот №');
+    await expect(page.getByLabel('Дата начала 1-го этапа:')).toHaveValue('2025-01-09T00:00');
     await expect(page.getByLabel('Полное наименование:')).toHaveValue('Тестовое наименование тендера');
     await expect(page.getByLabel('Реестровый номер :')).toHaveValue('Тестовый Реестровый №');
     await expect(page.getByLabel('Лот номер:')).toHaveValue('Тестовый Лот №');
-    await expect(page.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
+    await page.getByRole('button', { name: 'Сохранить' }).click();
+    await expect(page.locator('#successful-alert')).toBeVisible();
+    await page.reload()
+    await expect(page.getByText('Документы тендераКомментарииНовый тендерУчаствоватьСохранитьУдалить')).toMatchAriaSnapshot(`
           - heading "Документы тендера" [level=3]
           - button "Прикрепить"
           - heading "Комментарии" [level=3]
@@ -39,8 +41,6 @@ test.describe('Авторизованные тесты', () => {
           - button "Сохранить"
           - button "Удалить"
           `);
-    await page.getByRole('button', { name: 'Сохранить' }).click();
-    await expect(page.locator('#successful-alert')).toBeVisible();
     await page.getByRole('link', { name: 'Торги' }).click();
     await expect(page.getByRole('main')).toMatchAriaSnapshot(`- 'link "Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽"'`);
   });

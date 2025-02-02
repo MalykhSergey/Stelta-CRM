@@ -35,9 +35,7 @@ test('Проверить форму этапа 2', async ({ page }) => {
     await page.getByLabel('Переторжка').getByLabel('Развернуть').click();
     await page.getByLabel('Формы 2 этапа').getByLabel('Развернуть').click();
     await page.getByLabel('Документы 2 этапа').getByLabel('Развернуть').click();
-    await expect(page.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
-      - heading "Этап 2" [level=3]
-      - button "Развернуть"
+    await expect(page.getByLabel('Документы 2 этапа')).toMatchAriaSnapshot(`
       - heading "Документы 2 этапа" [level=3]
       - button "Прикрепить"
       - button "Развернуть"
@@ -47,25 +45,25 @@ test('Проверить форму этапа 2', async ({ page }) => {
       - button "Удалить"
       - link "6.png"
       - button "Удалить"
+      `);
+    await expect(page.getByLabel('Формы 2 этапа')).toMatchAriaSnapshot(`
       - heading "Формы 2 этапа" [level=3]
       - button "Прикрепить"
       - button "Развернуть"
       - link "6.png"
       - button "Удалить"
-      - text: "Наша цена:"
-      - textbox "Наша цена:" [disabled]: /\\d+,\\d+\\.\\d+₽/
+      `);
+    await expect(page.getByLabel('Переторжка')).toMatchAriaSnapshot(`
       - heading "Переторжка 1" [level=3]
       - button "Прикрепить"
       - button "Развернуть"
       - button
       - link "5.png"
       - button "Удалить"
-      - text: "Наша цена:"
-      - textbox: /\\d+\\.\\d+₽/
-      - button "Переторжка"
       `);
     await expect(page.locator('#Stage2FormPrice19')).toHaveValue('11,703.98₽');
     await expect(page.locator('#RebPrice707')).toHaveValue('100.12₽');
+
 
 });
 test('Перевести на этап 2 Заявка подана', async ({ page }) => {

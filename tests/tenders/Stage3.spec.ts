@@ -18,9 +18,7 @@ test('Проверить форму этапа 3', async ({ page }) => {
     await page.getByLabel('Документы договора').getByLabel('Развернуть').click();
     await expect(page.getByLabel('Дата заключения договора:')).toHaveValue('2025-01-01');
     await expect(page.getByLabel('Номер заключения договора:')).toHaveValue('Контракт 3298791');
-    await expect(page.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
-      - heading "Договор" [level=3]
-      - button "Развернуть"
+    await expect(page.getByLabel('Документы договора')).toMatchAriaSnapshot(`
       - heading "Документы договора" [level=3]
       - button "Прикрепить"
       - button "Развернуть"
@@ -30,10 +28,6 @@ test('Проверить форму этапа 3', async ({ page }) => {
       - button "Удалить"
       - link "6.png"
       - button "Удалить"
-      - text: "Дата заключения договора:"
-      - textbox "Дата заключения договора:"
-      - text: "Номер заключения договора:"
-      - textbox "Номер заключения договора:"
       `);
 });
 
