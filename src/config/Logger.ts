@@ -9,7 +9,7 @@ if (process.env.LOG_TO_CONSOLE === 'true') {
         new winston.transports.Console({
             format: winston.format.combine(
                 winston.format.colorize(),
-                winston.format.timestamp(),
+                winston.format.timestamp({ format: 'DD.MM.YYYY HH:mm:ss' }),
                 winston.format.printf(({timestamp, level, message}) => {
                     return `${timestamp} ${level}: ${message}`;
                 })
@@ -21,13 +21,13 @@ if (process.env.LOG_TO_CONSOLE === 'true') {
 if (process.env.LOG_TO_FILE === 'true') {
     transports.push(
         new DailyRotateFile({
-            filename: `${logDir}/%DATE%-results.log`,
-            datePattern: 'DD-MM-YYYY',
+            filename: `${logDir}/%DATE%.log`,
+            datePattern: 'DD.MM.YYYY',
             zippedArchive: true,
             maxSize: '20m',
             maxFiles: '14d',
             format: winston.format.combine(
-                winston.format.timestamp(),
+                winston.format.timestamp({ format: 'DD.MM.YYYY HH:mm:ss' }),
                 winston.format.json()
             )
         })
