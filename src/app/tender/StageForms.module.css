@@ -13,19 +13,39 @@
     gap: 20px;
 }
 
-.dynamicSizeForm > .hiddenContent {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    margin-top: 0;
-    opacity: 0;
-    max-height: 0;
-    transition: all 0.5s ease;
+@supports not (interpolate-size: allow-keywords) {
+    .dynamicSizeForm>.hiddenContent {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin-top: 0;
+        opacity: 0;
+        max-height: 0;
+        transition: all 0.5s ease;
+    }
+
+    .dynamicSizeForm.expanded>.hiddenContent {
+        overflow: visible;
+        margin-top: 10px;
+        max-height: 100%;
+        opacity: 1;
+    }
 }
 
-.dynamicSizeForm.expanded > .hiddenContent {
-    overflow: visible;
-    margin-top: 10px;
-    max-height: 100%;
-    opacity: 1;
+@supports (interpolate-size: allow-keywords) {
+    .dynamicSizeForm {
+        overflow: hidden;
+        transition: all 0.5s ease;
+        height: 80px;
+    }
+
+    .dynamicSizeForm>.hiddenContent {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+    }
+
+    .dynamicSizeForm.expanded {
+        height: fit-content;
+    }
 }

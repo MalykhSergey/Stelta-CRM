@@ -1,5 +1,6 @@
 :root {
     --border: rgb(204, 204, 204);
+    interpolate-size: allow-keywords;
 }
 *{
     font-family: var(--default-font), sans-serif;
