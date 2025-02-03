@@ -9,7 +9,7 @@ test('Выполнить дозапрос документов', async ({ page }
   await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
   await page1.locator('#documentRequest825').fill('2025-01-15');
   await page1.getByRole('button', { name: 'Сохранить' }).click();
-  await expect(page1.locator('#successful-alert')).toBeVisible();
+  await expect(page1.getByLabel("successful")).toBeVisible();
   await page1.reload()
   await expect(page1.getByLabel('Формы 1 этапа')).toMatchAriaSnapshot(`
         - heading "Формы 1 этапа" [level=3]

@@ -1,38 +1,93 @@
-import {faCheck, faExclamation} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+"use client"
+import { faCheck, faExclamation } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { makeAutoObservable } from "mobx";
+import { observer } from "mobx-react-lite";
 import styles from "./Alert.module.css";
-
-const timers: { [x: string]: (NodeJS.Timeout | number)[] } = {
-    error: [0, 0],
-    successful: [0, 0],
-};
-export const showMessage = (message: string, type: string = 'error') => {
-    const alert = document.getElementById(`${type}-alert`)
-    const alert_text = document.getElementById(`${type}-text`)
-    if (alert && alert_text) {
-        alert_text.textContent = message
-        alert.style.display = "flex"
-        alert.style.opacity = '1'
-        clearTimeout(timers[type][0])
-        clearTimeout(timers[type][1])
-        timers[type][0] = setTimeout(() => {
-            alert.style.opacity = '0'
-        }, 4000);
-        timers[type][1] = setTimeout(() => {
-            alert.style.display = "none"
-        }, 7000);
+enum AlertType {
+  successful = "successful", error = "error"
+}
+class Alert {
+  type: AlertType = AlertType.error
+  hiding: boolean = false
+  deleted: boolean = false
+  message: string = ""
+  timers: NodeJS.Timeout[] = []
+  id = 0
+  constructor(message: string, type: string) {
+    this.message = message
+    if (type === 'successful') {
+      this.type = AlertType.successful
     }
+    else {
+      this.type = AlertType.error
+    }
+    makeAutoObservable(this)
+    this.timers.push(setTimeout(() => {
+      this.hiding = true
+    }, 1500),
+      setTimeout(() => {
+        this.deleted = true
+      }, 4500))
+  }
+}
+class AlertStorage {
+  id = 0
+  messages: Alert[] = []
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+  push(alert: Alert) {
+    alert.id = this.id++
+    this.messages.push(alert)
+    alert.timers.push(setTimeout(() => {
+      this.remove(alert)
+    }, 6750))
+  }
+  remove(alert: Alert) {
+    alert.timers.forEach(timer => {
+      clearTimeout(timer)
+    })
+    this.messages = this.messages.filter(value => {
+      return value.id !== alert.id
+    })
+  }
+}
+
+const alertStorage = new AlertStorage()
+
+export const showMessage = (message: string, type: string = 'error') => {
+  alertStorage.push(new Alert(message, type))
 };
 
-export const AlertContainer = () => (
-    <div className={styles.container}>
-        <div className={`${styles.error} ${styles.alert}`} id="error-alert"><FontAwesomeIcon icon={faExclamation}
-                                                                                             style={{height: '20px'}}></FontAwesomeIcon>
-            <div id="error-text"></div>
-        </div>
-        <div className={`${styles.successful} ${styles.alert}`} id="successful-alert"><FontAwesomeIcon icon={faCheck}
-                                                                                                       style={{height: '20px'}}></FontAwesomeIcon>
-            <div id="successful-text"></div>
-        </div>
+export const AlertContainer = observer(() => {
+  const handleClick = (alert: Alert) => {
+    alertStorage.remove(alert)
+  };
+  const messages = alertStorage.messages.map((alert) => {
+    let icon = faCheck
+    if (alert.type === AlertType.error) {
+      icon = faExclamation
+    }
+    let isVisible = ""
+    if (alert.hiding) {
+      isVisible = styles.hidden
+    }
+    let isDeleted = ""
+    if (alert.deleted) {
+      isDeleted = styles.deleted
+    }
+    return (
+      <div className={`${styles[alert.type]} ${styles.alert} ${isVisible} ${isDeleted}`} key={alert.id} onClick={() => handleClick(alert)} aria-label={alert.type}>
+        <FontAwesomeIcon icon={icon} style={{ height: '20px' }} />
+        <div>{alert.message}</div>
+      </div>
+    )
+  })
+  return (
+    <div className={styles.container} id="alerts-container">
+      {messages}
     </div>
-);
+  )
+});

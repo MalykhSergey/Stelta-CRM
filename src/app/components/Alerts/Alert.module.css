@@ -1,7 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    max-width: 30%;
+    max-width: 400px;
     gap: 20px;
     position: fixed;
     z-index: 10;
@@ -10,15 +10,26 @@
 }
 
 .alert {
-    display: none;
+    display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
     gap: 20px;
     padding: 10px 20px;
     border-radius: 8px;
     max-width: 400px;
-    transition: all 3s ease;
+    height: auto;
+    overflow: hidden;
+    transition: opacity ease 3s, height, padding, margin ease 0.75s;
+}
+
+.alert.hidden {
+    opacity: 0;
+}
+
+.alert.deleted {
+    margin-top: -20px;
+    height: 0;
+    padding: 0;
 }
 
 .error {

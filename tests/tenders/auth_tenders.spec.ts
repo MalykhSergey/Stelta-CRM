@@ -28,7 +28,7 @@ test.describe('Авторизованные тесты', () => {
     await expect(page.getByLabel('Реестровый номер :')).toHaveValue('Тестовый Реестровый №');
     await expect(page.getByLabel('Лот номер:')).toHaveValue('Тестовый Лот №');
     await page.getByRole('button', { name: 'Сохранить' }).click();
-    await expect(page.locator('#successful-alert')).toBeVisible();
+    await expect(page.getByLabel("successful")).toBeVisible();
     await page.reload()
     await expect(page.getByText('Документы тендераКомментарииНовый тендерУчаствоватьСохранитьУдалить')).toMatchAriaSnapshot(`
           - heading "Документы тендера" [level=3]
@@ -212,7 +212,7 @@ test.describe('Авторизованные тесты', () => {
     await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
     const page1 = await page1Promise;
     await page1.getByRole('button', { name: 'Участвовать' }).click();
-    await expect(page1.locator('#successful-alert')).toBeVisible();
+    await expect(page1.getByLabel("successful")).toBeVisible();
     await expect(page1.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
           - heading "Этап 1" [level=3]
           - button "Развернуть"
@@ -276,7 +276,7 @@ test.describe('Авторизованные тесты', () => {
     await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
     const page1 = await page1Promise;
     await page1.getByRole('button', { name: 'Подать заявку' }).click();
-    await expect(page1.locator('#successful-alert')).toBeVisible();
+    await expect(page1.getByLabel("successful")).toBeVisible();
     await expect(page1.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
       - heading "Документы тендера" [level=3]
       - button "Развернуть"

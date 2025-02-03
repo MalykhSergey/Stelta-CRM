@@ -4,7 +4,7 @@ import {files_for_upload} from "./files_for_upload/files_path";
 test('Выполнить дозапрос документов', async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/tender/15")
     await page.getByRole('button', { name: 'Сметный расчёт' }).click();
-    await expect(page.locator('#successful-alert')).toBeVisible();
+    await expect(page.getByLabel("successful")).toBeVisible();
     await expect(page.getByLabel('Статус:')).toHaveValue('3');
     await expect(page.getByRole('button', { name: 'Переторжка' })).toBeVisible();
 });
@@ -69,14 +69,14 @@ test('Проверить форму этапа 2', async ({ page }) => {
 test('Перевести на этап 2 Заявка подана', async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/tender/19")
     await page.getByRole('button', { name: 'Подать заявку' }).click();
-    await expect(page.locator('#successful-alert')).toBeVisible();
+    await expect(page.getByLabel("successful")).toBeVisible();
     await page.reload()
     await expect(page.getByLabel('Статус:')).toHaveValue('4');
 });
 test('Вернуться на предыдущий этап', async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/tender/19")
     await page.getByRole('button', { name: 'Переторжка' }).click();
-    await expect(page.locator('#successful-alert')).toBeVisible();
+    await expect(page.getByLabel("successful")).toBeVisible();
     await page.reload()
     await expect(page.getByLabel('Статус:')).toHaveValue('3');
 })
