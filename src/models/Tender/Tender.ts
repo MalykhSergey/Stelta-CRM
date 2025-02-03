@@ -1,10 +1,10 @@
+import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson"
 import { makeAutoObservable } from "mobx"
 import { Result } from "../../app/Result"
+import Company from "../Company/Company"
 import { DocumentRequest } from "./DocumentRequest"
 import FileName from "./FileName"
 import { RebiddingPrice } from "./RebiddingPrice"
-import Company from "../Company/Company"
-import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
 
 export class Tender {
     public id: number = 0
@@ -22,6 +22,7 @@ export class Tender {
     public date_finish = ''
     public startDateRange = 0
     public endDateRange = 0
+    public statusDate = 0
     public contractDate = ''
     public contractNumber = ''
     public contactPerson: ContactPerson = new ContactPerson(0, '', '', '')
@@ -56,6 +57,7 @@ export class Tender {
         tender.date1_finish = row.date1_finish
         tender.date2_finish = row.date2_finish
         tender.date_finish = row.date_finish
+        tender.statusDate = tender.getStatusDate()
         tender.startDateRange = new Date(row.date1_start).getTime()
         const date1 = new Date(row.date1_finish).getTime()
         const date2 = new Date(row.date2_finish).getTime()
@@ -91,6 +93,7 @@ export class Tender {
         tender.date_finish = obj.date_finish
         tender.startDateRange = obj.startDateRange
         tender.endDateRange = obj.endDateRange
+        tender.statusDate = obj.statusDate
         tender.contractNumber = obj.contractNumber
         tender.contractDate = obj.contractDate
         tender.contactPerson = makeAutoObservable(new ContactPerson(obj.contactPerson.id, obj.contactPerson.name, obj.contactPerson.phoneNumber, obj.contactPerson.email))
@@ -260,5 +263,22 @@ export class Tender {
 
     public get isValid(): boolean {
         return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.phoneNumber != '' && this.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
+    }
+
+    public getStatusDate() {
+        switch (this.status) {
+            case 1:
+                return new Date(this.date1_start).getTime()
+            case 2:
+                return new Date(this.date1_finish).getTime()
+            case 3:
+                return new Date(this.date2_finish).getTime()
+            case 4:
+                return new Date(this.date2_finish).getTime()
+            case 5:
+                return new Date(this.date_finish).getTime()
+            default:
+                return 0
+        }
     }
 }  

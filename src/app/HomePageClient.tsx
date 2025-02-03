@@ -32,7 +32,7 @@ export function HomePageClient({tendersJSON}: { tendersJSON: string }) {
                                    onClick={() => createTenderHandler(0)}><span>Добавить тендер</span>
                     <FontAwesomeIcon icon={faOutdent} style={{height: '20px'}}/>
                 </button>}
-                <TendersFilter allTenders={allTenders} setTenders={setTenders} hideOtherStatuses={true}/>
+                <TendersFilter allTenders={allTenders} setTenders={setTenders} simpleRange={true}/>
             </div>
             <div className={` ${styles.column}`}>
                 <h3 className={`${styles.columnHeader}  rounded shadowed`} id={styles.first}>Новый тендер </h3>
