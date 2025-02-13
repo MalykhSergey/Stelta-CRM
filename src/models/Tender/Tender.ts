@@ -26,8 +26,6 @@ export class Tender {
     public contractDate = ''
     public contractNumber = ''
     public contactPerson: ContactPerson = new ContactPerson(0, '', '', '')
-    public phoneNumber: string = ''
-    public email: string = ''
     public comments: string[] = ['', '', '', '', '', '']
     public stagedFileNames: FileName[][] = [[], [], [], [], [], [], []]
     public rebiddingPrices: RebiddingPrice[] = []
@@ -204,25 +202,6 @@ export class Tender {
         this.contactPerson = value
     }
 
-    setPhoneNumber(value: string): Result<string, string> {
-        this.phoneNumber = value
-        if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
-        }
-        return { ok: true, value: '' }
-    }
-
-    setEmail(value: string): Result<string, string> {
-        this.email = value
-        if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
-        }
-        if (!this.email.includes('@')) {
-            return { ok: false, error: 'Email не содержит @!' }
-        }
-        return { ok: true, value: '' }
-    }
-
     setContractNumber(value: string): Result<string, string> {
         this.contractNumber = value
         if (value == "") {
@@ -262,7 +241,7 @@ export class Tender {
     }
 
     public get isValid(): boolean {
-        return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.phoneNumber != '' && this.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
+        return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.contactPerson.phoneNumber != '' && this.contactPerson.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
     }
 
     public getStatusDate() {
