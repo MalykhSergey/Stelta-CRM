@@ -1,11 +1,11 @@
 "use client"
-import { faCheck, faExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faExclamation, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react-lite";
 import styles from "./Alert.module.css";
 enum AlertType {
-  successful = "successful", error = "error"
+  successful = "successful", error = "error", info = "info"
 }
 class Alert {
   type: AlertType = AlertType.error
@@ -14,21 +14,24 @@ class Alert {
   message: string = ""
   timers: NodeJS.Timeout[] = []
   id = 0
-  constructor(message: string, type: string) {
+  constructor(message: string, type: string, timeDelay = 0) {
     this.message = message
     if (type === 'successful') {
       this.type = AlertType.successful
     }
-    else {
+    else if (type === "error") {
       this.type = AlertType.error
+    }
+    else if (type === "info") {
+      this.type = AlertType.info
     }
     makeAutoObservable(this)
     this.timers.push(setTimeout(() => {
       this.hiding = true
-    }, 1500),
+    }, 1500 + timeDelay),
       setTimeout(() => {
         this.deleted = true
-      }, 4500))
+      }, 4500 + timeDelay))
   }
 }
 class AlertStorage {
@@ -57,8 +60,8 @@ class AlertStorage {
 
 const alertStorage = new AlertStorage()
 
-export const showMessage = (message: string, type: string = 'error') => {
-  alertStorage.push(new Alert(message, type))
+export const showMessage = (message: string, type: string = 'error', timeDelay = 0) => {
+  alertStorage.push(new Alert(message, type, timeDelay))
 };
 
 export const AlertContainer = observer(() => {
@@ -69,6 +72,9 @@ export const AlertContainer = observer(() => {
     let icon = faCheck
     if (alert.type === AlertType.error) {
       icon = faExclamation
+    }
+    if (alert.type === AlertType.info) {
+      icon = faInfo
     }
     let isVisible = ""
     if (alert.hiding) {
@@ -81,7 +87,7 @@ export const AlertContainer = observer(() => {
     return (
       <div className={`${styles[alert.type]} ${styles.alert} ${isVisible} ${isDeleted}`} key={alert.id} onClick={() => handleClick(alert)} aria-label={alert.type}>
         <FontAwesomeIcon icon={icon} style={{ height: '20px' }} />
-        <div>{alert.message}</div>
+        <div dangerouslySetInnerHTML={{ __html: alert.message }} />
       </div>
     )
   })
