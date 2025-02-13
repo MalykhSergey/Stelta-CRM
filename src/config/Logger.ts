@@ -10,7 +10,7 @@ if (process.env.LOG_TO_CONSOLE === 'true') {
             format: winston.format.combine(
                 winston.format.colorize(),
                 winston.format.timestamp({ format: 'DD.MM.YYYY HH:mm:ss' }),
-                winston.format.printf(({timestamp, level, message}) => {
+                winston.format.printf(({ timestamp, level, message }) => {
                     return `${timestamp} ${level}: ${message}`;
                 })
             )
@@ -35,19 +35,19 @@ if (process.env.LOG_TO_FILE === 'true') {
 }
 
 console.log = (...args) => {
-    logger.info(...args);
+    logger.info(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
 };
 
 console.error = (...args) => {
-    logger.error(...args);
+    logger.error(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
 };
 
 console.warn = (...args) => {
-    logger.warn(...args);
+    logger.warn(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
 };
 
 console.info = (...args) => {
-    logger.info(...args);
+    logger.info(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
 };
 
 const logger = winston.createLogger({

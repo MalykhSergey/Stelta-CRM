@@ -54,7 +54,7 @@ export class CalendarService {
                 });
             }
             else {
-                logger.error(error);
+                logger.error("Ошибка обновления/создания события", error);
             }
         }
     }
@@ -81,7 +81,13 @@ export class CalendarService {
     }
 
     static async handleTenderEvents(tender: Tender) {
-        await this.authenticate();
+        try {
+            await this.authenticate();
+        }
+        catch (error) {
+            logger.error("Ошибка авторизации в Google Calendar", error)
+            return
+        }
         const dates = [
             { type: 'date1start', date: tender.date1_start },
             { type: 'date1finish', date: tender.date1_finish },
