@@ -9,10 +9,12 @@ class TenderStorage {
 
     async createTender(status = 0) {
         try {
-            return (await connection.query(`INSERT into tenders("status") values($1) RETURNING ID`, [status])).rows[0].id
+            const tender_id = (await connection.query(`INSERT into tenders("status") values($1) RETURNING ID`, [status])).rows[0].id
+            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tender_id}`, {recursive: true})
+            return tender_id
         } catch (e) {
             return handleDatabaseError(e,
-                {'23505': 'Пустой тендер уже существует. Заполните поля Реестровый номер и Лот №!',},
+                {'23505': 'Пустой тендер уже существует. Заполните полe Лот №!',},
                 'Ошибка создания тендера');
         }
     }
@@ -192,7 +194,9 @@ class TenderStorage {
 
     async addDocumentRequest(tenderId: number) {
         try {
-            return (await connection.query('INSERT INTO document_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+            const document_request_id = (await connection.query('INSERT INTO document_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id;
+            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${document_request_id}`, {recursive: true})
+            return document_request_id
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка создания дозапроса документов!');
         }
@@ -200,7 +204,9 @@ class TenderStorage {
 
     async addRebiddingPrice(tenderId: number) {
         try {
-            return (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id
+            const rebidding_price_id = (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id;
+            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebidding_price_id}`, {recursive: true})
+            return rebidding_price_id
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка создания переторжки!');
         }
@@ -210,7 +216,7 @@ class TenderStorage {
         try {
             await connection.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])
             await connection.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
-            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, {recursive: true})
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, {recursive: true})
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
         }
@@ -220,7 +226,7 @@ class TenderStorage {
         try {
             await connection.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])
             await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
-            await fs.rmdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, {recursive: true})
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, {recursive: true})
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');
         }
