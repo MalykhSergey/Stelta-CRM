@@ -1,10 +1,10 @@
 "use server";
 
-import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
-import {authAction} from "@/models/User/UserService";
-import {ContactPerson, IContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 import logger from "@/config/Logger";
-import {User} from "@/models/User/User";
+import { IContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
+import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
+import { User } from "@/models/User/User";
+import { authAction } from "@/models/User/UserService";
 
 export async function getContactPersonById(id: number): Promise<IContactPerson | { error: string }> {
     return await ContactPersonStorage.getContactPersonById(id);
@@ -14,26 +14,14 @@ export async function getContactPersonsByCompanyId(companyId: number): Promise<I
     return await ContactPersonStorage.getContactPersonsByCompanyId(companyId);
 }
 
-export async function createContactPerson(form: FormData) {
-    return authAction(async (user:User) => {
-        const name = form.get('name');
-        const phoneNumber = form.get('phone_number');
-        const email = form.get('email');
-        const companyId = form.get('company_id');
-        logger.info(`${user.name} create contact person ${name} in ${companyId}`);
-        if (name && phoneNumber && email && companyId) {
-            return await ContactPersonStorage.createContactPerson(
-                new ContactPerson(0, name as string, phoneNumber as string, email as string),
-                Number.parseInt(companyId as string)
-            );
-        } else {
-            return {error: 'Недостаточно полей!'};
-        }
+export async function createContactPerson(contactPerson: IContactPerson, companyId: number) {
+    return authAction(async () => {
+        return await ContactPersonStorage.createContactPerson(contactPerson, companyId);
     });
 }
 
 export async function updateContactPerson(form: FormData) {
-    return authAction(async (user:User) => {
+    return authAction(async (user: User) => {
         const id = form.get('id');
         logger.info(`${user.name} update contact person ${id}`);
         const name = form.get('name');
@@ -47,12 +35,12 @@ export async function updateContactPerson(form: FormData) {
                 email as string
             );
         } else
-            return {error: 'Недостаточно полей!'};
+            return { error: 'Недостаточно полей!' };
     });
 }
 
 export async function deleteContactPerson(id: number) {
-    return authAction(async (user:User) => {
+    return authAction(async (user: User) => {
         logger.info(`${user.name} delete contact person ${id}`);
         return await ContactPersonStorage.deleteContactPerson(id);
     });

@@ -5,7 +5,7 @@ test.describe('Авторизованные тесты', () => {
   test('Создать новый тендер', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
     await page.getByRole('button', { name: 'Добавить тендер' }).click();
-    page.waitForTimeout(100)
+    page.waitForTimeout(200)
     await expect(page.getByLabel('Статус:')).toHaveValue('0');
     await expect(page.getByLabel('Организация:')).toHaveValue('0');
     await expect(page.getByLabel('Полное наименование:')).toHaveValue('Полное наименование тендера');

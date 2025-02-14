@@ -1,6 +1,6 @@
-import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 import Company from "@/models/Company/Company";
-import {makeAutoObservable} from "mobx";
+import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
+import { makeAutoObservable } from "mobx";
 
 export class ContactPersonStore {
     constructor(company: Company, contactPerson: ContactPerson) {
@@ -36,6 +36,20 @@ export class ContactPersonStore {
     }
 
     get isNew() {
-        return this.company.contactPersons.filter(contactPerson => contactPerson.isEquals(this.contactPerson)).length < 1
+        for (const contactPerson of this.company.contactPersons) {
+            if (contactPerson.isEquals(this.contactPerson))
+                return false
+        }
+        return true;
+    }
+
+    checkOnNew() {
+        for (const contactPerson of this.company.contactPersons) {
+            if (contactPerson.isEquals(this.contactPerson)) {
+                this.contactPerson.id = contactPerson.id
+                return
+            }
+        }
+        this.contactPerson.id = 0
     }
 }

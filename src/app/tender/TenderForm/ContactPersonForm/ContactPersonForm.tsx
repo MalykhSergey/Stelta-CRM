@@ -21,6 +21,7 @@ const ContactPersonForm = observer(
         const store = useLocalObservable(() => new ContactPersonStore(props.company, props.contactPerson))
         useEffect(() => {
             store.company = props.company
+            store.checkOnNew()
         }, [props.company, store]);
         return (
             <>
@@ -35,8 +36,7 @@ const ContactPersonForm = observer(
                             disabled={!props.isEditable}
                             onChange={(e) => {
                                 store.contactPerson.setName(e.target.value)
-                                if(store.isNew)
-                                    store.contactPerson.id = 0
+                                store.checkOnNew()
                             }}
                             className={styles.input}
                         />
@@ -64,8 +64,7 @@ const ContactPersonForm = observer(
                     isEditable={props.isEditable}
                     onChange={(e) => {
                         store.contactPerson.setPhoneNumber(e.target.value)
-                        if(store.isNew)
-                            store.contactPerson.id = 0
+                        store.checkOnNew()
                     }}
                     errors={props.errors}
                 />
@@ -76,8 +75,7 @@ const ContactPersonForm = observer(
                     isEditable={props.isEditable}
                     onChange={(e) => {
                         store.contactPerson.setEmail(e.target.value)
-                        if(store.isNew)
-                            store.contactPerson.id = 0
+                        store.checkOnNew()
                     }}
                     errors={props.errors}
                 />
