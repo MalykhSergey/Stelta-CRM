@@ -1,7 +1,7 @@
 export default function Version(props: { version: string, changes: string[] }) {
     const changes_items = props.changes.map((change, index) => <li key={index} dangerouslySetInnerHTML={{ __html: change }} />);
     return (
-        <div>
+        <div className="card" style={{ padding: "40px", width: "800px", marginLeft: "auto", marginRight: "auto" }}>
             <h2>Версия <span style={{ color: "blue" }}>{props.version}</span></h2>
             <hr />
             <h2 style={{ marginTop: "20px" }}>Что нового:</h2>

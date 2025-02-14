@@ -109,7 +109,8 @@ CREATE TABLE public.contact_persons (
     phone_number character varying(50) DEFAULT 'Не указан'::character varying NOT NULL,
     email character varying(255) DEFAULT 'Не указан'::character varying NOT NULL,
     company_id integer NOT NULL,
-    CONSTRAINT contact_persons_email_check CHECK (((email)::text ~~ '%@%'::text))
+    CONSTRAINT contact_persons_email_check CHECK (((email)::text ~~ '%@%'::text)),
+    CONSTRAINT contact_persons_unique UNIQUE ("name",company_id,email,phone_number)
 );
 
 
