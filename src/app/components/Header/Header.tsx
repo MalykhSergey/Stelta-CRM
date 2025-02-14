@@ -3,12 +3,20 @@ import { useAuth } from '@/app/AuthContext';
 import Image from 'next/image';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import SteltaLogo from '../../../static/images/logo.png';
+import { showMessage } from '../Alerts/Alert';
 import styles from "./Header.module.css";
 
 export default function Header() {
     const authContext = useAuth()
     const pathname = usePathname()
+    useEffect(() => {
+        if (!authContext.user.name) return
+        if (localStorage.getItem("version") != process.env.APP_VERSION)
+            showMessage(`Новая версия ${process.env.APP_VERSION}. <a href="./changelog">Узнать больше</a>`, "info", 3000)
+        localStorage.setItem("version", process.env.APP_VERSION || 'error')
+    }, [authContext.user.name])
     return (
         <header id={styles.header}>
             {authContext.user.name ? <Link href='/'><Image src={SteltaLogo} alt={"Stelta logo"} id={styles.logo}></Image></Link> : <Image src={SteltaLogo} alt={"Stelta logo"} id={styles.logo}></Image>}

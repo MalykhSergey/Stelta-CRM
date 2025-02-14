@@ -22,9 +22,6 @@ export default function LoginPage() {
         if (!("error" in result)) {
             const name = loginForm.get("name") as string
             showMessage(`Добро пожаловать ${name}!`, "successful")
-            if (localStorage.getItem("version") != process.env.APP_VERSION)
-                showMessage(`Новая версия ${process.env.APP_VERSION}. <a href="./changelog">Узнать больше</a>`, "info", 3000)
-            localStorage.setItem("version", process.env.APP_VERSION || 'error')
             authContext.setUser(result)
             router.push('/')
         } else {
