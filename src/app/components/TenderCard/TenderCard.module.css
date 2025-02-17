@@ -18,6 +18,18 @@
     font-size: 14px;
 }
 
+.titleMiddle::before {
+    content: ' ... ';
+}
+
+.title:hover .titleMiddle::before {
+    content: '';
+}
+
+.title:hover .titleMiddle:after {
+    content: attr(full-text);
+}
+
 .hoverCard:hover {
     transform: scale(1.15);
     transition: all 0.5s ease;

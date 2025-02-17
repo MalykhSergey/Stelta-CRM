@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import {Tender} from '../../../models/Tender/Tender';
+import { formatValue } from "react-currency-input-field";
+import { Tender } from '../../../models/Tender/Tender';
 import styles from './TenderCard.module.css';
 import "./statuses.css";
-import {formatValue} from "react-currency-input-field";
 
 function convertDate(value: string) {
     const convertedDate = new Date(value).toLocaleString().split(',')
@@ -10,6 +10,30 @@ function convertDate(value: string) {
         <>
             <div className={styles.info}>{convertedDate[0]} {convertedDate[1].slice(0, -3)}</div>
         </>)
+}
+
+const MAX_TITLE_LENGTH = 100
+
+function reduceTitle(title: string): { begin: string, middle: string, end: string } {
+    if (title.length <= MAX_TITLE_LENGTH)
+        return { begin: title, middle: "", end: "" }
+    const words = title.split(' ')
+    if (words.length <= 5)
+        return { begin: title, middle: "", end: "" }
+    let begin_index = 1
+    let end_index = 3
+    let sum: number = words[0].length + words[1].length + words[words.length - 3].length + words[words.length - 2].length + words[words.length - 1].length
+    while (true) {
+        if (sum >= MAX_TITLE_LENGTH || words.length <= begin_index + end_index)
+            break
+        end_index++
+        sum += words[words.length - end_index].length
+        if (sum >= MAX_TITLE_LENGTH || words.length <= begin_index + end_index)
+            break
+        begin_index++
+        sum += words[begin_index].length
+    }
+    return { begin: words.slice(0, begin_index).join(' '), middle: " " + words.slice(begin_index, words.length - end_index).join(' ') + " ", end: words.slice(words.length - end_index).join(' ') }
 }
 
 export default function TenderCard(props: { tender: Tender }) {
@@ -44,20 +68,26 @@ export default function TenderCard(props: { tender: Tender }) {
             dateSpan = <span className={styles.label}>Подведение итогов: </span>
             break
     }
+    const title = reduceTitle(props.tender.name);
     return (
         <Link className={`card ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}
-              target='_blank'>
+            target='_blank'>
             <div className={'indicator status-' + props.tender.status}>{props.tender.isSpecial && '✔'}</div>
             <span className={styles.label}>{props.tender.company.name}</span>
             <div className={styles.indicator}></div>
-            <div className={styles.title}>{props.tender.name}</div>
+            <div className={styles.title}>
+                {title.begin}
+                {title.middle != "" && <span className={styles.titleMiddle} full-text={title.middle} />}
+                {title.end}
+            </div>
             <span className={styles.label}>НМЦК: </span>
             <div className={styles.info}>{
                 formatValue({
-                value: props.tender.initialMaxPrice.slice(-2) == '00' ? props.tender.initialMaxPrice.slice(0, -2) : props.tender.initialMaxPrice,
-                suffix: '₽',
-                groupSeparator: ' ',
-                decimalSeparator: ','})}
+                    value: props.tender.initialMaxPrice.slice(-2) == '00' ? props.tender.initialMaxPrice.slice(0, -2) : props.tender.initialMaxPrice,
+                    suffix: '₽',
+                    groupSeparator: ' ',
+                    decimalSeparator: ','
+                })}
             </div>
             {dateSpan}
             {dateField}
