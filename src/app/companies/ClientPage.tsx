@@ -1,18 +1,13 @@
 "use client"
-import { ContactPersonForm } from "@/app/companies/ContactPersonForm/ContactPersonForm"
-import { DeleteButton } from "@/app/components/Buttons/DeleteButton/DeleteButton"
 import { PrimaryButton } from "@/app/components/Buttons/PrimaryButton/PrimaryButton"
-import Company from "@/models/Company/Company"
+import Company, { ICompany } from "@/models/Company/Company"
 import { createCompany, deleteCompany, updateCompany } from "@/models/Company/CompanyService"
-import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson"
-import { faCheck } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { makeAutoObservable } from "mobx"
+import { Role } from "@/models/User/User"
 import { useState } from "react"
 import { useAuth } from "../AuthContext"
 import { showMessage } from "../components/Alerts/Alert"
+import CompanyItem from "./CompanyItem"
 import styles from "./page.module.css"
-import {Role} from "@/models/User/User";
 
 export default function ClientCompanies({ companiesProps }: { companiesProps: string }) {
     const [companies, setCompanies] = useState(Company.fromJSONArray(companiesProps))
@@ -30,24 +25,21 @@ export default function ClientCompanies({ companiesProps }: { companiesProps: st
 
     }
 
-    async function updateHandler(formData: FormData) {
-        const result = await updateCompany(formData)
+    async function updateHandler(updated_company: ICompany) {
+        const result = await updateCompany({...updated_company})
         if (result?.error)
             showMessage(result.error)
         else {
-            const id = Number.parseInt(formData.get('id') as string)
-            const name = formData.get('name') as string
             setCompanies(companies.map((company: Company) => {
-                if (company.id == id)
-                    company.name = name
+                if (company.id == updated_company.id)
+                    company.name = updated_company.name
                 return company
             }))
             showMessage("Организация успешно обновлена!", "successful")
         }
     }
 
-    async function deleteHandler(e: React.MouseEvent<HTMLButtonElement>) {
-        const id = Number.parseInt(e.currentTarget.value);
+    async function deleteHandler(id: number) {
         const result = await deleteCompany(id)
         if (result?.error)
             showMessage(result.error)
@@ -70,22 +62,7 @@ export default function ClientCompanies({ companiesProps }: { companiesProps: st
                 </div>
             }
             <div className={styles.companies}>
-                {companies.map((row: Company) =>
-                    <div key={'company' + row.id} className={styles.company + ' card'}>
-                        <form action={updateHandler} className={styles.companyInputs}>
-                            <input type="hidden" name='id' defaultValue={row.id} />
-                            <textarea name='name' defaultValue={row.name} />
-                            {isAuth &&
-                                <>
-                                    <PrimaryButton aria-label="Сохранить" type="submit"><FontAwesomeIcon
-                                        icon={faCheck}></FontAwesomeIcon></PrimaryButton>
-                                    <DeleteButton onClick={deleteHandler} type="button" value={row.id} />
-                                </>}
-                        </form>
-                        <ContactPersonForm company={row} isEditable={isAuth} errors={{}}
-                            contactPerson={makeAutoObservable(new ContactPerson(0, '', '', ''))} />
-                    </div>
-                )
+                {companies.map((row: Company) => <CompanyItem key={row.id} company={row} isAuth={isAuth} updateHandler={updateHandler} deleteHandler={deleteHandler} />)
                 }
             </div>
         </main>

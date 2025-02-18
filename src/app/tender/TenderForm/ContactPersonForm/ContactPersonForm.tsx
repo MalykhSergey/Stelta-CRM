@@ -29,7 +29,7 @@ const ContactPersonForm = observer(
                 <div className={styles.formGroup}>
                     <div className={styles.inputRow} id={style.ContactPersonNameContainer}>
                         <input
-                            type='text'
+                            type='search'
                             id={style.ContactPersonName}
                             name='ContactPersonName'
                             value={store.contactPerson.name}
