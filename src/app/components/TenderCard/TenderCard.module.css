@@ -13,6 +13,21 @@
     margin-bottom: 10px;
 }
 
+.hot-3 {
+    color: rgb(255, 45, 45);
+    font-weight: 400;
+}
+
+.hot-2 {
+    color: rgb(255, 38, 38);
+    font-weight: 500;
+}
+
+.hot-1 {
+    color: rgb(255, 0, 0);
+    font-weight: 600;
+}
+
 .label {
     color: #6E6E6E;
     font-size: 14px;

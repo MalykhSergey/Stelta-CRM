@@ -5,10 +5,17 @@ import styles from './TenderCard.module.css';
 import "./statuses.css";
 
 function convertDate(value: string) {
-    const convertedDate = new Date(value).toLocaleString().split(',')
+    const tender_date = new Date(value)
+    const now_date = new Date()
+    const diffMs = tender_date.getTime() - now_date.getTime()
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1
+    let date_hot_style = ""
+    if (diffDays > 0 && diffDays < 4)
+        date_hot_style = styles[`hot-${diffDays}`]
+    const converted_date = tender_date.toLocaleString().split(',')
     return (
         <>
-            <div className={styles.info}>{convertedDate[0]} {convertedDate[1].slice(0, -3)}</div>
+            <div className={`${styles.info} ${date_hot_style}`}>{converted_date[0]} {converted_date[1].slice(0, -3)}</div>
         </>)
 }
 

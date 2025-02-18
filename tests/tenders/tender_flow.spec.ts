@@ -1,7 +1,7 @@
 import { expect, test } from "../login-fixture";
 import {files_for_upload} from "./files_for_upload/files_path";
 
-test.describe('Авторизованные тесты', () => {
+test.describe('Поток создания и заполнения 1-го этапа', () => {
   test('Создать новый тендер', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
     await page.getByRole('button', { name: 'Добавить тендер' }).click();
@@ -267,7 +267,7 @@ test.describe('Авторизованные тесты', () => {
           - button "Дозапрос документов"
           `);
     await page1.getByRole('button', { name: 'Сохранить' }).click();
-    await page1.goto('http://127.0.0.1:3000/tender/27');
+    await page1.reload();
     await expect(await page1.getByLabel('Дата предоставления ответа').nth(0)).toHaveValue('2025-01-01');
     await expect(await page1.getByLabel('Дата предоставления ответа').nth(1)).toHaveValue('2025-01-02');
   });
