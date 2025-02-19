@@ -48,6 +48,7 @@ export async function addRebiddingPrice(tenderId: number) {
 export async function deleteDocumentRequestById(tenderId: number, documentRequestId: number) {
     return authAction(async (user: User) => {
         logger.info(`${user.name} delete document request`);
+        CalendarService.deleteDocumentRequest(documentRequestId)
         return tenderStorage.deleteDocumentRequest(tenderId, documentRequestId)
     })
 }

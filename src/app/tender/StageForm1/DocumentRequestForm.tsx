@@ -1,6 +1,5 @@
 import {DocumentRequest} from "@/models/Tender/DocumentRequest";
 import FileName from "@/models/Tender/FileName";
-import {deleteDocumentRequestById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
 import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 import styles from './DocumentRequestForm.module.css';
@@ -31,10 +30,7 @@ const DocumentRequestForm: React.FC<DocumentRequestFormProps> = observer(({
                            isEditable={isEditable}
                            className='card'
                            independent={isEditable}
-                           onDelete={() => {
-                               deleteDocumentRequest()
-                               deleteDocumentRequestById(tenderId, documentRequest.id)
-                           }}
+                           onDelete={deleteDocumentRequest}
             />
             <div>
                 <label htmlFor={`documentRequest${documentRequest.id}`}>Дата предоставления ответа</label>

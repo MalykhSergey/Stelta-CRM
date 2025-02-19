@@ -3,6 +3,7 @@ import getStatusName from "@/models/Tender/Status";
 import { Tender } from "@/models/Tender/Tender";
 import { JWT } from "google-auth-library";
 import { google } from "googleapis";
+import { DocumentRequest } from "../DocumentRequest";
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events'];
 const timeZone = 'Asia/Omsk';
@@ -74,7 +75,7 @@ export class CalendarService {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             catch (error: any) {
                 if ("code" in error && error.code != 410 && error.code != 404) {
-                    logger.error(`Failed to delete event with ID ${eventId}:`, error);
+                    logger.error(`Ошибка удаления события ${eventId}:`, error);
                 }
             }
         }
@@ -109,7 +110,61 @@ export class CalendarService {
                 start: { dateTime: currentDate.toISOString(), timeZone },
                 end: { dateTime: currentDate.toISOString(), timeZone },
             };
-            await this.updateOrCreateEvent(eventData);
+            this.updateOrCreateEvent(eventData);
+        }
+        for (const document_request of tender.documentRequests) {
+            this.updateDocumentRequest(tender.name, document_request)
+        }
+    }
+
+    static async updateDocumentRequest(tender_name: string, document_request: DocumentRequest) {
+        const calendar = google.calendar({ version: 'v3', auth: this.auth });
+        const currentDate = new Date(document_request.date)
+        const event_data: EventData = {
+            id: `documentrequest${document_request.id}`,
+            summary: `Дозапрос документов для ${tender_name}`,
+            description: '',
+            start: { dateTime: currentDate.toISOString(), timeZone },
+            end: { dateTime: currentDate.toISOString(), timeZone },
+        }
+        try {
+            event_data.start = { dateTime: currentDate.toISOString(), timeZone }
+            event_data.end = { dateTime: currentDate.toISOString(), timeZone }
+            await calendar.events.update({
+                calendarId: process.env.CALENDAR_ID,
+                eventId: `document_request${document_request.id}`,
+                requestBody: event_data,
+            });
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        catch (error: any) {
+            if ("code" in error && error.code == 404) {
+                await calendar.events.insert({
+                    calendarId: process.env.CALENDAR_ID,
+                    requestBody: event_data,
+                });
+            }
+            else {
+                logger.error(`Ошибка обновления/создания события document_request${document_request.id}`, error);
+            }
+        }
+    }
+
+    static async deleteDocumentRequest(document_request_id: number) {
+        await this.authenticate();
+        const calendar = google.calendar({ version: 'v3', auth: this.auth });
+        const eventId = `documentrequest${document_request_id}`;
+        try {
+            await calendar.events.delete({
+                calendarId: process.env.CALENDAR_ID,
+                eventId,
+            });
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        catch (error: any) {
+            if ("code" in error && error.code != 410 && error.code != 404) {
+                logger.error(`Ошибка удаления события ${eventId}:`, error);
+            }
         }
     }
 }

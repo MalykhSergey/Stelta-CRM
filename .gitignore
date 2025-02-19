@@ -38,3 +38,4 @@ calendar_keys.json
 *.tsbuildinfo
 next-env.d.ts
 /logs/
+.env.test
