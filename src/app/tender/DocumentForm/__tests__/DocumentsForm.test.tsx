@@ -84,7 +84,7 @@ describe('DocumentsForm', () => {
         setup();
 
         const expandButton = screen.getByLabelText('Развернуть');
-        const container = screen.getByLabelText('Документы');
+        const container = screen.getByLabelText('Тестовые документы');
 
         
         expect(container.className).not.toMatch(/expanded/);
@@ -125,7 +125,7 @@ describe('DocumentsForm', () => {
         const attachButton = screen.getByLabelText('Прикрепить');
         fireEvent.click(attachButton);
 
-        const fileInput = screen.getByLabelText('Документы').querySelector('input[type="file"]');
+        const fileInput = screen.getByLabelText('Тестовые документы').querySelector('input[type="file"]');
         const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
         fireEvent.change(fileInput!, { target: { files: [file] } });
 

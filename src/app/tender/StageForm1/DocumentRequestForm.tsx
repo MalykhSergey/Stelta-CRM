@@ -13,12 +13,12 @@ interface DocumentRequestFormProps {
 }
 
 const DocumentRequestForm: React.FC<DocumentRequestFormProps> = observer(({
-                                                                      tenderId,
-                                                                      documentRequest,
-                                                                      orderNumber,
-                                                                      isEditable,
-                                                                      deleteDocumentRequest
-                                                                  }) => {
+                                                                              tenderId,
+                                                                              documentRequest,
+                                                                              orderNumber,
+                                                                              isEditable,
+                                                                              deleteDocumentRequest
+                                                                          }) => {
     return (
         <div className={styles.documentRequest}>
             <DocumentsForm tenderId={tenderId} stage={1}
@@ -35,7 +35,8 @@ const DocumentRequestForm: React.FC<DocumentRequestFormProps> = observer(({
             <div>
                 <label htmlFor={`documentRequest${documentRequest.id}`}>Дата предоставления ответа</label>
                 <input id={`documentRequest${documentRequest.id}`} type="date" value={documentRequest.date}
-                       onChange={(e) => documentRequest.setDate(e.currentTarget.value)} required disabled={!isEditable}/>
+                       onChange={(e) => documentRequest.setDate(e.currentTarget.value)} required
+                       disabled={!isEditable}/>
             </div>
         </div>
     )

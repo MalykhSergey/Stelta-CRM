@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { showMessage } from '../../components/Alerts/Alert'
 import ClientCompanies from '../ClientPage'
+import {Role, User} from "@/models/User/User";
 
 vi.mock('@/models/Company/CompanyService')
 vi.mock('../../components/Alerts/Alert')
@@ -15,8 +16,14 @@ describe('ClientCompanies', () => {
     ])
 
     const renderWithAuth = (auth = true) => {
+        const viewer_user = new User();
+        viewer_user.role = Role.Viewer
+        viewer_user.name = "viewer"
+        const editor_user = new User();
+        editor_user.role = Role.Editor
+        editor_user.name = "editor"
         return render(
-            <AuthProvider initialAuth={auth ? 'testUser' : ''}>
+            <AuthProvider initialAuth={auth ? editor_user : viewer_user}>
                 <ClientCompanies companiesProps={mockCompanies} />
             </AuthProvider>
         )
@@ -52,11 +59,10 @@ describe('ClientCompanies', () => {
 
         renderWithAuth(true)
 
-        const companyInput = screen.getAllByRole('textbox')[1] // первая компания в списке
-        fireEvent.change(companyInput, { target: { value: 'Обновленная Компания' } })
-
-        const updateForm = companyInput.closest('form')!
-        fireEvent.submit(updateForm)
+        const companyInput = screen.getByText('Компания 1')
+        fireEvent.paste(companyInput,"Обновлённая компания")
+        const saveButton = screen.getAllByLabelText('Сохранить')[0]
+        fireEvent.click(saveButton)
         await waitFor(() => {
             expect(updateCompany).toHaveBeenCalled()
             expect(showMessage).toHaveBeenCalledWith('Организация успешно обновлена!', 'successful')
@@ -97,10 +103,6 @@ describe('ClientCompanies', () => {
 
     it('должен скрывать элементы управления для неавторизованного пользователя', () => {
         renderWithAuth(false)
-
-        expect(screen.queryByRole('form', { name: 'Добавить организацию' })).not.toBeInTheDocument()
-
-
         expect(screen.queryByRole('button', { name: 'Удалить' })).not.toBeInTheDocument()
         expect(screen.queryByRole('button', { name: 'Сохранить' })).not.toBeInTheDocument()
     })

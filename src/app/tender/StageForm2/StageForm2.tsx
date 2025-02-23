@@ -3,7 +3,7 @@ import {RebiddingPrice} from '@/models/Tender/RebiddingPrice';
 import {addRebiddingPrice} from '@/models/Tender/TenderService';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
-import {Tender} from '../../../models/Tender/Tender';
+import {Tender} from '@/models/Tender/Tender';
 import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import RebiddingPriceForm from './RebiddingPriceForm';
 import styles from "./StageForm2.module.css"

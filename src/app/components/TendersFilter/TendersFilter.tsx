@@ -83,18 +83,18 @@ export default function TendersFilter(props: {
                 </select>
             </div>
             <div className='column'>
-                <label className={styles.filterLabel}>Полное наименование:</label>
-                <input ref={fullName} type="text" className={styles.filterInput} placeholder="Полное наименование"
+                <label htmlFor="filter_name" className={styles.filterLabel}>Полное наименование:</label>
+                <input id="filter_name" ref={fullName} type="text" className={styles.filterInput} placeholder="Полное наименование"
                     onChange={changeFilter} />
             </div>
             <div className='column'>
-                <label className={styles.filterLabel}>Организация:</label>
-                <input ref={company} type="text" className={styles.filterInput} placeholder="Название организации"
+                <label htmlFor="filter_company" className={styles.filterLabel}>Организация:</label>
+                <input id="filter_company" ref={company} type="text" className={styles.filterInput} placeholder="Название организации"
                     onChange={changeFilter} />
             </div>
             <div className='column'>
-                <label className={styles.filterLabel}>Реестровый номер:</label>
-                <input ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..."
+                <label htmlFor="filter_number" className={styles.filterLabel}>Реестровый номер:</label>
+                <input id="filter_number" ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..."
                     onChange={changeFilter} />
             </div>
             <div className='column'>
