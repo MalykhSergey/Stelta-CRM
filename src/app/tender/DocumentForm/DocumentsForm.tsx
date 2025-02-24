@@ -1,7 +1,7 @@
 import FileName from '@/models/Tender/FileName';
 import {faDownload} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {observer, useLocalObservable} from 'mobx-react-lite';
+import {observer} from 'mobx-react-lite';
 import {useRef} from 'react';
 import {useConfirmDialog} from '../../components/Dialog/ConfirmDialogContext';
 import styles from './DocumentsForm.module.css';
@@ -12,6 +12,7 @@ import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 import StageStyles from "@/app/tender/StageForms.module.css";
 import {AttachButton} from "@/app/components/Buttons/AttachButton/AttachButton";
 import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
+import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
 
 interface DocumentsFormProps {
     tenderId: number,
@@ -23,11 +24,11 @@ interface DocumentsFormProps {
     removeFile: (fileName: FileName) => void,
     title: string,
     isEditable: boolean,
-    className?: string,
     independent?: boolean,
     isOpened?: boolean,
     onDelete?: () => void
 }
+
 const MAX_FILE_SIZE = 30 * 1024 * 1024
 
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
@@ -40,24 +41,15 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                                                                   removeFile,
                                                                   title,
                                                                   isEditable,
-                                                                  className = '',
                                                                   independent,
                                                                   onDelete = () => {
                                                                   },
                                                                   isOpened = false,
                                                               }) => {
-    const collapsed = useLocalObservable(() => ({
-        isTrue: isOpened,
-        toggle() {
-            this.isTrue = !this.isTrue
-        }
-    }));
     const {showConfirmDialog} = useConfirmDialog();
     const fileInput = useRef<HTMLInputElement>(null)
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
-        if (!collapsed.isTrue)
-            collapsed.toggle()
         if (e.target.files)
             for (let i = 0; i < e.target.files.length; i++) {
                 const file_name = encodeURI(e.target.files[i].name)
@@ -104,36 +96,44 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
             </div>)
     }
     return (
-        <div className={`${className} ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`} aria-label={title}>
-            <div className={StageStyles.cardHeader}>
-                <h3>{title}</h3>
-                {
-                    isEditable &&
-                    <div>
-                        <AttachButton onClick={() => {
-                            if (fileInput.current) fileInput.current.click()
-                        }}/>
-                        <input ref={fileInput} onChange={handleChange} type="file" name="file" multiple hidden/>
-                        <input type="hidden" name="tenderId" value={tenderId}/>
+
+        <ExpandableForm
+            start_value={isOpened && fileNames.length > 0}
+            // additional_class={className}
+            aria-label={title}
+            header={(toggle, isExpanded) => {
+                return (
+                    <div className={StageStyles.cardHeader}>
+                        <h3>{title}</h3>
+                        {isEditable &&
+                            <div>
+                                <AttachButton onClick={() => {
+                                    if (fileInput.current) fileInput.current.click()
+                                }}/>
+                                <input ref={fileInput} onChange={async (e) => {
+                                    await handleChange(e)
+                                    if (!isExpanded) toggle()
+                                }}
+                                       type="file" name="file" multiple hidden/>
+                                <input type="hidden" name="tenderId" value={tenderId}/>
+                            </div>
+                        }
+                        <div className={StageStyles.rightPanel}>
+                            {fileNames.length > 0 && <ExpandButton onClick={toggle} expanded={!isExpanded}/>}
+                            {independent && isEditable &&
+                                <CloseButton onClick={() => {
+                                    showConfirmDialog({
+                                        message: `Вы действительно хотите удалить?`,
+                                        onConfirm: onDelete
+                                    })
+                                }}/>
+                            }
+                        </div>
                     </div>
-                }
-                <div className={StageStyles.rightPanel}>
-                    {fileNames.length > 0 &&
-                        <ExpandButton onClick={collapsed.toggle} expanded={!collapsed.isTrue}/>}
-                    {independent && isEditable &&
-                        <CloseButton onClick={() => {
-                            showConfirmDialog({
-                                message: `Вы действительно хотите удалить?`,
-                                onConfirm: onDelete
-                            })
-                        }}/>
-                    }
-                </div>
-            </div>
-            <div className={StageStyles.hiddenContent}>
-                {files}
-            </div>
-        </div>
+                )
+            }}>
+            {files}
+        </ExpandableForm>
     )
 });
 export default DocumentsForm

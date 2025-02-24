@@ -12,6 +12,7 @@ import type {JSX} from "react";
 import CurrencyInput from "react-currency-input-field";
 import StageStyles from "@/app/tender/StageForms.module.css";
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
+import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
 
 interface StageForm2Props {
     tender: Tender,
@@ -23,12 +24,6 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
         value: '',
         setError(value: string) {
             this.value = value
-        }
-    }));
-    const collapsed = useLocalObservable(() => ({
-        isTrue: isEditable,
-        toggle() {
-            this.isTrue = !this.isTrue
         }
     }));
     const handleClick = async () => {
@@ -44,24 +39,28 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
         )
     })
     return (
-        <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
-            <div className={StageStyles.cardHeader}>
-                <h3>Этап 2</h3>
-                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel}
-                              expanded={!collapsed.isTrue}/>
-            </div>
-            <div className={`${StageStyles.hiddenContent}  ${StageStyles.stageForm}`}>
+        <ExpandableForm start_value={isEditable}
+                        header={(toggle, isExpanded) => {
+                            return (
+                                <div className={StageStyles.cardHeader}>
+                                    <h3>Этап 2</h3>
+                                    <ExpandButton onClick={toggle} className={StageStyles.rightPanel}
+                                                  expanded={!isExpanded}/>
+                                </div>
+                            )
+                        }}>
+            <div className={StageStyles.stageForm}>
                 <DocumentsForm tenderId={tender.id} stage={2}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}
                                fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={isEditable}
-                               independent={false} className='card'/>
+                               independent={false}/>
                 <div className={styles.secondForms}>
                     <DocumentsForm tenderId={tender.id} stage={3}
                                    pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 3)}
                                    removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 3)}
                                    fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={isEditable}
-                                   independent={false} className='card'/>
+                                   independent={false}/>
                     <div>
                         <label htmlFor={`Stage2FormPrice${tender.id}`}>Наша цена:</label>
                         <CurrencyInput
@@ -85,7 +84,7 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
                 {rebiddingPrices}
                 {isEditable && <button className='BlueButton' onClick={handleClick}>Переторжка</button>}
             </div>
-        </div>
+        </ExpandableForm>
     );
 });
 export default StageForm2

@@ -1,11 +1,10 @@
-import { showMessage } from '@/app/components/Alerts/Alert';
 import Company from '@/models/Company/Company';
-import { ContactPerson } from '@/models/Company/ContactPerson/ContactPerson';
-import { deleteContactPerson, updateContactPerson } from '@/models/Company/ContactPerson/ContactPersonService';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { makeAutoObservable } from 'mobx';
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ContactPersonForm } from '../ContactPersonForm';
+import {ContactPerson} from '@/models/Company/ContactPerson/ContactPerson';
+import {deleteContactPerson, updateContactPerson} from '@/models/Company/ContactPerson/ContactPersonService';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {makeAutoObservable} from 'mobx';
+import {afterEach, describe, expect, it, vi} from 'vitest';
+import {ContactPersonForm} from '../ContactPersonForm';
 
 vi.mock('@/models/Company/ContactPerson/ContactPersonService', () => ({
     updateContactPerson: vi.fn(),

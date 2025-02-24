@@ -1,10 +1,11 @@
-import FileName from "@/models/Tender/FileName";
 import {Tender} from "@/models/Tender/Tender";
-import {observer, useLocalObservable} from "mobx-react-lite";
-import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
-import styles from "./StageForm3.module.css";
+import {observer} from "mobx-react-lite";
 import StageStyles from "@/app/tender/StageForms.module.css";
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
+import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
+import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
+import FileName from "@/models/Tender/FileName";
+import styles from "./StageForm3.module.css";
 
 interface StageForm3Props {
     tender: Tender,
@@ -12,24 +13,19 @@ interface StageForm3Props {
 }
 
 const StageForm3: React.FC<StageForm3Props> = observer(({tender, isEditable}) => {
-    const collapsed = useLocalObservable(() => ({
-        isTrue: true,
-        toggle() {
-            this.isTrue = !this.isTrue
-        }
-    }));
     return (
-        <div className={`card ${StageStyles.dynamicSizeForm}  ${collapsed.isTrue ? StageStyles.expanded : ''}`}>
-            <div className={StageStyles.cardHeader}>
+        <ExpandableForm start_value={isEditable} header={(toggle, isExpanded) => (
+            <div className={`${StageStyles.cardHeader}`}>
                 <h3>Договор</h3>
-                <ExpandButton onClick={collapsed.toggle} className={StageStyles.rightPanel} expanded={!collapsed.isTrue}/>
+                <ExpandButton onClick={toggle} className={StageStyles.rightPanel} expanded={!isExpanded}/>
             </div>
-            <div className={`${StageStyles.hiddenContent}  ${StageStyles.stageForm}`}>
+        )}>
+            <div className={StageStyles.stageForm}>
                 <DocumentsForm tenderId={tender.id} stage={5}
                                pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 5)}
                                removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 5)}
                                fileNames={tender.stagedFileNames[5]} title='Документы договора' isEditable={isEditable}
-                               independent={false} className='card'/>
+                               independent={false}/>
                 <div id={styles.grid}>
                     <div className={styles.inputGroup}>
                         <label htmlFor={`contractDate${tender.id}`}>Дата заключения договора:</label>
@@ -45,7 +41,7 @@ const StageForm3: React.FC<StageForm3Props> = observer(({tender, isEditable}) =>
                     </div>
                 </div>
             </div>
-        </div>
+        </ExpandableForm>
     )
 })
 export default StageForm3

@@ -28,7 +28,6 @@ const DocumentRequestForm: React.FC<DocumentRequestFormProps> = observer(({
                            specialPlaceId={documentRequest.id}
                            fileNames={documentRequest.fileNames} title={`Дозапрос документов ${orderNumber}`}
                            isEditable={isEditable}
-                           className='card'
                            independent={isEditable}
                            onDelete={deleteDocumentRequest}
             />

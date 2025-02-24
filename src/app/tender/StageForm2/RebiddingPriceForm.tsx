@@ -35,7 +35,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
                                deleteRebiddingPrice()
                                deleteRebiddingPriceById(tenderId, rebiddingPrice.id)
                            }}
-                           isEditable={isEditable} independent={isEditable} className="card"/>
+                           isEditable={isEditable} independent={isEditable}/>
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
                 <CurrencyInput
