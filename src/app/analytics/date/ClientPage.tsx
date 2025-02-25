@@ -127,14 +127,18 @@ const DateRangeAnalyticsClient = observer((props: {
                     <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial}/>
                 </div>
                 <div className='row-inputs'>
-                    <label htmlFor="startDateInput">От:</label>
-                    <input id="startDateInput" ref={startDateInput} type="date"
-                           defaultValue={props.startDate.toLocaleDateString('en-CA')}
-                           onChange={loadData}/>
-                    <label htmlFor="endDateInput">До:</label>
-                    <input id="endDateInput" ref={endDateInput} type="date"
-                           defaultValue={props.endDate.toLocaleDateString('en-CA')}
-                           onChange={loadData}/>
+                    <div className='row-inputs'>
+                        <label htmlFor="startDateInput">От:</label>
+                        <input id="startDateInput" ref={startDateInput} type="date"
+                               defaultValue={props.startDate.toLocaleDateString('en-CA')}
+                               onChange={loadData}/>
+                    </div>
+                    <div className='row-inputs'>
+                        <label htmlFor="endDateInput">До:</label>
+                        <input id="endDateInput" ref={endDateInput} type="date"
+                               defaultValue={props.endDate.toLocaleDateString('en-CA')}
+                               onChange={loadData}/>
+                    </div>
                 </div>
             </div>
             <div style={{display: "flex", flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'}}>

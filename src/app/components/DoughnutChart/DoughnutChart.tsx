@@ -11,7 +11,7 @@ const centerTextPlugin = {
     id: 'center-title',
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     beforeDraw: function (chart: any) {
-        if (chart.config.type != 'doughnut'){
+        if (chart.config.type != 'doughnut') {
             return;
         }
         const centerConfig = chart.config.options!.elements!.center;
@@ -87,13 +87,17 @@ const centerTextPlugin = {
 
 Chart.register(centerTextPlugin);
 
-export default function DoughnutChart(props: { data: ChartData<'doughnut', number[], string>, title: string, type:ChartDataType }) {
+export default function DoughnutChart(props: {
+    data: ChartData<'doughnut', number[], string>,
+    title: string,
+    type: ChartDataType
+}) {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     useEffect(() => {
             const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
-            let legendFontSize = 15
+            let isMobile = false
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-                legendFontSize /= 3
+                isMobile = true
             }
             if (chartRef.current && total > 0) {
                 const ctx = chartRef.current.getContext('2d')!;
@@ -102,24 +106,25 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                         type: 'doughnut',
                         data: props.data,
                         options: {
-                            maintainAspectRatio: false,
+                            maintainAspectRatio: isMobile,
                             elements: {
                                 center: {
                                     text: formatValue({
                                         value: Math.round(total).toString(),
                                         suffix: props.type == ChartDataType.COUNT ? '' : '₽',
                                         groupSeparator: ' ',
-                                        decimalSeparator: ','}),
+                                        decimalSeparator: ','
+                                    }),
                                     maxFontSize: 50,
                                 },
                             },
                             plugins: {
                                 legend: {
-                                    position: 'right',
+                                    position: isMobile ? 'bottom' : 'right',
                                     labels: {
                                         color: 'rgb(0,0,0)',
                                         font: {
-                                            size: legendFontSize
+                                            size: isMobile ? 8 : 16
                                         }
                                     },
                                     onClick: function () {
@@ -136,7 +141,10 @@ export default function DoughnutChart(props: { data: ChartData<'doughnut', numbe
                                         const width = chartArea.width
                                         const height = chartArea.height
                                         const relative_Value = context.dataset.data[context.dataIndex] as number / total;
-                                        const sectorArea = Math.min(width, height) * relative_Value;
+                                        let sectorArea = Math.min(width, height) * relative_Value;
+                                        if (isMobile) {
+                                            sectorArea /= 2
+                                        }
                                         return {size: Math.min(Math.max(sectorArea * 0.4, 8), 40)};
                                     },
                                     anchor: 'center',

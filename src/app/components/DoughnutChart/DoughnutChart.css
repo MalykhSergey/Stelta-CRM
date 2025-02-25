@@ -1,11 +1,11 @@
 #canvas-container {
-    height: 600px;
-    width: 800px;
+    height: 50vh;
+    width: 48vw;
 }
 
 @media only screen and (max-width: 600px) {
     #canvas-container {
-        height: 300px;
-        width: 300px;
+        height: unset;
+        width: 90vw;
     }
 }
