@@ -42,10 +42,10 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
             ORDER BY tender_id, id DESC
         ) AS reb_prices ON reb_prices.tender_id = tenders.id
         WHERE 
-            (date1_start >= $1::timestamp AND date1_start <= $2::timestamp OR 
-             date1_finish >= $1::timestamp AND date1_finish <= $2::timestamp OR 
-             date2_finish >= $1::timestamp AND date2_finish <= $2::timestamp OR 
-             date_finish >= $1::timestamp AND date_finish <= $2::timestamp)
+            (date1_start >= $1::timestamp AND date1_start <= $2::timestamp) OR 
+             (date1_finish >= $1::timestamp AND date1_finish <= $2::timestamp) OR 
+             (date2_finish >= $1::timestamp AND date2_finish <= $2::timestamp) OR 
+             (date_finish >= $1::timestamp AND date_finish <= $2::timestamp)
         GROUP BY status, is_special;
 `, [start_date, finish_date])).rows
 }

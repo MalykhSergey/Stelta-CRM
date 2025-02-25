@@ -1,7 +1,7 @@
 import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
 import DateRangeAnalyticsClient from "./ClientPage";
-import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
 import {Metadata} from "next";
+import {CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default async function DateRangeAnalyticsServer() {
     const endDate = new Date(currentYear, 11, 31);
 
     const analytics_data = await getStatusAnalyticsByDateRange(
-        startDate.toLocaleDateString('en-CA'), endDate.toLocaleDateString('en-CA')) as StatusAnalytics
+        startDate.toLocaleDateString('en-CA'), endDate.toLocaleDateString('en-CA')) as CumulativeStatusAnalytics
     return (
         <DateRangeAnalyticsClient initialData={analytics_data} startDate={startDate} endDate={endDate}/>)
 }

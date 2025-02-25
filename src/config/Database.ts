@@ -39,5 +39,7 @@ export function handleDatabaseError(
     }
     return { error: defaultMessage };
 }
-
+/**
+ * Пул соединений. Не использовать conn.query для транзакций!
+ */
 export default conn;

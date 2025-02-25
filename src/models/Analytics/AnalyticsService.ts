@@ -9,6 +9,7 @@ import {
 import { CommonAnalytics } from "./CommonAnalytics"
 import { CompanyAnalyticsDTO } from "./CompanyAnalytics"
 import { StatusAnalytics } from "./StatusAnalytics"
+import {CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
 
 export async function getCommonAnalytics() {
     const result = await loadCommonAnalytics()
@@ -49,7 +50,7 @@ export async function getStatusAnalyticsByCompany(company_id: number) {
 
 export async function getStatusAnalyticsByDateRange(startDate: string, endDate: string) {
     const result = await loadStatusAnalyticsByDate(startDate, endDate)
-    const analytics = new StatusAnalytics()
+    const analytics = new CumulativeStatusAnalytics()
     for (const row of result) {
         if (row.is_special) {
             analytics.special_count += row.count
@@ -57,8 +58,13 @@ export async function getStatusAnalyticsByDateRange(startDate: string, endDate: 
         } else {
             const statusName = getStatusName(row.status)
             analytics.status_counts[statusName] = (analytics.status_counts[statusName] || 0) + row.count
+            const abs_status = row.status;
+            analytics.cumulative_status_price[abs_status] = (analytics.cumulative_status_price[abs_status] || 0) + row.count
             analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
         }
+    }
+    for (let i = analytics.cumulative_status_price.length - 2; i != -1; i--) {
+        analytics.cumulative_status_price[i] += analytics.cumulative_status_price[i + 1]
     }
     return {...analytics}
 }

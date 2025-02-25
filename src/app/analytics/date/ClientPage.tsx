@@ -1,21 +1,22 @@
 "use client"
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
 import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
-import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
 import React, {useMemo, useRef} from "react";
 import styles from '../page.module.css';
 import {makeAutoObservable} from "mobx";
 import {observer} from "mobx-react-lite";
 import ChartDataType from "@/models/Analytics/ChartDataType";
+import BarChart from "@/app/analytics/date/BarChart";
+import {CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
 
 class AnalyticsStore {
-    data: StatusAnalytics
+    data: CumulativeStatusAnalytics
     startDate: string
     endDate: string
     isSpecial: boolean
     type: ChartDataType
 
-    constructor(initialData: StatusAnalytics, startDate: string, endDate: string) {
+    constructor(initialData: CumulativeStatusAnalytics, startDate: string, endDate: string) {
         this.data = initialData
         this.isSpecial = false
         this.startDate = startDate
@@ -24,34 +25,56 @@ class AnalyticsStore {
         makeAutoObservable(this)
     }
 
-    setData(newData: StatusAnalytics, startDateString: string, endDateString: string) {
+    setData(newData: CumulativeStatusAnalytics, startDateString: string, endDateString: string) {
         this.data = newData
         this.startDate = startDateString
         this.endDate = endDateString
     }
 
-        getChartData() {
-            let data
-            const labels = Object.keys(this.data.status_counts)
+    getChartData() {
+        let data
+        const labels = Object.keys(this.data.status_counts)
+        if (this.type == ChartDataType.COUNT)
+            data = Object.values(this.data.status_counts)
+        else
+            data = Object.values(this.data.status_price)
+        if (this.isSpecial) {
+            labels.push("Подыгрыш")
             if (this.type == ChartDataType.COUNT)
-                data = Object.values(this.data.status_counts)
+                data.push(this.data.special_count)
             else
-                data = Object.values(this.data.status_price)
-            if (this.isSpecial) {
-                labels.push("Подыгрыш")
-                if (this.type == ChartDataType.COUNT)
-                    data.push(this.data.special_count)
-                else
-                    data.push(this.data.special_price)
-            }
-            return {
-                title: `Тендеры за период: ${this.startDate} – ${this.endDate}`,
-                data: {
-                    labels: labels,
-                    datasets: [{data: data}]
-                }
+                data.push(this.data.special_price)
+        }
+        return {
+            title: `Тендеры за период: ${this.startDate} – ${this.endDate}`,
+            data: {
+                labels: labels,
+                datasets: [{data: data}]
             }
         }
+    }
+
+    getCumulativeChartData() {
+        const data = this.data.cumulative_status_price
+        const labels = ["Новый тендер", "Подготовка заявки 1 Этап", "Заявка подана 1 этап", "Подготовка заявки 2 Этап", "Заявка подана 2 этап", "Заключение договора", "Договор заключен"]
+        return {
+            title: `Воронка продаж за период: ${this.startDate} – ${this.endDate}`,
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data, categoryPercentage: 1, backgroundColor: [
+                        "rgb(54, 162, 235)",
+                        "rgb(255, 99, 132)",
+                        "rgb(255, 159, 64)",
+                        "rgb(255, 205, 86)",
+                        "rgb(75, 192, 192)",
+                        "rgb(153, 102, 255)",
+                        "rgb(201, 203, 207)"
+                    ],
+                }]
+            }
+        }
+    }
 
     toggleIsSpecial() {
         this.isSpecial = !this.isSpecial
@@ -63,12 +86,13 @@ class AnalyticsStore {
 }
 
 const DateRangeAnalyticsClient = observer((props: {
-    initialData: StatusAnalytics,
+    initialData: CumulativeStatusAnalytics,
     startDate: Date,
     endDate: Date
 }) => {
     const analyticsStore = useMemo(() => new AnalyticsStore(props.initialData, props.startDate.toLocaleDateString('ru-RU'), props.endDate.toLocaleDateString('ru-RU')), [props.initialData])
     const chartData = analyticsStore.getChartData()
+    const cumulativeChartData = analyticsStore.getCumulativeChartData()
     const startDateInput = useRef<HTMLInputElement | null>(null)
     const endDateInput = useRef<HTMLInputElement | null>(null)
 
@@ -77,7 +101,7 @@ const DateRangeAnalyticsClient = observer((props: {
         const endDate = endDateInput.current!.value;
         if (!Date.parse(startDate) || !Date.parse(endDate))
             return
-        const analytics_data = await getStatusAnalyticsByDateRange(startDate, endDate) as StatusAnalytics
+        const analytics_data = await getStatusAnalyticsByDateRange(startDate, endDate) as CumulativeStatusAnalytics
         analyticsStore.setData(analytics_data, startDate, endDate)
     }
 
@@ -113,8 +137,16 @@ const DateRangeAnalyticsClient = observer((props: {
                            onChange={loadData}/>
                 </div>
             </div>
-            <h1 id={styles.chartTitle}>{chartData.title}</h1>
-            <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
+            <div style={{display: "flex", flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'}}>
+                <div>
+                    <h1 className={styles.chartTitle}>{chartData.title}</h1>
+                    <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
+                </div>
+                <div>
+                    <h1 className={styles.chartTitle}>{cumulativeChartData.title}</h1>
+                    <BarChart data={cumulativeChartData.data}/>
+                </div>
+            </div>
         </div>
     )
 })

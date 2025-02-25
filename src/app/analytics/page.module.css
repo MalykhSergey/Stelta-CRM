@@ -1,12 +1,7 @@
 #inputsContainer {
-    /*display: grid;*/
-    /*grid-template-columns: repeat(2, auto);*/
-    /*justify-content: start;*/
-    /*align-items: center;*/
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    max-width: 500px;
     gap: 10px;
 }
 #inputsContainer > * {
@@ -18,11 +13,17 @@
     gap: 20px;
     margin: auto;
 }
-#chartTitle{
+.chartTitle{
     font-family: var(--bold-title-font);
 }
 @media only screen and (max-width: 600px) {
     #inputsContainer {
-        max-width: none;
+        width: unset;
+    }
+}
+@media only screen and (max-width: 1700px) {
+    #inputsContainer {
+        width: 800px;
+        align-self: center;
     }
 }

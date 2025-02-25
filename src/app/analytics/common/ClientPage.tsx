@@ -82,7 +82,7 @@ const CommonAnalyticsClient = observer((props: { initialData: CommonAnalytics })
                     <input type="checkbox" id='is_special' defaultChecked={true} onChange={toggleIsSpecial}/>
                 </div>
             </div>
-            <h1 id={styles.chartTitle}>Общая аналитика по тендерам</h1>
+            <h1 className={styles.chartTitle}>Общая аналитика по тендерам</h1>
             <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
         </div>
     )

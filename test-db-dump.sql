@@ -198,7 +198,7 @@ ALTER TABLE public.document_requests_files ALTER COLUMN id ADD GENERATED ALWAYS 
 
 CREATE TABLE public.rebidding_prices (
     tender_id integer NOT NULL,
-    price numeric(12,2) DEFAULT 0 NOT NULL,
+    price numeric(16,2) DEFAULT 0 NOT NULL,
     id integer NOT NULL
 );
 
@@ -292,8 +292,8 @@ CREATE TABLE public.tenders (
     name character varying DEFAULT 'Полное наименование тендера'::character varying NOT NULL,
     lot_number character varying DEFAULT 'Лот №'::character varying NOT NULL,
     register_number character varying DEFAULT 'Реестровый №'::character varying NOT NULL,
-    initial_max_price numeric(12,2) DEFAULT 0 NOT NULL,
-    price numeric(12,2) DEFAULT 0 NOT NULL,
+    initial_max_price numeric(16,2) DEFAULT 0 NOT NULL,
+    price numeric(16,2) DEFAULT 0 NOT NULL,
     date1_start timestamp without time zone DEFAULT now() NOT NULL,
     date1_finish timestamp without time zone DEFAULT now() NOT NULL,
     date2_finish timestamp without time zone DEFAULT now() NOT NULL,

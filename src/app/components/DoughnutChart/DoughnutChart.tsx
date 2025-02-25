@@ -11,6 +11,9 @@ const centerTextPlugin = {
     id: 'center-title',
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     beforeDraw: function (chart: any) {
+        if (chart.config.type != 'doughnut'){
+            return;
+        }
         const centerConfig = chart.config.options!.elements!.center;
         if (centerConfig) {
             const ctx = chart.ctx;
