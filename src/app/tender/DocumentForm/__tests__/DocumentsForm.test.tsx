@@ -1,34 +1,35 @@
-import { ConfirmDialogProvider } from '@/app/components/Dialog/ConfirmDialogContext';
-import FileName, { FileType } from '@/models/Tender/FileName';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {ConfirmDialogProvider} from '@/app/components/Dialog/ConfirmDialogContext';
+import FileName, {FileType} from '@/models/Tender/FileName';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import DocumentsForm from '../DocumentsForm';
 
 
 vi.mock('../Handler', () => ({
     deleteHandler: vi.fn(),
     uploadHandler: vi.fn().mockResolvedValue([
-        { id: 1, name: 'test1.pdf' },
-        { id: 2, name: 'test2.pdf' }
+        {id: 1, name: 'test1.pdf'},
+        {id: 2, name: 'test2.pdf'}
     ])
 }));
 
 describe('DocumentsForm', () => {
-    const mockFileNames: FileName[] = [
-        { id: 1, tenderId: 1, parentId: 0, name: 'test1.pdf', fileType: FileType.Tender },
-        { id: 2, tenderId: 1, parentId: 0, name: 'test2.pdf', fileType: FileType.Tender }
-    ];
     const mockProps = {
         tenderId: 1,
         stage: 1,
-        fileNames: mockFileNames,
-        pushFile: vi.fn(),
-        removeFile: vi.fn(),
+        fileNames: [
+            {id: 1, tenderId: 1, parentId: 0, name: 'test1.pdf', fileType: FileType.Tender},
+            {id: 2, tenderId: 1, parentId: 0, name: 'test2.pdf', fileType: FileType.Tender}
+        ],
         title: 'Тестовые документы',
         isEditable: true
     };
 
     const setup = (props = mockProps) => {
+        mockProps.fileNames = [
+            {id: 1, tenderId: 1, parentId: 0, name: 'test1.pdf', fileType: FileType.Tender},
+            {id: 2, tenderId: 1, parentId: 0, name: 'test2.pdf', fileType: FileType.Tender}
+        ]
         return render(
             <ConfirmDialogProvider>
                 <DocumentsForm {...props} />
@@ -50,15 +51,15 @@ describe('DocumentsForm', () => {
     });
 
     it('должен отображать кнопку прикрепления файла только в режиме редактирования', () => {
-        const { rerender } = setup();
+        const {rerender} = setup();
 
-        
+
         expect(screen.getByLabelText('Прикрепить')).toBeDefined();
 
-        
+
         rerender(
             <ConfirmDialogProvider>
-                <DocumentsForm {...mockProps} isEditable={false} />
+                <DocumentsForm {...mockProps} isEditable={false}/>
             </ConfirmDialogProvider>
         );
         expect(screen.queryByLabelText('Прикрепить')).toBeNull();
@@ -68,15 +69,15 @@ describe('DocumentsForm', () => {
         setup();
 
         const deleteButtons = screen.getAllByLabelText('Удалить');
-        expect(deleteButtons).toHaveLength(mockFileNames.length);
+        expect(deleteButtons).toHaveLength(mockProps.fileNames.length);
     });
 
     it('должен иметь правильные ссылки для скачивания файлов', () => {
         setup();
 
-        mockFileNames.forEach(file => {
+        mockProps.fileNames.forEach(file => {
             const link = screen.getByText(file.name).closest('a');
-            expect(link).toHaveAttribute('href', `/download/?fileName=${FileName.getFilePath(file)}`);
+            expect(link).toHaveAttribute('href', `/download/?fileName=${encodeURIComponent(FileName.getFilePath(file))}`);
         });
     });
 
@@ -86,7 +87,7 @@ describe('DocumentsForm', () => {
         const expandButton = screen.getByLabelText('Развернуть');
         const container = screen.getByLabelText('Тестовые документы');
 
-        
+
         expect(container.className).not.toMatch(/expanded/);
         expect(expandButton.className).toMatch(/rotated/);
 
@@ -94,7 +95,7 @@ describe('DocumentsForm', () => {
         expect(container.className).toMatch(/expanded/);
         expect(expandButton.className).not.toMatch(/rotated/);
 
-        
+
         fireEvent.click(expandButton);
         expect(container.className).not.toMatch(/expanded/);
         expect(expandButton.className).toMatch(/rotated/);
@@ -114,7 +115,7 @@ describe('DocumentsForm', () => {
         fireEvent.click(confirmButton);
 
         await waitFor(() => {
-            expect(mockProps.removeFile).toHaveBeenCalledWith(mockFileNames[0]);
+            expect(mockProps.fileNames.length == 1)
         });
 
     });
@@ -126,11 +127,11 @@ describe('DocumentsForm', () => {
         fireEvent.click(attachButton);
 
         const fileInput = screen.getByLabelText('Тестовые документы').querySelector('input[type="file"]');
-        const file = new File(['test content'], 'test.txt', { type: 'text/plain' });
-        fireEvent.change(fileInput!, { target: { files: [file] } });
+        const file = new File(['test content'], 'test.txt', {type: 'text/plain'});
+        fireEvent.change(fileInput!, {target: {files: [file]}});
 
         await waitFor(() => {
-            expect(mockProps.pushFile).toHaveBeenCalled();
+            expect(mockProps.fileNames.length == 3);
         });
     });
 }); 

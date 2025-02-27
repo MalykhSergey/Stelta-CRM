@@ -1,5 +1,4 @@
 import {DocumentRequest} from "@/models/Tender/DocumentRequest";
-import FileName from "@/models/Tender/FileName";
 import {observer} from "mobx-react-lite";
 import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 import styles from './DocumentRequestForm.module.css';
@@ -21,14 +20,12 @@ const DocumentRequestForm: React.FC<DocumentRequestFormProps> = observer(({
                                                                           }) => {
     return (
         <div className={styles.documentRequest}>
-            <DocumentsForm tenderId={tenderId} stage={1}
-                           pushFile={(fileName: FileName) => documentRequest.addFile(fileName)}
-                           removeFile={(fileName: FileName) => documentRequest.removeFile(fileName)}
+            <DocumentsForm tenderId={tenderId}
                            specialPlaceName='documentRequestId'
                            specialPlaceId={documentRequest.id}
                            fileNames={documentRequest.fileNames} title={`Дозапрос документов ${orderNumber}`}
                            isEditable={isEditable}
-                           independent={isEditable}
+                           isShowDelete={isEditable}
                            onDelete={deleteDocumentRequest}
             />
             <div>

@@ -18,8 +18,8 @@ vi.mock('@/app/components/Buttons/ExpandButton/ExpandButton', () => ({
     )
 }));
 vi.mock('@/app/tender/DocumentForm/DocumentsForm', () => ({
-    default: ({title, stage}: { title: string; stage: number; }) => (
-        <div data-testid={`documents-form-${stage}`}>{title}</div>
+    default: ({title, specialPlaceId}: { title: string; specialPlaceId: number; }) => (
+        <div data-testid={`documents-form-${specialPlaceId}`}>{title}</div>
     )
 }));
 vi.mock('@/models/Tender/TenderService', () => ({
