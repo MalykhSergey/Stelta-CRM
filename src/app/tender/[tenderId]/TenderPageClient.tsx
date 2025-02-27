@@ -1,24 +1,23 @@
 'use client';
 
-import { useAuth } from "@/app/AuthContext";
-import { showMessage } from '@/app/components/Alerts/Alert';
-import { PrimaryButton } from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
+import {useAuth} from "@/app/AuthContext";
+import {showMessage} from '@/app/components/Alerts/Alert';
+import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
 import CommentsForm from '@/app/tender/CommentsForm/CommentsForm';
-import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import StageForm1 from '@/app/tender/StageForm1/StageForm1';
 import StageForm2 from '@/app/tender/StageForm2/StageForm2';
 import StageForm3 from '@/app/tender/StageForm3/StageForm3';
 import TenderForm from '@/app/tender/TenderForm/TenderForm';
 import Company from '@/models/Company/Company';
-import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
-import FileName from '@/models/Tender/FileName';
-import { Tender } from '@/models/Tender/Tender';
-import { deleteTender, updateTenderById } from '@/models/Tender/TenderService';
-import { Role } from "@/models/User/User";
-import { observer, useLocalObservable } from 'mobx-react-lite';
-import { useRouter } from 'next/navigation';
+import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
+import {Tender} from '@/models/Tender/Tender';
+import {deleteTender, updateTenderById} from '@/models/Tender/TenderService';
+import {Role} from "@/models/User/User";
+import {observer, useLocalObservable} from 'mobx-react-lite';
+import {useRouter} from 'next/navigation';
 import styles from "./TenderPageClient.module.css";
-import { createContactPerson } from "@/models/Company/ContactPerson/ContactPersonService";
+import {createContactPerson} from "@/models/Company/ContactPerson/ContactPersonService";
+import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 
 const getGreenButtonText = (status: number) => {
     switch (status) {
@@ -118,7 +117,7 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
                 showMessage("Выберите организацию!", "error")
             }
             const result = await createContactPerson({...tender.contactPerson}, tender.company.id)
-            if (result?.error){
+            if (result?.error) {
                 showMessage(result.error)
                 return
             }
@@ -149,32 +148,30 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
     return (
         <div id={styles.content}>
             <div id={styles.leftPanel}>
-                <TenderForm tender={tender} companies={companies} isEditable={isEditable} />
+                <TenderForm tender={tender} companies={companies} isEditable={isEditable}/>
             </div>
             <div id={styles.rightPanel}>
-                <DocumentsForm tenderId={tender.id} stage={0} fileNames={tender.stagedFileNames[0]}
-                    pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 0)}
-                    removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 0)}
-                    title='Документы тендера' isEditable={tender.status == 0}
-                    isOpened={isEditable.company} />
+                <DocumentsForm title='Документы тендера' tenderId={tender.id} fileNames={tender.stagedFileNames[0]}
+                               specialPlaceName={'stage'} specialPlaceId={0} isEditable={tender.status == 0}
+                               isOpened={isEditable.company}/>
                 {Math.abs(tender.status) >= 1 &&
-                    <StageForm1 tender={tender} isEditable={tender.status == 1 && isAuth} />}
+                    <StageForm1 tender={tender} isEditable={tender.status == 1 && isAuth}/>}
                 {Math.abs(tender.status) >= 3 &&
-                    <StageForm2 tender={tender} isEditable={tender.status == 3 && isAuth} />}
+                    <StageForm2 tender={tender} isEditable={tender.status == 3 && isAuth}/>}
                 {Math.abs(tender.status) >= 5 &&
-                    <StageForm3 tender={tender} isEditable={tender.status == 5 && isAuth} />}
-                <CommentsForm tender={tender} />
+                    <StageForm3 tender={tender} isEditable={tender.status == 5 && isAuth}/>}
+                <CommentsForm tender={tender}/>
                 {isAuth && <div className={styles.buttonRow}>
                     {(tender.status > 0 && tender.status < 6 && (tender.status & 1) == 0) &&
                         <button className='OrangeButton'
-                            onClick={() => updateStageHandler(tender.status - 1)}>{getOrangeButtonText(tender.status)}</button>}
+                                onClick={() => updateStageHandler(tender.status - 1)}>{getOrangeButtonText(tender.status)}</button>}
                     {tender.status >= 0 && tender.status < 6 && <button className='GreenButton'
-                        onClick={() => updateStageHandler(tender.status + 1)}>{getGreenButtonText(tender.status)}</button>}
+                                                                        onClick={() => updateStageHandler(tender.status + 1)}>{getGreenButtonText(tender.status)}</button>}
                     <PrimaryButton onClick={saveHandler}>Сохранить</PrimaryButton>
                     {tender.status == 0 &&
                         <button className='RedButton' onClick={() => deleteHandler()}>Удалить</button>}
                     {tender.status > 0 && tender.status < 5 && <button className='RedButton'
-                        onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
+                                                                       onClick={() => updateStageHandler(-tender.status)}>{getLooseButtonText(tender.status)}</button>}
                 </div>}
             </div>
         </div>

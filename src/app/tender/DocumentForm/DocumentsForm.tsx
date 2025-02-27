@@ -16,15 +16,12 @@ import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
 
 interface DocumentsFormProps {
     tenderId: number,
-    stage: number,
     specialPlaceName?: string,
     specialPlaceId?: number,
     fileNames: FileName[],
-    pushFile: (fileName: FileName) => void,
-    removeFile: (fileName: FileName) => void,
     title: string,
     isEditable: boolean,
-    independent?: boolean,
+    isShowDelete?: boolean,
     isOpened?: boolean,
     onDelete?: () => void
 }
@@ -33,15 +30,12 @@ const MAX_FILE_SIZE = 30 * 1024 * 1024
 
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                                                                   tenderId,
-                                                                  stage,
                                                                   specialPlaceName = 'default',
                                                                   specialPlaceId = 0,
                                                                   fileNames,
-                                                                  pushFile,
-                                                                  removeFile,
                                                                   title,
                                                                   isEditable,
-                                                                  independent,
+                                                                  isShowDelete: isShowDelete,
                                                                   onDelete = () => {
                                                                   },
                                                                   isOpened = false,
@@ -50,22 +44,23 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
     const fileInput = useRef<HTMLInputElement>(null)
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
+        let size = 0
         if (e.target.files)
             for (let i = 0; i < e.target.files.length; i++) {
                 const file_name = encodeURI(e.target.files[i].name)
-                if (e.target.files[i].size > MAX_FILE_SIZE) {
-                    showMessage(`Файл ${file_name} превышает допустимый размер в 30 МБ.`);
-                    continue;
+                size += e.target.files[i].size
+                if (size >= MAX_FILE_SIZE) {
+                    showMessage(`Суммарный объём файлов превышает допустимый размер в 30 МБ. Будет загружена только часть файлов.`);
+                    break;
                 }
                 formData.append('file', e.target.files[i], file_name);
             }
-        formData.append('stage', stage.toString());
         formData.append('tenderId', tenderId.toString());
         formData.append(specialPlaceName, specialPlaceId.toString());
         const result = await uploadHandler(formData)
         if (Array.isArray(result))
             for (const newFile of result as FileName[])
-                pushFile(newFile)
+                fileNames.push(newFile)
         else
             showMessage(result.error)
     }
@@ -80,8 +75,11 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                         const result = await deleteHandler({...fileName})
                         if (result?.error) {
                             showMessage(result.error)
-                        } else
-                            removeFile(fileName)
+                        } else {
+                            const index = fileNames.findIndex(item => item.name === fileName.name);
+                            if (index > -1)
+                                fileNames.splice(index, 1);
+                        }
                     }
                 })
         };
@@ -90,7 +88,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
     for (const fileName of fileNames) {
         files.push(
             <div className={styles.fileItem} key={fileName.name + files.length}>
-                <a href={`/download/?fileName=${FileName.getFilePath(fileName)}`} download>
+                <a href={`/download/?fileName=${encodeURIComponent(FileName.getFilePath(fileName))}`} download>
                     {fileName.name}<FontAwesomeIcon icon={faDownload}></FontAwesomeIcon></a>
                 {isEditable && <DeleteButton onClick={deleteClickHandler(fileName)}/>}
             </div>)
@@ -99,7 +97,6 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
 
         <ExpandableForm
             start_value={isOpened && fileNames.length > 0}
-            // additional_class={className}
             aria-label={title}
             header={(toggle, isExpanded) => {
                 return (
@@ -115,12 +112,11 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                                     if (!isExpanded) toggle()
                                 }}
                                        type="file" name="file" multiple hidden/>
-                                <input type="hidden" name="tenderId" value={tenderId}/>
                             </div>
                         }
                         <div className={StageStyles.rightPanel}>
                             {fileNames.length > 0 && <ExpandButton onClick={toggle} expanded={!isExpanded}/>}
-                            {independent && isEditable &&
+                            {isShowDelete && isEditable &&
                                 <CloseButton onClick={() => {
                                     showConfirmDialog({
                                         message: `Вы действительно хотите удалить?`,

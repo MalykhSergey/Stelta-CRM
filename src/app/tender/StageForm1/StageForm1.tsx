@@ -2,7 +2,6 @@ import {showMessage} from "@/app/components/Alerts/Alert";
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 import DocumentsForm from '@/app/tender/DocumentForm/DocumentsForm';
 import {DocumentRequest} from '@/models/Tender/DocumentRequest';
-import FileName from '@/models/Tender/FileName';
 import {Tender} from '@/models/Tender/Tender';
 import {addDocumentRequest, deleteDocumentRequestById} from '@/models/Tender/TenderService';
 import {makeAutoObservable} from 'mobx';
@@ -46,21 +45,20 @@ const StageForm1: React.FC<StageFormProps> = observer(({tender, isEditable}) => 
         <ExpandableForm
             start_value={isEditable}
             header={(toggle, isExpanded) => {
-            return (
-                <div className={StageStyles.cardHeader}>
-                    <h3>Этап 1</h3>
-                    <ExpandButton onClick={toggle} className={StageStyles.rightPanel}
-                                  expanded={!isExpanded}/>
-                </div>
-            )
-        }}>
+                return (
+                    <div className={StageStyles.cardHeader}>
+                        <h3>Этап 1</h3>
+                        <ExpandButton onClick={toggle} className={StageStyles.rightPanel}
+                                      expanded={!isExpanded}/>
+                    </div>
+                )
+            }}>
             <div className={StageStyles.stageForm}>
                 <DocumentsForm
                     title='Формы 1 этапа'
                     tenderId={tender.id}
-                    stage={1}
-                    pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 1)}
-                    removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 1)}
+                    specialPlaceName={'stage'}
+                    specialPlaceId={1}
                     fileNames={tender.stagedFileNames[1]}
                     isEditable={isEditable}/>
                 {datesRequests}

@@ -4,7 +4,6 @@ import StageStyles from "@/app/tender/StageForms.module.css";
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
 import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
-import FileName from "@/models/Tender/FileName";
 import styles from "./StageForm3.module.css";
 
 interface StageForm3Props {
@@ -21,11 +20,9 @@ const StageForm3: React.FC<StageForm3Props> = observer(({tender, isEditable}) =>
             </div>
         )}>
             <div className={StageStyles.stageForm}>
-                <DocumentsForm tenderId={tender.id} stage={5}
-                               pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 5)}
-                               removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 5)}
-                               fileNames={tender.stagedFileNames[5]} title='Документы договора' isEditable={isEditable}
-                               independent={false}/>
+                <DocumentsForm tenderId={tender.id} specialPlaceName={'stage'} specialPlaceId={5}
+                               fileNames={tender.stagedFileNames[5]} title='Документы договора'
+                               isEditable={isEditable}/>
                 <div id={styles.grid}>
                     <div className={styles.inputGroup}>
                         <label htmlFor={`contractDate${tender.id}`}>Дата заключения договора:</label>

@@ -46,8 +46,8 @@ describe('StageForm2', () => {
         // Проверяем наличие заголовка
         expect(screen.getByText('Этап 2')).toBeInTheDocument();
         // Проверяем, что рендерятся документы и формы для 2 этапа
-        expect(screen.getByTestId('documents-form-2')).toBeInTheDocument();
-        expect(screen.getByTestId('documents-form-3')).toBeInTheDocument();
+        expect(screen.getByText('Документы 2 этапа')).toBeInTheDocument();
+        expect(screen.getByText('Формы 2 этапа')).toBeInTheDocument();
         // Проверяем наличие поля ввода "Наша цена:"
         const currencyInput = screen.getByLabelText(/Наша цена:/) as HTMLInputElement;
         expect(currencyInput).toBeInTheDocument();

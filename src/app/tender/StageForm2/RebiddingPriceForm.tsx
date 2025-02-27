@@ -1,4 +1,3 @@
-import FileName from "@/models/Tender/FileName";
 import {RebiddingPrice} from "@/models/Tender/RebiddingPrice";
 import {deleteRebiddingPriceById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
@@ -25,9 +24,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
     const [error, setError] = useState('')
     return (
         <div className={styles.rebiddingPrice}>
-            <DocumentsForm tenderId={tenderId} stage={1}
-                           pushFile={(fileName: FileName) => rebiddingPrice.addFile(fileName)}
-                           removeFile={(fileName: FileName) => rebiddingPrice.removeFile(fileName)}
+            <DocumentsForm tenderId={tenderId}
                            specialPlaceName='rebiddingPriceId'
                            specialPlaceId={rebiddingPrice.id}
                            fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`}
@@ -35,7 +32,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
                                deleteRebiddingPrice()
                                deleteRebiddingPriceById(tenderId, rebiddingPrice.id)
                            }}
-                           isEditable={isEditable} independent={isEditable}/>
+                           isEditable={isEditable} isShowDelete={isEditable}/>
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>
                 <CurrencyInput

@@ -1,4 +1,3 @@
-import FileName from '@/models/Tender/FileName';
 import {RebiddingPrice} from '@/models/Tender/RebiddingPrice';
 import {addRebiddingPrice} from '@/models/Tender/TenderService';
 import {makeAutoObservable} from 'mobx';
@@ -50,17 +49,11 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
                             )
                         }}>
             <div className={StageStyles.stageForm}>
-                <DocumentsForm tenderId={tender.id} stage={2}
-                               pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 2)}
-                               removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 2)}
-                               fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={isEditable}
-                               independent={false}/>
+                <DocumentsForm tenderId={tender.id} specialPlaceName={'stage'} specialPlaceId={2}
+                               fileNames={tender.stagedFileNames[2]} title='Документы 2 этапа' isEditable={isEditable}/>
                 <div className={styles.secondForms}>
-                    <DocumentsForm tenderId={tender.id} stage={3}
-                                   pushFile={(fileName: FileName) => tender.addToStagedFileNames(fileName, 3)}
-                                   removeFile={(fileName: FileName) => tender.removeFileFromStagedFileNames(fileName, 3)}
-                                   fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={isEditable}
-                                   independent={false}/>
+                    <DocumentsForm tenderId={tender.id} specialPlaceName={'stage'} specialPlaceId={3}
+                                   fileNames={tender.stagedFileNames[3]} title='Формы 2 этапа' isEditable={isEditable}/>
                     <div>
                         <label htmlFor={`Stage2FormPrice${tender.id}`}>Наша цена:</label>
                         <CurrencyInput

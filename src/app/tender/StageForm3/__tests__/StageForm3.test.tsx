@@ -6,8 +6,11 @@ import {Tender} from '@/models/Tender/Tender';
 import {mockDeep} from "vitest-mock-extended";
 
 vi.mock('@/app/tender/DocumentForm/DocumentsForm', () => ({
-    default: ({title, stage}: { title: string; stage: number; }) => (
-        <div data-testid={`documents-form-${stage}`}>{title}</div>
+    default: ({title, specialPlaceId}: {
+        title: string;
+        specialPlaceId: number
+    }) => (
+        <div data-testid={`documents-form-${specialPlaceId}`}>{title}</div>
     )
 }));
 vi.mock('@/app/components/Buttons/ExpandButton/ExpandButton', () => ({
