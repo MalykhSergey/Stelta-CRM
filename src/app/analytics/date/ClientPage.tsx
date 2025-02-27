@@ -1,13 +1,15 @@
 "use client"
-import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
-import React, {useMemo, useRef} from "react";
-import styles from '../page.module.css';
-import {makeAutoObservable} from "mobx";
-import {observer} from "mobx-react-lite";
-import ChartDataType from "@/models/Analytics/ChartDataType";
 import BarChart from "@/app/analytics/date/BarChart";
-import {CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
+import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
+import { getStatusAnalyticsByDateRange } from "@/models/Analytics/AnalyticsService";
+import ChartDataType from "@/models/Analytics/ChartDataType";
+import { CountInDate, CumulativeStatusAnalytics } from "@/models/Analytics/CumulativeStatusAnalytics";
+import getStatusName from "@/models/Tender/Status";
+import { makeAutoObservable } from "mobx";
+import { observer } from "mobx-react-lite";
+import React, { useMemo, useRef } from "react";
+import styles from '../page.module.css';
+import CFD from "./CFD";
 
 class AnalyticsStore {
     data: CumulativeStatusAnalytics
@@ -49,7 +51,7 @@ class AnalyticsStore {
             title: `Тендеры за период: ${this.startDate} – ${this.endDate}`,
             data: {
                 labels: labels,
-                datasets: [{data: data}]
+                datasets: [{ data: data }]
             }
         }
     }
@@ -72,6 +74,18 @@ class AnalyticsStore {
                         "rgb(201, 203, 207)"
                     ],
                 }]
+            }
+        }
+    }
+
+    getCFDData() {
+        const datasets = this.data.dates_status_counts.map((status, index) => {
+            return { data: status.map((value: CountInDate) => { return { x: value.date, y: value.count } }), label: getStatusName(index) }
+        })
+        return {
+            title: `Воронка продаж за период: ${this.startDate} – ${this.endDate}`,
+            data: {
+                datasets: datasets
             }
         }
     }
@@ -118,37 +132,41 @@ const DateRangeAnalyticsClient = observer((props: {
             <div id={styles.inputsContainer}>
                 <div className="row-inputs">
                     <label htmlFor="count">Количество:</label>
-                    <input id='count' type="radio" name='type' value='0' onChange={toggleType} defaultChecked={true}/>
+                    <input id='count' type="radio" name='type' value='0' onChange={toggleType} defaultChecked={true} />
                     <label htmlFor="sum">Цена:</label>
-                    <input id='sum' type="radio" name='type' value='1' onChange={toggleType}/>
+                    <input id='sum' type="radio" name='type' value='1' onChange={toggleType} />
                 </div>
                 <div className='row-inputs'>
                     <label htmlFor="is_special">Показывать подыгрыш:</label>
-                    <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial}/>
+                    <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial} />
                 </div>
                 <div className='row-inputs'>
                     <div className='row-inputs'>
                         <label htmlFor="startDateInput">От:</label>
                         <input id="startDateInput" ref={startDateInput} type="date"
-                               defaultValue={props.startDate.toLocaleDateString('en-CA')}
-                               onChange={loadData}/>
+                            defaultValue={props.startDate.toLocaleDateString('en-CA')}
+                            onChange={loadData} />
                     </div>
                     <div className='row-inputs'>
                         <label htmlFor="endDateInput">До:</label>
                         <input id="endDateInput" ref={endDateInput} type="date"
-                               defaultValue={props.endDate.toLocaleDateString('en-CA')}
-                               onChange={loadData}/>
+                            defaultValue={props.endDate.toLocaleDateString('en-CA')}
+                            onChange={loadData} />
                     </div>
                 </div>
             </div>
-            <div style={{display: "flex", flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'}}>
+            <div style={{ display: "flex", flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <div>
                     <h1 className={styles.chartTitle}>{chartData.title}</h1>
-                    <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
+                    <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type} />
                 </div>
                 <div>
                     <h1 className={styles.chartTitle}>{cumulativeChartData.title}</h1>
-                    <BarChart data={cumulativeChartData.data}/>
+                    <BarChart data={cumulativeChartData.data} />
+                </div>
+                <div>
+                    <h1 className={styles.chartTitle}>{cumulativeChartData.title}</h1>
+                    <CFD data={analyticsStore.getCFDData().data} />
                 </div>
             </div>
         </div>
