@@ -41,10 +41,11 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+COMMENT ON SCHEMA public IS 'standard public schema';
 
 
 --
--- TOC entry 865 (class 1247 OID 16386)
+-- TOC entry 866 (class 1247 OID 16386)
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -56,7 +57,7 @@ CREATE TYPE public.user_role AS ENUM (
 
 
 --
--- TOC entry 236 (class 1255 OID 16540)
+-- TOC entry 237 (class 1255 OID 16393)
 -- Name: log_status_change(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -83,7 +84,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 217 (class 1259 OID 16393)
+-- TOC entry 217 (class 1259 OID 16394)
 -- Name: companies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -94,7 +95,7 @@ CREATE TABLE public.companies (
 
 
 --
--- TOC entry 218 (class 1259 OID 16398)
+-- TOC entry 218 (class 1259 OID 16399)
 -- Name: companies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -109,7 +110,7 @@ ALTER TABLE public.companies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 219 (class 1259 OID 16399)
+-- TOC entry 219 (class 1259 OID 16400)
 -- Name: contact_persons; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -124,7 +125,7 @@ CREATE TABLE public.contact_persons (
 
 
 --
--- TOC entry 220 (class 1259 OID 16410)
+-- TOC entry 220 (class 1259 OID 16409)
 -- Name: contact_persons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -139,7 +140,7 @@ ALTER TABLE public.contact_persons ALTER COLUMN id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 221 (class 1259 OID 16411)
+-- TOC entry 221 (class 1259 OID 16410)
 -- Name: document_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -151,7 +152,7 @@ CREATE TABLE public.document_requests (
 
 
 --
--- TOC entry 222 (class 1259 OID 16415)
+-- TOC entry 222 (class 1259 OID 16414)
 -- Name: date_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -165,7 +166,7 @@ CREATE SEQUENCE public.date_requests_id_seq
 
 
 --
--- TOC entry 3488 (class 0 OID 0)
+-- TOC entry 3495 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: date_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -174,7 +175,7 @@ ALTER SEQUENCE public.date_requests_id_seq OWNED BY public.document_requests.id;
 
 
 --
--- TOC entry 223 (class 1259 OID 16416)
+-- TOC entry 223 (class 1259 OID 16415)
 -- Name: document_requests_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -186,7 +187,7 @@ CREATE TABLE public.document_requests_files (
 
 
 --
--- TOC entry 224 (class 1259 OID 16421)
+-- TOC entry 224 (class 1259 OID 16420)
 -- Name: document_requests_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -201,7 +202,7 @@ ALTER TABLE public.document_requests_files ALTER COLUMN id ADD GENERATED ALWAYS 
 
 
 --
--- TOC entry 225 (class 1259 OID 16422)
+-- TOC entry 225 (class 1259 OID 16421)
 -- Name: rebidding_prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -213,7 +214,7 @@ CREATE TABLE public.rebidding_prices (
 
 
 --
--- TOC entry 226 (class 1259 OID 16426)
+-- TOC entry 226 (class 1259 OID 16425)
 -- Name: rebidding_prices_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -225,7 +226,7 @@ CREATE TABLE public.rebidding_prices_files (
 
 
 --
--- TOC entry 227 (class 1259 OID 16431)
+-- TOC entry 227 (class 1259 OID 16430)
 -- Name: rebidding_prices_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -240,7 +241,7 @@ ALTER TABLE public.rebidding_prices_files ALTER COLUMN id ADD GENERATED ALWAYS A
 
 
 --
--- TOC entry 228 (class 1259 OID 16432)
+-- TOC entry 228 (class 1259 OID 16431)
 -- Name: request_prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -254,7 +255,7 @@ CREATE SEQUENCE public.request_prices_id_seq
 
 
 --
--- TOC entry 3489 (class 0 OID 0)
+-- TOC entry 3496 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: request_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -263,7 +264,7 @@ ALTER SEQUENCE public.request_prices_id_seq OWNED BY public.rebidding_prices.id;
 
 
 --
--- TOC entry 229 (class 1259 OID 16433)
+-- TOC entry 229 (class 1259 OID 16432)
 -- Name: tenders_files; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -276,7 +277,7 @@ CREATE TABLE public.tenders_files (
 
 
 --
--- TOC entry 230 (class 1259 OID 16439)
+-- TOC entry 230 (class 1259 OID 16438)
 -- Name: tender_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -291,7 +292,7 @@ ALTER TABLE public.tenders_files ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
--- TOC entry 235 (class 1259 OID 16530)
+-- TOC entry 231 (class 1259 OID 16439)
 -- Name: tender_status_history; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -303,7 +304,48 @@ CREATE TABLE public.tender_status_history (
 
 
 --
--- TOC entry 231 (class 1259 OID 16440)
+-- TOC entry 236 (class 1259 OID 16543)
+-- Name: tender_status_cache; Type: MATERIALIZED VIEW; Schema: public; Owner: -
+--
+
+CREATE MATERIALIZED VIEW public.tender_status_cache AS
+ WITH min_max_dates AS (
+         SELECT min((tender_status_history.changed_at)::date) AS min_date,
+            max((tender_status_history.changed_at)::date) AS max_date
+           FROM public.tender_status_history
+        ), date_series AS (
+         SELECT (generate_series((min_max_dates.min_date)::timestamp with time zone, (min_max_dates.max_date)::timestamp with time zone, '1 day'::interval))::date AS report_date
+           FROM min_max_dates
+        ), all_statuses AS (
+         SELECT s.status
+           FROM ( VALUES (0), (1), (2), (3), (4), (5), (6)) s(status)
+        ), all_combinations AS (
+         SELECT t.report_date,
+            s.status
+           FROM (date_series t
+             CROSS JOIN all_statuses s)
+        ), tender_status AS (
+         SELECT c.report_date,
+            c.status,
+            (count(DISTINCT h.tender_id))::integer AS count_tenders
+           FROM (all_combinations c
+             LEFT JOIN LATERAL ( SELECT tender_status_history.tender_id,
+                    first_value(tender_status_history.status) OVER (PARTITION BY tender_status_history.tender_id ORDER BY tender_status_history.changed_at DESC) AS status
+                   FROM public.tender_status_history
+                  WHERE ((tender_status_history.changed_at)::date <= c.report_date)) h ON ((h.status = c.status)))
+          GROUP BY c.report_date, c.status
+        )
+ SELECT report_date AS date,
+    status,
+    count_tenders,
+    (sum(count_tenders) OVER (PARTITION BY report_date ORDER BY status DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW))::integer AS cumulative_tenders
+   FROM tender_status
+  ORDER BY report_date, status
+  WITH NO DATA;
+
+
+--
+-- TOC entry 232 (class 1259 OID 16442)
 -- Name: tenders; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -334,7 +376,7 @@ CREATE TABLE public.tenders (
 
 
 --
--- TOC entry 232 (class 1259 OID 16456)
+-- TOC entry 233 (class 1259 OID 16458)
 -- Name: tenders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -349,15 +391,7 @@ ALTER TABLE public.tenders ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 3316 (class 2620 OID 16541)
--- Name: tenders tr_log_status_change; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER tr_log_status_change AFTER INSERT OR UPDATE OF status ON public.tenders FOR EACH ROW EXECUTE FUNCTION public.log_status_change();
-
-
---
--- TOC entry 233 (class 1259 OID 16457)
+-- TOC entry 234 (class 1259 OID 16459)
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -371,7 +405,7 @@ CREATE TABLE public.users (
 
 
 --
--- TOC entry 234 (class 1259 OID 16463)
+-- TOC entry 235 (class 1259 OID 16465)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -386,7 +420,7 @@ ALTER TABLE public.users ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 3261 (class 2604 OID 16464)
+-- TOC entry 3265 (class 2604 OID 16466)
 -- Name: document_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -394,7 +428,7 @@ ALTER TABLE ONLY public.document_requests ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
--- TOC entry 3264 (class 2604 OID 16465)
+-- TOC entry 3268 (class 2604 OID 16467)
 -- Name: rebidding_prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -402,7 +436,7 @@ ALTER TABLE ONLY public.rebidding_prices ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 3462 (class 0 OID 16393)
+-- TOC entry 3469 (class 0 OID 16394)
 -- Dependencies: 217
 -- Data for Name: companies; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -429,7 +463,7 @@ INSERT INTO public.companies OVERRIDING SYSTEM VALUE VALUES (45, 'ООО «Ха�
 
 
 --
--- TOC entry 3464 (class 0 OID 16399)
+-- TOC entry 3471 (class 0 OID 16400)
 -- Dependencies: 219
 -- Data for Name: contact_persons; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -529,7 +563,7 @@ INSERT INTO public.contact_persons OVERRIDING SYSTEM VALUE VALUES (82, 'Жанн
 
 
 --
--- TOC entry 3466 (class 0 OID 16411)
+-- TOC entry 3473 (class 0 OID 16410)
 -- Dependencies: 221
 -- Data for Name: document_requests; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -598,7 +632,7 @@ INSERT INTO public.document_requests VALUES (824, '2025-01-05', 26);
 
 
 --
--- TOC entry 3468 (class 0 OID 16416)
+-- TOC entry 3475 (class 0 OID 16415)
 -- Dependencies: 223
 -- Data for Name: document_requests_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -606,7 +640,7 @@ INSERT INTO public.document_requests VALUES (824, '2025-01-05', 26);
 
 
 --
--- TOC entry 3470 (class 0 OID 16422)
+-- TOC entry 3477 (class 0 OID 16421)
 -- Dependencies: 225
 -- Data for Name: rebidding_prices; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -663,7 +697,7 @@ INSERT INTO public.rebidding_prices VALUES (24, 7812.47, 717);
 
 
 --
--- TOC entry 3471 (class 0 OID 16426)
+-- TOC entry 3478 (class 0 OID 16425)
 -- Dependencies: 226
 -- Data for Name: rebidding_prices_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -671,16 +705,91 @@ INSERT INTO public.rebidding_prices VALUES (24, 7812.47, 717);
 
 
 --
--- TOC entry 3480 (class 0 OID 16530)
--- Dependencies: 235
+-- TOC entry 3483 (class 0 OID 16439)
+-- Dependencies: 231
 -- Data for Name: tender_status_history; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.tender_status_history VALUES (2, 0, '2025-03-02 09:09:07');
+INSERT INTO public.tender_status_history VALUES (2, 2, '2025-07-23 00:47:08');
+INSERT INTO public.tender_status_history VALUES (2, 6, '2025-09-15 08:35:15');
+INSERT INTO public.tender_status_history VALUES (3, 0, '2025-07-17 07:37:46');
+INSERT INTO public.tender_status_history VALUES (3, 5, '2025-09-21 09:30:55');
+INSERT INTO public.tender_status_history VALUES (3, 4, '2025-11-13 11:15:34');
+INSERT INTO public.tender_status_history VALUES (4, 0, '2025-05-17 18:34:37');
+INSERT INTO public.tender_status_history VALUES (4, 5, '2025-07-25 17:58:18');
+INSERT INTO public.tender_status_history VALUES (4, 3, '2025-11-09 23:31:28');
+INSERT INTO public.tender_status_history VALUES (5, 0, '2025-05-27 18:31:17');
+INSERT INTO public.tender_status_history VALUES (5, 5, '2025-07-19 22:35:34');
+INSERT INTO public.tender_status_history VALUES (5, 6, '2025-10-28 04:22:45');
+INSERT INTO public.tender_status_history VALUES (6, 0, '2025-04-18 12:13:55');
+INSERT INTO public.tender_status_history VALUES (6, 3, '2025-08-25 07:18:16');
+INSERT INTO public.tender_status_history VALUES (6, 5, '2025-12-26 16:56:30');
+INSERT INTO public.tender_status_history VALUES (7, 0, '2025-02-28 07:24:24');
+INSERT INTO public.tender_status_history VALUES (7, 2, '2025-10-08 19:05:28');
+INSERT INTO public.tender_status_history VALUES (7, 5, '2025-11-28 16:16:22');
+INSERT INTO public.tender_status_history VALUES (8, 0, '2025-01-10 09:30:12');
+INSERT INTO public.tender_status_history VALUES (8, 6, '2025-12-11 00:00:35');
+INSERT INTO public.tender_status_history VALUES (8, 4, '2025-12-29 22:47:07');
+INSERT INTO public.tender_status_history VALUES (9, 0, '2025-05-06 07:07:30');
+INSERT INTO public.tender_status_history VALUES (9, 5, '2025-05-27 05:09:35');
+INSERT INTO public.tender_status_history VALUES (9, 1, '2025-08-14 08:28:00');
+INSERT INTO public.tender_status_history VALUES (10, 0, '2025-05-23 13:48:49');
+INSERT INTO public.tender_status_history VALUES (10, 1, '2025-07-13 02:15:23');
+INSERT INTO public.tender_status_history VALUES (10, 4, '2025-10-18 21:00:30');
+INSERT INTO public.tender_status_history VALUES (11, 0, '2025-02-18 17:34:27');
+INSERT INTO public.tender_status_history VALUES (11, 1, '2025-06-05 19:41:33');
+INSERT INTO public.tender_status_history VALUES (11, 6, '2025-10-13 16:38:11');
+INSERT INTO public.tender_status_history VALUES (12, 0, '2025-06-14 09:52:21');
+INSERT INTO public.tender_status_history VALUES (12, 2, '2025-10-17 06:21:14');
+INSERT INTO public.tender_status_history VALUES (12, 5, '2025-10-26 21:12:02');
+INSERT INTO public.tender_status_history VALUES (13, 0, '2025-03-05 18:35:08');
+INSERT INTO public.tender_status_history VALUES (13, 5, '2025-04-09 03:49:08');
+INSERT INTO public.tender_status_history VALUES (13, 3, '2025-12-25 21:04:13');
+INSERT INTO public.tender_status_history VALUES (14, 0, '2025-04-21 09:58:05');
+INSERT INTO public.tender_status_history VALUES (14, 5, '2025-05-02 01:05:32');
+INSERT INTO public.tender_status_history VALUES (14, 6, '2025-08-23 21:35:23');
+INSERT INTO public.tender_status_history VALUES (15, 0, '2025-03-01 12:26:21');
+INSERT INTO public.tender_status_history VALUES (15, 5, '2025-03-05 02:09:04');
+INSERT INTO public.tender_status_history VALUES (15, 2, '2025-03-07 22:22:21');
+INSERT INTO public.tender_status_history VALUES (16, 0, '2025-04-06 22:05:17');
+INSERT INTO public.tender_status_history VALUES (16, 3, '2025-11-27 08:35:26');
+INSERT INTO public.tender_status_history VALUES (16, 5, '2025-11-29 18:24:08');
+INSERT INTO public.tender_status_history VALUES (17, 0, '2025-01-09 08:25:40');
+INSERT INTO public.tender_status_history VALUES (17, 5, '2025-01-22 12:15:29');
+INSERT INTO public.tender_status_history VALUES (17, 3, '2025-08-01 17:42:21');
+INSERT INTO public.tender_status_history VALUES (18, 0, '2025-03-06 08:56:11');
+INSERT INTO public.tender_status_history VALUES (18, 1, '2025-10-16 10:33:29');
+INSERT INTO public.tender_status_history VALUES (18, 4, '2025-12-25 22:40:25');
+INSERT INTO public.tender_status_history VALUES (19, 0, '2025-05-01 08:23:41');
+INSERT INTO public.tender_status_history VALUES (19, 2, '2025-07-28 08:33:39');
+INSERT INTO public.tender_status_history VALUES (19, 3, '2025-12-18 09:23:49');
+INSERT INTO public.tender_status_history VALUES (20, 0, '2025-01-04 14:31:35');
+INSERT INTO public.tender_status_history VALUES (20, 2, '2025-03-22 07:42:35');
+INSERT INTO public.tender_status_history VALUES (20, 4, '2025-08-12 04:44:42');
+INSERT INTO public.tender_status_history VALUES (21, 0, '2025-01-31 23:14:35');
+INSERT INTO public.tender_status_history VALUES (21, 5, '2025-08-10 09:57:45');
+INSERT INTO public.tender_status_history VALUES (21, 1, '2025-10-22 03:30:03');
+INSERT INTO public.tender_status_history VALUES (22, 0, '2025-01-05 04:04:53');
+INSERT INTO public.tender_status_history VALUES (22, 1, '2025-06-18 12:36:18');
+INSERT INTO public.tender_status_history VALUES (22, 2, '2025-09-04 11:08:43');
+INSERT INTO public.tender_status_history VALUES (23, 0, '2025-01-04 04:17:13');
+INSERT INTO public.tender_status_history VALUES (23, 6, '2025-05-11 05:16:24');
+INSERT INTO public.tender_status_history VALUES (23, 4, '2025-10-05 00:42:01');
+INSERT INTO public.tender_status_history VALUES (24, 0, '2025-03-12 17:37:03');
+INSERT INTO public.tender_status_history VALUES (24, 6, '2025-06-04 18:19:40');
+INSERT INTO public.tender_status_history VALUES (24, 5, '2025-06-15 08:10:56');
+INSERT INTO public.tender_status_history VALUES (25, 0, '2025-02-28 22:18:45');
+INSERT INTO public.tender_status_history VALUES (25, 5, '2025-06-12 02:26:44');
+INSERT INTO public.tender_status_history VALUES (25, 1, '2025-09-08 21:52:34');
+INSERT INTO public.tender_status_history VALUES (26, 0, '2025-07-02 13:05:07');
+INSERT INTO public.tender_status_history VALUES (26, 2, '2025-08-13 03:39:59');
+INSERT INTO public.tender_status_history VALUES (26, 1, '2025-08-28 04:12:27');
 
 
 --
--- TOC entry 3476 (class 0 OID 16440)
--- Dependencies: 231
+-- TOC entry 3484 (class 0 OID 16442)
+-- Dependencies: 232
 -- Data for Name: tenders; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -712,7 +821,7 @@ INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (26, 1, 'Приспо�
 
 
 --
--- TOC entry 3474 (class 0 OID 16433)
+-- TOC entry 3481 (class 0 OID 16432)
 -- Dependencies: 229
 -- Data for Name: tenders_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -720,8 +829,8 @@ INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (26, 1, 'Приспо�
 
 
 --
--- TOC entry 3478 (class 0 OID 16457)
--- Dependencies: 233
+-- TOC entry 3486 (class 0 OID 16459)
+-- Dependencies: 234
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -732,7 +841,7 @@ INSERT INTO public.users OVERRIDING SYSTEM VALUE VALUES (7, 'SuperUser', '31b80a
 
 
 --
--- TOC entry 3490 (class 0 OID 0)
+-- TOC entry 3497 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -741,7 +850,7 @@ SELECT pg_catalog.setval('public.companies_id_seq', 55, true);
 
 
 --
--- TOC entry 3491 (class 0 OID 0)
+-- TOC entry 3498 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: contact_persons_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -750,7 +859,7 @@ SELECT pg_catalog.setval('public.contact_persons_id_seq', 182, true);
 
 
 --
--- TOC entry 3492 (class 0 OID 0)
+-- TOC entry 3499 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: date_requests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -759,7 +868,7 @@ SELECT pg_catalog.setval('public.date_requests_id_seq', 824, true);
 
 
 --
--- TOC entry 3493 (class 0 OID 0)
+-- TOC entry 3500 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: document_requests_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -768,7 +877,7 @@ SELECT pg_catalog.setval('public.document_requests_files_id_seq', 72, true);
 
 
 --
--- TOC entry 3494 (class 0 OID 0)
+-- TOC entry 3501 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: rebidding_prices_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -777,7 +886,7 @@ SELECT pg_catalog.setval('public.rebidding_prices_files_id_seq', 15, true);
 
 
 --
--- TOC entry 3495 (class 0 OID 0)
+-- TOC entry 3502 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: request_prices_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -786,7 +895,7 @@ SELECT pg_catalog.setval('public.request_prices_id_seq', 717, true);
 
 
 --
--- TOC entry 3496 (class 0 OID 0)
+-- TOC entry 3503 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: tender_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -795,8 +904,8 @@ SELECT pg_catalog.setval('public.tender_files_id_seq', 77, true);
 
 
 --
--- TOC entry 3497 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 3504 (class 0 OID 0)
+-- Dependencies: 233
 -- Name: tenders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -804,8 +913,8 @@ SELECT pg_catalog.setval('public.tenders_id_seq', 26, true);
 
 
 --
--- TOC entry 3498 (class 0 OID 0)
--- Dependencies: 234
+-- TOC entry 3505 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -813,7 +922,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 7, true);
 
 
 --
--- TOC entry 3280 (class 2606 OID 16467)
+-- TOC entry 3284 (class 2606 OID 16469)
 -- Name: companies companies_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -822,7 +931,7 @@ ALTER TABLE ONLY public.companies
 
 
 --
--- TOC entry 3282 (class 2606 OID 16469)
+-- TOC entry 3286 (class 2606 OID 16471)
 -- Name: companies companies_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -831,7 +940,7 @@ ALTER TABLE ONLY public.companies
 
 
 --
--- TOC entry 3284 (class 2606 OID 16471)
+-- TOC entry 3288 (class 2606 OID 16473)
 -- Name: contact_persons contact_persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -840,7 +949,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 3286 (class 2606 OID 16409)
+-- TOC entry 3290 (class 2606 OID 16475)
 -- Name: contact_persons contact_persons_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -849,7 +958,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 3290 (class 2606 OID 16473)
+-- TOC entry 3294 (class 2606 OID 16477)
 -- Name: document_requests_files document_requests_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -858,7 +967,7 @@ ALTER TABLE ONLY public.document_requests_files
 
 
 --
--- TOC entry 3292 (class 2606 OID 16475)
+-- TOC entry 3296 (class 2606 OID 16479)
 -- Name: rebidding_prices prices_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -867,7 +976,7 @@ ALTER TABLE ONLY public.rebidding_prices
 
 
 --
--- TOC entry 3294 (class 2606 OID 16477)
+-- TOC entry 3298 (class 2606 OID 16481)
 -- Name: rebidding_prices_files rebidding_prices_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -876,7 +985,7 @@ ALTER TABLE ONLY public.rebidding_prices_files
 
 
 --
--- TOC entry 3288 (class 2606 OID 16479)
+-- TOC entry 3292 (class 2606 OID 16483)
 -- Name: document_requests requests_dates_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -885,7 +994,7 @@ ALTER TABLE ONLY public.document_requests
 
 
 --
--- TOC entry 3296 (class 2606 OID 16481)
+-- TOC entry 3300 (class 2606 OID 16485)
 -- Name: tenders_files tender_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -894,7 +1003,7 @@ ALTER TABLE ONLY public.tenders_files
 
 
 --
--- TOC entry 3306 (class 2606 OID 16534)
+-- TOC entry 3303 (class 2606 OID 16487)
 -- Name: tender_status_history tender_status_history_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -903,7 +1012,7 @@ ALTER TABLE ONLY public.tender_status_history
 
 
 --
--- TOC entry 3298 (class 2606 OID 16483)
+-- TOC entry 3305 (class 2606 OID 16489)
 -- Name: tenders tenders_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -912,7 +1021,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3300 (class 2606 OID 16485)
+-- TOC entry 3307 (class 2606 OID 16491)
 -- Name: tenders tenders_unique_1; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -921,7 +1030,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3302 (class 2606 OID 16487)
+-- TOC entry 3309 (class 2606 OID 16493)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -930,7 +1039,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3304 (class 2606 OID 16489)
+-- TOC entry 3311 (class 2606 OID 16495)
 -- Name: users users_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -939,7 +1048,31 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3307 (class 2606 OID 16490)
+-- TOC entry 3301 (class 1259 OID 16496)
+-- Name: idx_tender_status_history_tender_id_changed_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_tender_status_history_tender_id_changed_at ON public.tender_status_history USING btree (tender_id, changed_at DESC);
+
+
+--
+-- TOC entry 3312 (class 1259 OID 16551)
+-- Name: tender_status_cache_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX tender_status_cache_idx ON public.tender_status_cache USING btree (date, status);
+
+
+--
+-- TOC entry 3322 (class 2620 OID 16497)
+-- Name: tenders tr_log_status_change; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER tr_log_status_change AFTER INSERT OR UPDATE OF status ON public.tenders FOR EACH ROW EXECUTE FUNCTION public.log_status_change();
+
+
+--
+-- TOC entry 3313 (class 2606 OID 16498)
 -- Name: contact_persons contact_persons_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -948,7 +1081,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 3309 (class 2606 OID 16495)
+-- TOC entry 3315 (class 2606 OID 16503)
 -- Name: document_requests_files document_requests_files_document_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -957,7 +1090,7 @@ ALTER TABLE ONLY public.document_requests_files
 
 
 --
--- TOC entry 3310 (class 2606 OID 16500)
+-- TOC entry 3316 (class 2606 OID 16508)
 -- Name: rebidding_prices prices_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -966,7 +1099,7 @@ ALTER TABLE ONLY public.rebidding_prices
 
 
 --
--- TOC entry 3311 (class 2606 OID 16505)
+-- TOC entry 3317 (class 2606 OID 16513)
 -- Name: rebidding_prices_files rebidding_prices_files_rebidding_prices_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -975,7 +1108,7 @@ ALTER TABLE ONLY public.rebidding_prices_files
 
 
 --
--- TOC entry 3308 (class 2606 OID 16510)
+-- TOC entry 3314 (class 2606 OID 16518)
 -- Name: document_requests requests_dates_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -984,7 +1117,7 @@ ALTER TABLE ONLY public.document_requests
 
 
 --
--- TOC entry 3312 (class 2606 OID 16515)
+-- TOC entry 3318 (class 2606 OID 16523)
 -- Name: tenders_files tender_files_tender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -993,7 +1126,7 @@ ALTER TABLE ONLY public.tenders_files
 
 
 --
--- TOC entry 3315 (class 2606 OID 16535)
+-- TOC entry 3319 (class 2606 OID 16528)
 -- Name: tender_status_history tender_status_history_tender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1002,7 +1135,7 @@ ALTER TABLE ONLY public.tender_status_history
 
 
 --
--- TOC entry 3313 (class 2606 OID 16520)
+-- TOC entry 3320 (class 2606 OID 16533)
 -- Name: tenders tenders_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1011,7 +1144,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3314 (class 2606 OID 16525)
+-- TOC entry 3321 (class 2606 OID 16538)
 -- Name: tenders tenders_contact_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1019,7 +1152,16 @@ ALTER TABLE ONLY public.tenders
     ADD CONSTRAINT tenders_contact_person_id_fkey FOREIGN KEY (contact_person_id) REFERENCES public.contact_persons(id);
 
 
--- Completed on 2025-02-26 16:37:26
+--
+-- TOC entry 3488 (class 0 OID 16543)
+-- Dependencies: 236 3490
+-- Name: tender_status_cache; Type: MATERIALIZED VIEW DATA; Schema: public; Owner: -
+--
+
+REFRESH MATERIALIZED VIEW public.tender_status_cache;
+
+
+-- Completed on 2025-02-28 20:24:21
 
 --
 -- PostgreSQL database dump complete

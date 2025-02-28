@@ -103,7 +103,9 @@ const CompanyAnalyticsClient = observer((props: { companies: Company[], initialD
                 </div>
             </div>
             <h1 className={styles.chartTitle}>{chartData.title}</h1>
-            <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
+            <div className={styles.chart}>
+                <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
+            </div>
         </div>
     )
 })

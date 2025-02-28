@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env: {
-        APP_VERSION: '0.9',
+        APP_VERSION: '1.0',
     },
     experimental: {
         serverActions: {

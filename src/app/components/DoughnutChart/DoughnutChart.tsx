@@ -1,7 +1,6 @@
 "use client"
 import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
 import {useEffect, useRef} from 'react';
-import "./DoughnutChart.css";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import ChartDataType from "@/models/Analytics/ChartDataType";
 import {formatValue} from "react-currency-input-field";
@@ -163,9 +162,5 @@ export default function DoughnutChart(props: {
     )
     ;
 
-    return (
-        <div id="canvas-container">
-            <canvas ref={chartRef}/>
-        </div>
-    );
+    return (<canvas ref={chartRef}/>);
 }

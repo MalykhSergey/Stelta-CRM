@@ -43,9 +43,5 @@ export default function BarChart(props: { data: ChartData<'bar', number[], strin
         ,
         [props.data]
     );
-    return (
-        <div id="canvas-container">
-            <canvas ref={chartRef}/>
-        </div>
-    )
+    return (<canvas ref={chartRef}/>)
 }

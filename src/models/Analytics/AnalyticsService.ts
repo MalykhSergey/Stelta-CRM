@@ -1,5 +1,5 @@
 "use server"
-import { CountInDate, CumulativeStatusAnalytics } from "@/models/Analytics/CumulativeStatusAnalytics"
+import {CountInDate, CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics"
 import getStatusName from "../Tender/Status"
 import {
     loadCommonAnalytics,
@@ -8,9 +8,9 @@ import {
     loadStatusAnalyticsByCompany,
     loadStatusAnalyticsByDate
 } from "./AnalyticsStorage"
-import { CommonAnalytics } from "./CommonAnalytics"
-import { CompanyAnalyticsDTO } from "./CompanyAnalytics"
-import { StatusAnalytics } from "./StatusAnalytics"
+import {CommonAnalytics} from "./CommonAnalytics"
+import {CompanyAnalyticsDTO} from "./CompanyAnalytics"
+import {StatusAnalytics} from "./StatusAnalytics"
 
 export async function getCommonAnalytics() {
     const result = await loadCommonAnalytics()
@@ -30,7 +30,7 @@ export async function getCommonAnalytics() {
             analytics.not_participate_price += Number.parseFloat(row.sum)
         }
     }
-    return { ...analytics }
+    return {...analytics}
 }
 
 export async function getStatusAnalyticsByCompany(company_id: number) {
@@ -46,7 +46,7 @@ export async function getStatusAnalyticsByCompany(company_id: number) {
             analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
         }
     }
-    return { ...analytics };
+    return {...analytics};
 }
 
 export async function getStatusAnalyticsByDateRange(startDate: string, endDate: string) {
@@ -59,7 +59,7 @@ export async function getStatusAnalyticsByDateRange(startDate: string, endDate: 
         } else {
             const statusName = getStatusName(row.status)
             analytics.status_counts[statusName] = (analytics.status_counts[statusName] || 0) + row.count
-            const abs_status = row.status;
+            const abs_status = Math.abs(row.status);
             analytics.cumulative_status_price[abs_status] = (analytics.cumulative_status_price[abs_status] || 0) + row.count
             analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
         }
@@ -69,16 +69,22 @@ export async function getStatusAnalyticsByDateRange(startDate: string, endDate: 
     }
     const cfd_result = await loadCumulativeAnalyticsByDate(startDate, endDate)
     for (const row of cfd_result) {
-        analytics.dates_status_counts[row.status].push({ ... new CountInDate(parseInt(row.date_time), parseInt(row.count_tenders)) })
+        analytics.status_counts_history[row.status].push({...new CountInDate(parseInt(row.date), row.count_tenders, row.cumulative_tenders)})
     }
-    return { ...analytics }
+    return {...analytics}
 }
 
 export async function getCompanyAnalyticsByStatus(status: number) {
     const result = await loadCompanyAnalyticsByStatus(status)
     const analytics_list = []
     for (const row of result) {
-        analytics_list.push({ ...new CompanyAnalyticsDTO({ id: row.id, name: row.name, contactPersons: [] }, row.count, Number.parseFloat(row.sum)) })
+        analytics_list.push({
+            ...new CompanyAnalyticsDTO({
+                id: row.id,
+                name: row.name,
+                contactPersons: []
+            }, row.count, Number.parseFloat(row.sum))
+        })
     }
     return analytics_list
 }

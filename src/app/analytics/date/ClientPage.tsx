@@ -1,13 +1,13 @@
 "use client"
 import BarChart from "@/app/analytics/date/BarChart";
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import { getStatusAnalyticsByDateRange } from "@/models/Analytics/AnalyticsService";
+import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
 import ChartDataType from "@/models/Analytics/ChartDataType";
-import { CountInDate, CumulativeStatusAnalytics } from "@/models/Analytics/CumulativeStatusAnalytics";
+import {CountInDate, CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
 import getStatusName from "@/models/Tender/Status";
-import { makeAutoObservable } from "mobx";
-import { observer } from "mobx-react-lite";
-import React, { useMemo, useRef } from "react";
+import {makeAutoObservable} from "mobx";
+import {observer} from "mobx-react-lite";
+import React, {useMemo, useRef} from "react";
 import styles from '../page.module.css';
 import CFD from "./CFD";
 
@@ -51,7 +51,7 @@ class AnalyticsStore {
             title: `Тендеры за период: ${this.startDate} – ${this.endDate}`,
             data: {
                 labels: labels,
-                datasets: [{ data: data }]
+                datasets: [{data: data}]
             }
         }
     }
@@ -78,12 +78,37 @@ class AnalyticsStore {
         }
     }
 
-    getCFDData() {
-        const datasets = this.data.dates_status_counts.map((status, index) => {
-            return { data: status.map((value: CountInDate) => { return { x: value.date, y: value.count } }), label: getStatusName(index) }
+    getStatusHistoryData() {
+        const datasets = this.data.status_counts_history.map((status, index) => {
+            return {
+                data: status.map((value: CountInDate) => {
+                    return {x: value.date, y: value.count}
+                }),
+                label: getStatusName(index),
+                order: -index,
+                fill: true,
+            }
         })
         return {
-            title: `Воронка продаж за период: ${this.startDate} – ${this.endDate}`,
+            title: `История изменений: ${this.startDate} – ${this.endDate}`,
+            data: {
+                datasets: datasets
+            }
+        }
+    }
+
+    getCFDData() {
+        const datasets = this.data.status_counts_history.map((status, index) => {
+            return {
+                data: status.map((value: CountInDate) => {
+                    return {x: value.date, y: value.cumulative_count}
+                }), label: getStatusName(index),
+                order: -index,
+                fill: true
+            }
+        })
+        return {
+            title: `CFD: ${this.startDate} – ${this.endDate}`,
             data: {
                 datasets: datasets
             }
@@ -104,9 +129,11 @@ const DateRangeAnalyticsClient = observer((props: {
     startDate: Date,
     endDate: Date
 }) => {
-    const analyticsStore = useMemo(() => new AnalyticsStore(props.initialData, props.startDate.toLocaleDateString('ru-RU'), props.endDate.toLocaleDateString('ru-RU')), [props.initialData])
+    const analyticsStore = useMemo(() => new AnalyticsStore(props.initialData, props.startDate.toLocaleDateString('ru-RU'), props.endDate.toLocaleDateString('ru-RU')), [props.endDate, props.initialData, props.startDate])
     const chartData = analyticsStore.getChartData()
     const cumulativeChartData = analyticsStore.getCumulativeChartData()
+    const historyData = analyticsStore.getStatusHistoryData();
+    const cfdData = analyticsStore.getCFDData();
     const startDateInput = useRef<HTMLInputElement | null>(null)
     const endDateInput = useRef<HTMLInputElement | null>(null)
 
@@ -132,41 +159,60 @@ const DateRangeAnalyticsClient = observer((props: {
             <div id={styles.inputsContainer}>
                 <div className="row-inputs">
                     <label htmlFor="count">Количество:</label>
-                    <input id='count' type="radio" name='type' value='0' onChange={toggleType} defaultChecked={true} />
+                    <input id='count' type="radio" name='type' value='0' onChange={toggleType} defaultChecked={true}/>
                     <label htmlFor="sum">Цена:</label>
-                    <input id='sum' type="radio" name='type' value='1' onChange={toggleType} />
+                    <input id='sum' type="radio" name='type' value='1' onChange={toggleType}/>
                 </div>
                 <div className='row-inputs'>
                     <label htmlFor="is_special">Показывать подыгрыш:</label>
-                    <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial} />
+                    <input type="checkbox" id='is_special' defaultChecked={false} onChange={toggleIsSpecial}/>
                 </div>
                 <div className='row-inputs'>
                     <div className='row-inputs'>
                         <label htmlFor="startDateInput">От:</label>
                         <input id="startDateInput" ref={startDateInput} type="date"
-                            defaultValue={props.startDate.toLocaleDateString('en-CA')}
-                            onChange={loadData} />
+                               defaultValue={props.startDate.toLocaleDateString('en-CA')}
+                               onChange={loadData}/>
                     </div>
                     <div className='row-inputs'>
                         <label htmlFor="endDateInput">До:</label>
                         <input id="endDateInput" ref={endDateInput} type="date"
-                            defaultValue={props.endDate.toLocaleDateString('en-CA')}
-                            onChange={loadData} />
+                               defaultValue={props.endDate.toLocaleDateString('en-CA')}
+                               onChange={loadData}/>
                     </div>
                 </div>
             </div>
-            <div style={{ display: "flex", flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{
+                display: "flex",
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                rowGap: '60px',
+                columnGap: '20px'
+            }}>
                 <div>
-                    <h1 className={styles.chartTitle}>{chartData.title}</h1>
-                    <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type} />
+                    <h2 className={styles.chartTitle}>{chartData.title}</h2>
+                    <div className={styles.chart}>
+                        <DoughnutChart data={chartData.data} title={chartData.title} type={analyticsStore.type}/>
+                    </div>
                 </div>
                 <div>
-                    <h1 className={styles.chartTitle}>{cumulativeChartData.title}</h1>
-                    <BarChart data={cumulativeChartData.data} />
+                    <h2 className={styles.chartTitle}>{cumulativeChartData.title}</h2>
+                    <div className={styles.chart}>
+                        <BarChart data={cumulativeChartData.data}/>
+                    </div>
                 </div>
                 <div>
-                    <h1 className={styles.chartTitle}>{cumulativeChartData.title}</h1>
-                    <CFD data={analyticsStore.getCFDData().data} />
+                    <h2 className={styles.chartTitle}>{historyData.title}</h2>
+                    <div className={styles.chart}>
+                        <CFD data={historyData.data}/>
+                    </div>
+                </div>
+                <div>
+                    <h2 className={styles.chartTitle}>{cfdData.title}</h2>
+                    <div className={styles.chart}>
+                        <CFD data={cfdData.data}/>
+                    </div>
                 </div>
             </div>
         </div>

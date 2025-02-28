@@ -52,32 +52,10 @@ export async function loadStatusAnalyticsByDate(start_date: string, finish_date:
 
 export async function loadCumulativeAnalyticsByDate(start_date: string, finish_date: string) {
     return (await connection.query(`
-    WITH date_series AS (
-        SELECT generate_series($1::date, $2::date, '1 week') AS report_date
-    ),
-    tender_status AS (
-        SELECT 
-            t.report_date,
-            h.status,
-            COUNT(DISTINCT h.tender_id) AS count_tenders
-        FROM date_series t
-        LEFT JOIN LATERAL (
-            SELECT DISTINCT ON (tender_id) tender_id, status
-            FROM tender_status_history
-            WHERE changed_at::date <= t.report_date
-            ORDER BY tender_id, changed_at DESC
-        ) h ON true
-        GROUP BY t.report_date, h.status
-        ORDER BY t.report_date, h.status
-    )
-    SELECT 
-        CAST (EXTRACT (EPOCH FROM report_date) * 1000 AS bigint) AS date_time,
-        status,
-        SUM(count_tenders) AS count_tenders
-    FROM tender_status
-    WHERE count_tenders > 0
-    GROUP BY report_date, status
-    ORDER BY report_date, status;`, [start_date, finish_date])).rows
+    SELECT CAST(EXTRACT(EPOCH FROM "date") * 1000 AS BIGINT) AS "date", status, count_tenders, cumulative_tenders
+    FROM tender_status_cache
+    WHERE "date" >= $1::date AND "date" <= $2::date
+    ORDER BY "date", status;`, [start_date, finish_date])).rows
 }
 
 export async function loadCompanyAnalyticsByStatus(status: number) {
