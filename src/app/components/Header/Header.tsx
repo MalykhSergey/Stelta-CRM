@@ -14,7 +14,7 @@ export default function Header() {
     useEffect(() => {
         if (!authContext.user.name) return
         if (localStorage.getItem("version") != process.env.APP_VERSION)
-            showMessage(`Новая версия ${process.env.APP_VERSION}. <a href="./changelog">Узнать больше</a>`, "info", 3000)
+            showMessage(`Новая версия ${process.env.APP_VERSION}. <a href="/changelog">Узнать больше</a>`, "info", 3000)
         localStorage.setItem("version", process.env.APP_VERSION || 'error')
     }, [authContext.user.name])
     return (
