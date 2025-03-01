@@ -1,12 +1,34 @@
 import styles from './ConfirmDialog.module.css';
 import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
+import {useEffect} from "react";
 
 type ConfirmDialogProps = {
     message: string;
     onConfirm: () => void;
     onCancel: () => void;
 };
+
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({message, onConfirm, onCancel}) => {
+
+    useEffect(() => {
+        function keyDownHandler(event: KeyboardEvent) {
+            switch (event.key) {
+                case 'Escape': {
+                    onCancel()
+                    break
+                }
+                case 'Enter': {
+                    onConfirm()
+                    break
+                }
+            }
+        }
+
+        document.addEventListener("keydown", keyDownHandler)
+        return () => {
+            document.removeEventListener("keydown", keyDownHandler)
+        }
+    }, [onCancel, onConfirm]);
     return (
         <div className={styles.overlay}>
             <div className={styles.dialog}>

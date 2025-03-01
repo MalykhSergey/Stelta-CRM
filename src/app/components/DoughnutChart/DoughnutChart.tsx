@@ -4,6 +4,7 @@ import {useEffect, useRef} from 'react';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import ChartDataType from "@/models/Analytics/ChartDataType";
 import {formatValue} from "react-currency-input-field";
+import ChartPlug from "@/app/analytics/ChartPlug";
 
 Chart.register(ChartDataLabels);
 const centerTextPlugin = {
@@ -92,75 +93,72 @@ export default function DoughnutChart(props: {
     type: ChartDataType
 }) {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
     useEffect(() => {
-            const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
-            let isMobile = false
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-                isMobile = true
-            }
-            if (chartRef.current && total > 0) {
-                const ctx = chartRef.current.getContext('2d')!;
-                if (ctx) {
-                    const chart = new Chart<'doughnut', number[], string>(ctx, {
-                        type: 'doughnut',
-                        data: props.data,
-                        options: {
-                            maintainAspectRatio: isMobile,
-                            elements: {
-                                center: {
-                                    text: formatValue({
-                                        value: Math.round(total).toString(),
-                                        suffix: props.type == ChartDataType.COUNT ? '' : '₽',
-                                        groupSeparator: ' ',
-                                        decimalSeparator: ','
-                                    }),
-                                    maxFontSize: 50,
-                                },
+        let isMobile = false
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+            isMobile = true
+        }
+        if (chartRef.current && total > 0) {
+            const ctx = chartRef.current.getContext('2d')!;
+            if (ctx) {
+                const chart = new Chart<'doughnut', number[], string>(ctx, {
+                    type: 'doughnut',
+                    data: props.data,
+                    options: {
+                        maintainAspectRatio: isMobile,
+                        elements: {
+                            center: {
+                                text: formatValue({
+                                    value: Math.round(total).toString(),
+                                    suffix: props.type == ChartDataType.COUNT ? '' : '₽',
+                                    groupSeparator: ' ',
+                                    decimalSeparator: ','
+                                }),
+                                maxFontSize: 50,
                             },
-                            plugins: {
-                                legend: {
-                                    position: isMobile ? 'bottom' : 'right',
-                                    labels: {
-                                        color: 'rgb(0,0,0)',
-                                        font: {
-                                            size: isMobile ? 8 : 16
-                                        }
-                                    },
-                                    onClick: function () {
+                        },
+                        plugins: {
+                            legend: {
+                                position: isMobile ? 'bottom' : 'right',
+                                labels: {
+                                    color: 'rgb(0,0,0)',
+                                    font: {
+                                        size: isMobile ? 8 : 16
                                     }
                                 },
-                                datalabels: {
-                                    formatter: (value, context) => {
-                                        const label_value = props.data.datasets[0].data[context.dataIndex]
-                                        return label_value ? `${(label_value / total * 100).toFixed(1)}%` : ''
-                                    },
-                                    color: 'rgb(255,255,255)',
-                                    font: (context) => {
-                                        const chartArea = context.chart.chartArea;
-                                        const width = chartArea.width
-                                        const height = chartArea.height
-                                        const relative_Value = context.dataset.data[context.dataIndex] as number / total;
-                                        let sectorArea = Math.min(width, height) * relative_Value;
-                                        if (isMobile) {
-                                            sectorArea /= 2
-                                        }
-                                        return {size: Math.min(Math.max(sectorArea * 0.4, 8), 40)};
-                                    },
-                                    anchor: 'center',
+                                onClick: function () {
+                                }
+                            },
+                            datalabels: {
+                                formatter: (value, context) => {
+                                    const label_value = props.data.datasets[0].data[context.dataIndex]
+                                    return label_value ? `${(label_value / total * 100).toFixed(1)}%` : ''
                                 },
-                            }
-                        } as ChartOptions<'doughnut'>,
-                    });
-                    return () => {
-                        chart.destroy();
-                    }
+                                color: 'rgb(255,255,255)',
+                                font: (context) => {
+                                    const chartArea = context.chart.chartArea;
+                                    const width = chartArea.width
+                                    const height = chartArea.height
+                                    const relative_Value = context.dataset.data[context.dataIndex] as number / total;
+                                    let sectorArea = Math.min(width, height) * relative_Value;
+                                    if (isMobile) {
+                                        sectorArea /= 2
+                                    }
+                                    return {size: Math.min(Math.max(sectorArea * 0.4, 8), 40)};
+                                },
+                                anchor: 'center',
+                            },
+                        }
+                    } as ChartOptions<'doughnut'>,
+                });
+                return () => {
+                    chart.destroy();
                 }
             }
         }
-        ,
-        [props.data]
-    )
-    ;
-
+    }, [props.data]);
+    if (total == 0)
+        return <ChartPlug/>
     return (<canvas ref={chartRef}/>);
 }

@@ -4,6 +4,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px 0px 20px;
+    overflow: hidden;
 }
 
 #logo {
@@ -38,7 +39,7 @@
     .navPanel {
         padding: 4px;
         gap: 4px;
-        overflow: scroll;
+        overflow: auto;
 
     }
 

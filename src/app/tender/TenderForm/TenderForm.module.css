@@ -3,9 +3,12 @@
     grid-template-columns: 35% 65%;
     column-gap: 10px;
     row-gap: 10px;
-    max-width: 800px;
 }
-
+@media only screen and (max-width: 600px) {
+    .form {
+        grid-template-columns: 1fr;
+    }
+}
 .inputRow {
     align-items: center;
     display: flex;
@@ -36,9 +39,3 @@
     align-self: center;
     font-size: 16px;
 }
-
-
-/* .input:focus {
-  border-color: #3f51b5;
-  outline: none;
-} */

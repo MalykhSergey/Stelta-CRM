@@ -1,10 +1,11 @@
 import {useEffect, useRef} from "react";
 import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
+import ChartPlug from "@/app/analytics/ChartPlug";
 
 export default function BarChart(props: { data: ChartData<'bar', number[], string> }) {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
     useEffect(() => {
-            const total = props.data.datasets[0].data.reduce((sum, number) => sum + number, 0)
             if (chartRef.current && total > 0) {
                 let isMobile = false
                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
@@ -39,9 +40,9 @@ export default function BarChart(props: { data: ChartData<'bar', number[], strin
                     }
                 }
             }
-        }
-        ,
-        [props.data]
+        }, [props.data]
     );
+    if (total==0)
+        return <ChartPlug/>
     return (<canvas ref={chartRef}/>)
 }
