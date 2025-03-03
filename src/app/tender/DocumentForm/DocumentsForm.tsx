@@ -26,7 +26,7 @@ interface DocumentsFormProps {
     onDelete?: () => void
 }
 
-const MAX_FILE_SIZE = 30 * 1024 * 1024
+const MAX_FILE_SIZE = 500 * 1024 * 1024
 
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                                                                   tenderId,
@@ -50,7 +50,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(({
                 const file_name = encodeURI(e.target.files[i].name)
                 size += e.target.files[i].size
                 if (size >= MAX_FILE_SIZE) {
-                    showMessage(`Суммарный объём файлов превышает допустимый размер в 30 МБ. Будет загружена только часть файлов.`);
+                    showMessage(`Суммарный объём файлов превышает допустимый размер в 500 МБ. Будет загружена только часть файлов.`);
                     break;
                 }
                 formData.append('file', e.target.files[i], file_name);
