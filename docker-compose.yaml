@@ -24,6 +24,9 @@ services:
     container_name: nextjs_container
     ports:
       - "3000:3000"
+#    tmpfs:
+#      - /app/uploads
+    mem_limit: "128mb"
     depends_on:
       postgres:
         condition: service_healthy

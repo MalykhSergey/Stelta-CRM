@@ -31,6 +31,11 @@ export function handleDatabaseError(
                 return { error: message };
             }
         }
+        for (const [code, message] of Object.entries(default_errors)) {
+            if (e.code === code) {
+                return { error: message };
+            }
+        }
         // Логирование необработанной ошибки базы данных
         logger.error(defaultMessage, { code: e.code, details: e.detail });
     } else {
@@ -39,6 +44,7 @@ export function handleDatabaseError(
     }
     return { error: defaultMessage };
 }
+const default_errors={'55P03':'Временно заблокировано вами или другим пользователем!',}
 /**
  * Пул соединений. Не использовать conn.query для транзакций!
  */

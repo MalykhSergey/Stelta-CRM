@@ -2,13 +2,9 @@ import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import RebiddingPriceForm from '../RebiddingPriceForm';
-import {deleteRebiddingPriceById} from '@/models/Tender/TenderService';
 import {RebiddingPrice} from "@/models/Tender/RebiddingPrice";
 import {mockDeep} from "vitest-mock-extended";
 
-vi.mock('@/models/Tender/TenderService', () => ({
-    deleteRebiddingPriceById: vi.fn()
-}));
 vi.mock('@/app/tender/DocumentForm/DocumentsForm', () => ({
     default: ({onDelete}: { onDelete: () => void }) => (
         <div data-testid="documents-form">
@@ -96,6 +92,5 @@ describe('RebiddingPriceForm', () => {
 
         // Проверяем, что вызвались переданная функция удаления и функция deleteRebiddingPriceById
         expect(deleteRebiddingPriceMock).toHaveBeenCalled();
-        expect(deleteRebiddingPriceById).toHaveBeenCalledWith(tenderId, fakeRebiddingPrice.id);
     });
 });

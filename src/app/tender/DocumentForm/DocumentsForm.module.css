@@ -3,4 +3,29 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 5px 5px;
+}
+.buttonRow{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.uploading {
+    border-radius: 5px;
+    background-color: rgb(240, 240, 240);
+}
+
+.spinner {
+    animation: rotation 1.5s infinite linear;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
     }
     return NextResponse.next();
 }
-
+// С Api нужно быть внимательным. Если middleware будет работать при скачивании и загрузке будет плохо.
 export const config = {
     matcher: ['/((?!api|_next/static|_next/image|favicon.ico|login).*)',],
 };

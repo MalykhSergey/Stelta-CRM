@@ -1,5 +1,5 @@
 import {RebiddingPrice} from '@/models/Tender/RebiddingPrice';
-import {addRebiddingPrice} from '@/models/Tender/TenderService';
+import {addRebiddingPrice, deleteRebiddingPriceById} from '@/models/Tender/TenderService';
 import {makeAutoObservable} from 'mobx';
 import {observer, useLocalObservable} from 'mobx-react-lite';
 import {Tender} from '@/models/Tender/Tender';
@@ -12,6 +12,7 @@ import CurrencyInput from "react-currency-input-field";
 import StageStyles from "@/app/tender/StageForms.module.css";
 import {ExpandButton} from "@/app/components/Buttons/ExpandButton/ExpandButton";
 import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
+import {showMessage} from "@/app/components/Alerts/Alert";
 
 interface StageForm2Props {
     tender: Tender,
@@ -31,7 +32,13 @@ const StageForm2: React.FC<StageForm2Props> = observer(({tender, isEditable}) =>
     const rebiddingPrices: JSX.Element[] = []
     tender.rebiddingPrices.forEach((rebiddingPrice, index) => {
         rebiddingPrices.push(
-            <RebiddingPriceForm key={index} tenderId={tender.id} deleteRebiddingPrice={() => {
+            <RebiddingPriceForm key={index} tenderId={tender.id} deleteRebiddingPrice={async () => {
+                const result = await deleteRebiddingPriceById(tender.id, rebiddingPrice.id)
+                if (result?.error) {
+                    showMessage(result.error)
+                    return
+                }
+                showMessage("Переторжка успешно удалёна.", 'successful');
                 tender.deleteRebiddingPrice(rebiddingPrice)
             }} rebiddingPrice={rebiddingPrice} orderNumber={index + 1}
                                 isEditable={(index + 1 == tender.rebiddingPrices.length) && isEditable}/>

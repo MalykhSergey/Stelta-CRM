@@ -1,5 +1,4 @@
 import {RebiddingPrice} from "@/models/Tender/RebiddingPrice";
-import {deleteRebiddingPriceById} from "@/models/Tender/TenderService";
 import {observer} from "mobx-react-lite";
 import {useState} from "react";
 import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
@@ -28,10 +27,7 @@ const RebiddingPriceForm: React.FC<RebiddingPriceProps> = observer(({
                            specialPlaceName='rebiddingPriceId'
                            specialPlaceId={rebiddingPrice.id}
                            fileNames={rebiddingPrice.fileNames} title={`Переторжка ${orderNumber}`}
-                           onDelete={() => {
-                               deleteRebiddingPrice()
-                               deleteRebiddingPriceById(tenderId, rebiddingPrice.id)
-                           }}
+                           onDelete={deleteRebiddingPrice}
                            isEditable={isEditable} isShowDelete={isEditable}/>
             <div>
                 <label htmlFor={`rebiddingPrice${rebiddingPrice.id}`}>Наша цена:</label>

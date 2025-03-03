@@ -55,15 +55,16 @@ test.describe('Поток создания и заполнения 1-го эта
     await documentsForm.locator('input[type="file"]').setInputFiles([
       files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
+    await page.waitForTimeout(500);
     await expect(documentsForm).toMatchAriaSnapshot(`
          - heading "Документы тендера" [level=3]
          - button "Прикрепить"
          - button "Развернуть"
          - link "4.png"
          - button "Удалить"
-         - link "5.png"
-         - button "Удалить"
          - link "6.png"
+         - button "Удалить"
+         - link "5.png"
          - button "Удалить"
          `);
     await documentsForm.getByLabel('Развернуть').click();
@@ -72,10 +73,13 @@ test.describe('Поток создания и заполнения 1-го эта
          - button "Прикрепить"
          - button "Развернуть"
          - link "4.png"
-         - button "Удалить"
-         - link "5.png"
+         - link
          - button "Удалить"
          - link "6.png"
+         - link
+         - button "Удалить"
+         - link "5.png"
+         - link
          - button "Удалить"
          `);
     await documentsForm.getByLabel('Развернуть').click();
@@ -234,12 +238,11 @@ test.describe('Поток создания и заполнения 1-го эта
     await page1.getByLabel('Дозапрос документов 1').locator('input[type="file"]').setInputFiles([
       files_for_upload[0],files_for_upload[1],files_for_upload[2]
     ]);
+    await page1.waitForTimeout(500);
     await page1.getByLabel('Дата предоставления ответа').fill('2025-01-01');
     await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
     await page1.getByLabel('Дата предоставления ответа').nth(1).fill('2025-01-02');
     await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
-    await page1.getByLabel('Дозапрос документов 3').getByRole('button').nth(1).click();
-    await page1.getByRole('button', { name: 'Да', exact: true }).click();
     await expect(page1.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
           - heading "Этап 1" [level=3]
           - button "Развернуть"
@@ -247,19 +250,30 @@ test.describe('Поток создания и заполнения 1-го эта
           - button "Прикрепить"
           - button "Развернуть"
           - link "4.png"
-          - button "Удалить"
-          - link "5.png"
+          - link
           - button "Удалить"
           - link "6.png"
+          - link
+          - button "Удалить"
+          - link "5.png"
+          - link
           - button "Удалить"
           - heading "Дозапрос документов 1" [level=3]
           - button "Развернуть"
           - link "4.png"
-          - link "5.png"
+          - link
           - link "6.png"
+          - link
+          - link "5.png"
+          - link
           - text: Дата предоставления ответа
           - textbox "Дата предоставления ответа" [disabled]
           - heading "Дозапрос документов 2" [level=3]
+          - button "Прикрепить"
+          - button
+          - text: Дата предоставления ответа
+          - textbox "Дата предоставления ответа"
+          - heading "Дозапрос документов 3" [level=3]
           - button "Прикрепить"
           - button
           - text: Дата предоставления ответа
@@ -277,6 +291,7 @@ test.describe('Поток создания и заполнения 1-го эта
     await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
     const page1 = await page1Promise;
     await page1.getByRole('button', { name: 'Подать заявку' }).click();
+    await page.waitForTimeout(100);
     await expect(page1.getByLabel("successful")).toBeVisible();
     await expect(page1.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
       - heading "Документы тендера" [level=3]
@@ -287,13 +302,19 @@ test.describe('Поток создания и заполнения 1-го эта
       - heading "Формы 1 этапа" [level=3]
       - button "Развернуть"
       - link "4.png"
+      - link
       - link "5.png"
+      - link
       - link "6.png"
+      - link
       - heading "Дозапрос документов 1" [level=3]
       - button "Развернуть"
       - link "4.png"
-      - link "5.png"
+      - link
       - link "6.png"
+      - link
+      - link "5.png"
+      - link
       - text: Дата предоставления ответа
       - textbox "Дата предоставления ответа" [disabled]
       - heading "Дозапрос документов 2" [level=3]

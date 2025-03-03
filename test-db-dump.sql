@@ -1131,7 +1131,7 @@ ALTER TABLE ONLY public.tenders_files
 --
 
 ALTER TABLE ONLY public.tender_status_history
-    ADD CONSTRAINT tender_status_history_tender_id_fkey FOREIGN KEY (tender_id) REFERENCES public.tenders(id);
+    ADD CONSTRAINT tender_status_history_tender_id_fkey FOREIGN KEY (tender_id) REFERENCES public.tenders(id) ON DELETE CASCADE;
 
 
 --

@@ -4,6 +4,8 @@ import connection, {handleDatabaseError} from "../../config/Database";
 import {ContactPerson} from '../Company/ContactPerson/ContactPerson';
 import FileName, {FileType} from "./FileName";
 import {Tender} from "./Tender";
+import {PoolClient} from "pg";
+import TransactionManager from "@/models/TransactionManager";
 
 class TenderStorage {
 
@@ -161,30 +163,30 @@ class TenderStorage {
         return tender
     }
 
-    async addFile(tenderId: number, fileName: string, stage: number, documentRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
+    async addFile(transaction: PoolClient, tenderId: number, fileName: string, stage: number, documentRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
         try {
             if (documentRequestId)
-                return (await connection.query('INSERT INTO document_requests_files("name", document_request_id) VALUES ($1,$2) RETURNING id', [fileName, documentRequestId])).rows[0].id;
+                return (await transaction.query('INSERT INTO document_requests_files("name", document_request_id) VALUES ($1,$2) RETURNING id', [fileName, documentRequestId])).rows[0].id;
             else if (rebiddingPriceId)
-                return (await connection.query('INSERT INTO rebidding_prices_files("name", rebidding_price_id) VALUES ($1,$2) RETURNING id', [fileName, rebiddingPriceId])).rows[0].id;
+                return (await transaction.query('INSERT INTO rebidding_prices_files("name", rebidding_price_id) VALUES ($1,$2) RETURNING id', [fileName, rebiddingPriceId])).rows[0].id;
             else
-                return (await connection.query('INSERT INTO tenders_files(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
+                return (await transaction.query('INSERT INTO tenders_files(tender_id, "name", stage) VALUES ($1,$2,$3) RETURNING id', [tenderId, fileName, stage])).rows[0].id;
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка добавления файла!');
         }
     }
 
-    async deleteFile(fileName: FileName) {
+    async deleteFile(transaction: PoolClient, fileName: FileName) {
         try {
             switch (fileName.fileType) {
                 case FileType.Tender:
-                    await connection.query('DELETE FROM tenders_files WHERE id = $1', [fileName.id]);
+                    await transaction.query('DELETE FROM tenders_files WHERE id = $1', [fileName.id]);
                     break;
                 case FileType.RebiddingPrice:
-                    await connection.query('DELETE FROM rebidding_prices_files WHERE id = $1', [fileName.id]);
+                    await transaction.query('DELETE FROM rebidding_prices_files WHERE id = $1', [fileName.id]);
                     break;
                 case FileType.DocumentRequest:
-                    await connection.query('DELETE FROM document_requests_files WHERE id = $1', [fileName.id]);
+                    await transaction.query('DELETE FROM document_requests_files WHERE id = $1', [fileName.id]);
                     break;
             }
         } catch (e) {
@@ -213,21 +215,32 @@ class TenderStorage {
     }
 
     async deleteDocumentRequest(tenderId: number, documentRequestId: number) {
+        const transaction = await TransactionManager.begin()
         try {
-            await connection.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])
-            await connection.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
+            await transaction.query('SELECT * FROM document_requests_files WHERE document_request_id = $1 FOR UPDATE NOWAIT', [documentRequestId])
+            await transaction.query('SELECT * FROM document_requests WHERE id = $1 FOR UPDATE NOWAIT', [documentRequestId])
+            await transaction.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])
+            await transaction.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
             await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, {recursive: true})
+            TransactionManager.commit(transaction)
         } catch (e) {
+            console.log(e)
+            TransactionManager.roll_back(transaction)
             return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
         }
     }
 
     async deleteRebiddingPrice(tenderId: number, rebiddingPriceId: number) {
+        const transaction = await TransactionManager.begin()
         try {
-            await connection.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])
-            await connection.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
+            await transaction.query('SELECT * FROM rebidding_prices_files WHERE rebidding_price_id = $1 FOR UPDATE NOWAIT', [rebiddingPriceId])
+            await transaction.query('SELECT * FROM rebidding_prices WHERE id = $1 FOR UPDATE NOWAIT', [rebiddingPriceId])
+            await transaction.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])
+            await transaction.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
             await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, {recursive: true})
+            TransactionManager.commit(transaction)
         } catch (e) {
+            TransactionManager.roll_back(transaction)
             return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');
         }
     }

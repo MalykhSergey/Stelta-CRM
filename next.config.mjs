@@ -1,12 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env: {
-        APP_VERSION: '1.1',
-    },
-    experimental: {
-        serverActions: {
-            bodySizeLimit: '500mb',
-        },
+        APP_VERSION: '1.2',
     },
     output: 'standalone',
 };
