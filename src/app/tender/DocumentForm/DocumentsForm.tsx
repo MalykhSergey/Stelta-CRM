@@ -12,6 +12,7 @@ import {AttachButton} from "@/app/components/Buttons/AttachButton/AttachButton";
 import {DeleteButton} from "@/app/components/Buttons/DeleteButton/DeleteButton";
 import ExpandableForm from "@/app/components/ExpandableForm/ExpandableForm";
 import DocumentsFileStorage from "@/app/tender/DocumentForm/DocumentsFileStorage";
+
 // import {showMessage} from "@/app/components/Alerts/Alert";
 
 interface DocumentsFormProps {
@@ -89,10 +90,10 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(
                 <div className={`${styles.fileItem} ${styles.uploading}`}
                      key={`uploading${index}`}>
                     <div>
-                        {<span>{uploading_file.file_name.name}</span>}
+                        {<span className={styles.title}>{uploading_file.file_name.name}</span>}
                     </div>
                     <div className={styles.buttonRow}>
-                        <span>{uploading_file.progress} %</span>
+                        <span className={styles.progress}>{uploading_file.progress} %</span>
                         <FontAwesomeIcon className={styles.spinner} icon={faSpinner}/>
                         <CloseButton onClick={() => file_storage.cancel_uploading(uploading_file)}/>
                     </div>
@@ -100,40 +101,40 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(
             )
         })
         return (<ExpandableForm
-                start_value={isOpened && fileNames.length > 0}
-                aria-label={title}
-                header={(toggle, isExpanded) => {
-                    return (
-                        <div className={StageStyles.cardHeader}>
-                            <h3>{title}</h3>
-                            {isEditable &&
-                                <div>
-                                    <AttachButton onClick={() => {
-                                        if (fileInput.current) fileInput.current.click()
-                                    }}/>
-                                    <input ref={fileInput} onChange={async (e) => {
-                                        handleChange(e)
-                                        if (!isExpanded) toggle()
-                                    }}
-                                           type="file" name="file" multiple hidden/>
-                                </div>
-                            }
-                            <div className={StageStyles.rightPanel}>
-                                {fileNames.length > 0 && <ExpandButton onClick={toggle} expanded={!isExpanded}/>}
-                                {isShowDelete && isEditable &&
-                                    <CloseButton onClick={() => {
-                                        showConfirmDialog({
-                                            message: `Вы действительно хотите удалить?`,
-                                            onConfirm: onDelete
-                                        })
-                                    }}/>
-                                }
+            start_value={isOpened && fileNames.length > 0}
+            aria-label={title}
+            header={(toggle, isExpanded) => {
+                return (
+                    <div className={StageStyles.cardHeader}>
+                        <h3>{title}</h3>
+                        {isEditable &&
+                            <div>
+                                <AttachButton onClick={() => {
+                                    if (fileInput.current) fileInput.current.click()
+                                }}/>
+                                <input ref={fileInput} onChange={async (e) => {
+                                    handleChange(e)
+                                    if (!isExpanded) toggle()
+                                }}
+                                       type="file" name="file" multiple hidden/>
                             </div>
+                        }
+                        <div className={StageStyles.rightPanel}>
+                            {fileNames.length > 0 && <ExpandButton onClick={toggle} expanded={!isExpanded}/>}
+                            {isShowDelete && isEditable &&
+                                <CloseButton onClick={() => {
+                                    showConfirmDialog({
+                                        message: `Вы действительно хотите удалить?`,
+                                        onConfirm: onDelete
+                                    })
+                                }}/>
+                            }
                         </div>
-                    )
-                }}>
-                {files}
-                {uploading_files}
-            </ExpandableForm>)
+                    </div>
+                )
+            }}>
+            {files}
+            {uploading_files}
+        </ExpandableForm>)
     });
 export default DocumentsForm
