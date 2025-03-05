@@ -1,11 +1,11 @@
 import { expect, test } from "../login-fixture";
-import {files_for_upload} from "./files_for_upload/files_path";
+import check_file_form from "./check_file_form";
 
-test.describe('Поток создания и заполнения 1-го этапа', () => {
+test.describe('Поток создания и заполнения тендера', () => {
   test('Создать новый тендер', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
     await page.getByRole('button', { name: 'Добавить тендер' }).click();
-    page.waitForTimeout(200)
+    await page.waitForLoadState();
     await expect(page.getByLabel('Статус:')).toHaveValue('0');
     await expect(page.getByLabel('Организация:')).toHaveValue('0');
     await expect(page.getByLabel('Полное наименование:')).toHaveValue('Полное наименование тендера');
@@ -30,91 +30,15 @@ test.describe('Поток создания и заполнения 1-го эта
     await expect(page.getByLabel('Лот номер:')).toHaveValue('Тестовый Лот №');
     await page.getByRole('button', { name: 'Сохранить' }).click();
     await expect(page.getByLabel("successful")).toBeVisible();
-    await page.reload()
-    await expect(page.getByText('Документы тендераКомментарииНовый тендерУчаствоватьСохранитьУдалить')).toMatchAriaSnapshot(`
-          - heading "Документы тендера" [level=3]
-          - button "Прикрепить"
-          - heading "Комментарии" [level=3]
-          - button "Развернуть"
-          - text: Новый тендер
-          - textbox "Новый тендер"
-          - button "Участвовать"
-          - button "Сохранить"
-          - button "Удалить"
-          `);
-    await page.getByRole('link', { name: 'Торги' }).click();
+  });
+
+  test('Проверить тендер на странице "Торги"', async ({ page }) => {
+    await page.goto('http://127.0.0.1:3000/');
     await expect(page.getByRole('main')).toMatchAriaSnapshot(`- 'link "Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽"'`);
   });
   test('Проверить работу форму загрузки файлов тендера', async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/');
-    await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
-    const page1Promise = page.waitForEvent('popup');
-    const page1 = await page1Promise;
-    const documentsForm = page1.getByLabel('Документы тендера');
-    await documentsForm.getByLabel('Прикрепить').click();
-    await documentsForm.locator('input[type="file"]').setInputFiles([
-      files_for_upload[0],files_for_upload[1],files_for_upload[2]
-    ]);
-    await page.waitForTimeout(500);
-    await expect(documentsForm).toMatchAriaSnapshot(`
-         - heading "Документы тендера" [level=3]
-         - button "Прикрепить"
-         - button "Развернуть"
-         - link "4.png"
-         - button "Удалить"
-         - link "6.png"
-         - button "Удалить"
-         - link "5.png"
-         - button "Удалить"
-         `);
-    await documentsForm.getByLabel('Развернуть').click();
-    await expect(documentsForm).toMatchAriaSnapshot(`
-         - heading "Документы тендера" [level=3]
-         - button "Прикрепить"
-         - button "Развернуть"
-         - link "4.png"
-         - link
-         - button "Удалить"
-         - link "6.png"
-         - link
-         - button "Удалить"
-         - link "5.png"
-         - link
-         - button "Удалить"
-         `);
-    await documentsForm.getByLabel('Развернуть').click();
-    await documentsForm.locator('div').filter({ hasText: /^4\.png$/ }).getByLabel('Удалить').click();
-    await page1.getByRole('button', { name: 'Да', exact: true }).click();
-    await documentsForm.locator('div').filter({ hasText: /^5\.png$/ }).getByLabel('Удалить').click();
-    await page1.getByRole('button', { name: 'Да', exact: true }).click();
-    await expect(documentsForm.getByText('5.png')).toBeHidden();
-    await expect(documentsForm).toMatchAriaSnapshot(`
-         - heading "Документы тендера" [level=3]
-         - button "Прикрепить"
-         - button "Развернуть"
-         - link "6.png"
-         - button "Удалить"
-         `);
-    await documentsForm.getByLabel('Удалить').click();
-    await page1.getByRole('button', { name: 'Нет' }).click();
-    await expect(documentsForm).toMatchAriaSnapshot(`
-         - heading "Документы тендера" [level=3]
-         - button "Прикрепить"
-         - button "Развернуть"
-         - link "6.png"
-         - button "Удалить"
-         `);
-    await page1.getByRole('link', { name: 'Торги' }).click();
-    const page2Promise = page1.waitForEvent('popup');
-    await page1.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
-    const page2 = await page2Promise;
-    await expect(page2.getByLabel('Документы тендера')).toMatchAriaSnapshot(`
-         - heading "Документы тендера" [level=3]
-         - button "Прикрепить"
-         - button "Развернуть"
-         - link "6.png"
-         - button "Удалить"
-         `);
+    await page.goto('http://127.0.0.1:3000/tender/27');
+    await check_file_form(page, 'Документы тендера');
   });
   test('Проверить работу формы комментариев', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
@@ -225,112 +149,6 @@ test.describe('Поток создания и заполнения 1-го эта
           - button "Прикрепить"
           - button "Дозапрос документов"
           `);
-  });
-  test('Проверка формы 1-го этапа', async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/');
-    await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽ Начало подачи: 1/9/' }).click();
-    const page1Promise = page.waitForEvent('popup');
-    const page1 = await page1Promise;
-    page1.locator('input[type="file"]').setInputFiles([
-      files_for_upload[0],files_for_upload[1],files_for_upload[2]
-    ]);
-    await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
-    await page1.getByLabel('Дозапрос документов 1').locator('input[type="file"]').setInputFiles([
-      files_for_upload[0],files_for_upload[1],files_for_upload[2]
-    ]);
-    await page1.waitForTimeout(500);
-    await page1.getByLabel('Дата предоставления ответа').fill('2025-01-01');
-    await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
-    await page1.getByLabel('Дата предоставления ответа').nth(1).fill('2025-01-02');
-    await page1.getByRole('button', { name: 'Дозапрос документов' }).click();
-    await expect(page1.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
-          - heading "Этап 1" [level=3]
-          - button "Развернуть"
-          - heading "Формы 1 этапа" [level=3]
-          - button "Прикрепить"
-          - button "Развернуть"
-          - link "4.png"
-          - link
-          - button "Удалить"
-          - link "6.png"
-          - link
-          - button "Удалить"
-          - link "5.png"
-          - link
-          - button "Удалить"
-          - heading "Дозапрос документов 1" [level=3]
-          - button "Развернуть"
-          - link "4.png"
-          - link
-          - link "6.png"
-          - link
-          - link "5.png"
-          - link
-          - text: Дата предоставления ответа
-          - textbox "Дата предоставления ответа" [disabled]
-          - heading "Дозапрос документов 2" [level=3]
-          - button "Прикрепить"
-          - button
-          - text: Дата предоставления ответа
-          - textbox "Дата предоставления ответа"
-          - heading "Дозапрос документов 3" [level=3]
-          - button "Прикрепить"
-          - button
-          - text: Дата предоставления ответа
-          - textbox "Дата предоставления ответа"
-          - button "Дозапрос документов"
-          `);
-    await page1.getByRole('button', { name: 'Сохранить' }).click();
-    await page1.reload();
-    await expect(await page1.getByLabel('Дата предоставления ответа').nth(0)).toHaveValue('2025-01-01');
-    await expect(await page1.getByLabel('Дата предоставления ответа').nth(1)).toHaveValue('2025-01-02');
-  });
-  test('Перевести тендер на этап 1 Заявка подана', async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/');
-    const page1Promise = page.waitForEvent('popup');
-    await page.getByRole('link', { name: 'Аксенова и партнеры Тестовое наименование тендера НМЦК: 0₽' }).click();
-    const page1 = await page1Promise;
-    await page1.getByRole('button', { name: 'Подать заявку' }).click();
-    await page.waitForTimeout(100);
-    await expect(page1.getByLabel("successful")).toBeVisible();
-    await expect(page1.locator('#TenderPageClient_rightPanel__ZhqeK')).toMatchAriaSnapshot(`
-      - heading "Документы тендера" [level=3]
-      - button "Развернуть"
-      - link "6.png"
-      - heading "Этап 1" [level=3]
-      - button "Развернуть"
-      - heading "Формы 1 этапа" [level=3]
-      - button "Развернуть"
-      - link "4.png"
-      - link
-      - link "5.png"
-      - link
-      - link "6.png"
-      - link
-      - heading "Дозапрос документов 1" [level=3]
-      - button "Развернуть"
-      - link "4.png"
-      - link
-      - link "6.png"
-      - link
-      - link "5.png"
-      - link
-      - text: Дата предоставления ответа
-      - textbox "Дата предоставления ответа" [disabled]
-      - heading "Дозапрос документов 2" [level=3]
-      - text: Дата предоставления ответа
-      - textbox "Дата предоставления ответа" [disabled]
-      - heading "Комментарии" [level=3]
-      - button "Развернуть"
-      - text: Новый тендер
-      - paragraph: "Новый тендер: тестовый комментарий"
-      - text: Заявка подана 1 этап
-      - textbox "Заявка подана 1 этап"
-      - button "Дозапрос"
-      - button "Сметный расчёт"
-      - button "Сохранить"
-      - button "Не участвуем"
-      `);
   });
 });
 
