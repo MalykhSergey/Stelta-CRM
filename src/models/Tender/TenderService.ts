@@ -18,8 +18,10 @@ export async function createTender(status: number) {
 export async function deleteTender(tenderId: number) {
     return authAction(async (user: User) => {
         logger.info(`${user.name} delete tender ${tenderId}`);
-        CalendarService.deleteTenderEvents(tenderId);
-        return tenderStorage.deleteTender(tenderId)
+        const result = await tenderStorage.deleteTender(tenderId);
+        if (!result?.error)
+            CalendarService.deleteTenderEvents(tenderId);
+        return result
     })
 }
 
@@ -48,8 +50,10 @@ export async function addRebiddingPrice(tenderId: number) {
 export async function deleteDocumentRequestById(tenderId: number, documentRequestId: number) {
     return authAction(async (user: User) => {
         logger.info(`${user.name} delete document request`);
-        CalendarService.deleteDocumentRequest(documentRequestId)
-        return tenderStorage.deleteDocumentRequest(tenderId, documentRequestId)
+        const result = await tenderStorage.deleteDocumentRequest(tenderId, documentRequestId);
+        if (!result?.error)
+            CalendarService.deleteDocumentRequest(documentRequestId)
+        return result
     })
 }
 
