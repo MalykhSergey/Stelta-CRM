@@ -39,3 +39,5 @@ calendar_keys.json
 next-env.d.ts
 /logs/
 .env.test
+.idea/
+calendar_keys.json
