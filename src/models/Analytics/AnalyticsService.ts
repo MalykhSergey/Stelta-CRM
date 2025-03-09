@@ -20,7 +20,7 @@ export async function getCommonAnalytics() {
             analytics.special_count += row.count
             analytics.special_price += Number.parseFloat(row.sum)
         } else if (row.status >= 5) {
-            analytics.win_count = row.count
+            analytics.win_count += row.count
             analytics.win_price = Number.parseFloat(row.sum)
         } else if (row.status == -4) {
             analytics.loose_count = row.count
