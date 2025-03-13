@@ -26,7 +26,7 @@ export async function loadUsers() {
     return getUsers();
 }
 
-const expirationTime = '1h'
+const expirationTime = process.env.JWT_EXP_TIME || '1h';
 
 export async function login(loginForm: FormData) {
     const user = await getUserByName(loginForm.get('name') as string)
@@ -36,7 +36,12 @@ export async function login(loginForm: FormData) {
             return {error: "Неправильный пароль!"}
         user.password = hashed_password
         const token = jwt.sign(
-            user,
+            {
+                id: user.id,
+                name: user.name,
+                password: user.password,
+                role: user.role
+            },
             process.env.JWT_SECRET!,
             {expiresIn: expirationTime}
         );
@@ -60,8 +65,8 @@ export async function authAction<T>(handler: (user: User) => Promise<T>) {
             const decoded_token = jwt.verify(auth_token.value, process.env.JWT_SECRET!)
             const user_in_token = decoded_token as User
             const found_user = await getUserByName(user_in_token.name)
-            if (found_user != null && found_user.password == user_in_token.password && found_user.role != Role.Viewer) {
-                return handler(decoded_token as User);
+            if (found_user != null && found_user.password == user_in_token.password && found_user.role == user_in_token.role && found_user.role != Role.Viewer) {
+                return handler(user_in_token);
             } else {
                 cookiesStore.delete("auth_token")
                 return {error: "Попытка неавторизованного доступа! Возможно ошибка в системе. Войдите в систему заново."}
@@ -70,13 +75,13 @@ export async function authAction<T>(handler: (user: User) => Promise<T>) {
             if (e instanceof jwt.TokenExpiredError) {
                 const decoded_token = jwt.decode(auth_token.value) as User
                 const found_user = await getUserByName(decoded_token.name)
-                if (found_user != null && found_user.password == decoded_token.password && found_user.role != Role.Viewer) {
+                // Сразу отсекаем Role.Viewer
+                if (found_user != null && found_user.password == decoded_token.password && found_user.role == decoded_token.role && found_user.role != Role.Viewer) {
                     const new_token = jwt.sign(
                         {
                             id: decoded_token.id,
                             name: decoded_token.name,
                             password: decoded_token.password,
-                            salt: decoded_token.salt,
                             role: decoded_token.role
                         },
                         process.env.JWT_SECRET!,
@@ -86,13 +91,14 @@ export async function authAction<T>(handler: (user: User) => Promise<T>) {
                     return handler(decoded_token as User);
                 }
             }
+            cookiesStore.delete("auth_token")
             return {error: "Попытка неавторизованного доступа! Войдите в систему."}
         }
     } else
         return {error: "Попытка неавторизованного доступа! Войдите в систему."}
 }
 
-export async function checkAuth() {
+export async function getUserCredentials() {
     const cookiesStore = await cookies()
     const auth_token = cookiesStore.get('auth_token')
     if (auth_token) {
@@ -105,4 +111,45 @@ export async function checkAuth() {
         }
     }
     return new User()
+}
+
+export async function authorize() {
+    const cookiesStore = await cookies()
+    const auth_token = cookiesStore.get('auth_token')
+    if (!auth_token)
+        return false
+    try {
+        const auth_user = jwt.verify(auth_token.value, process.env.JWT_SECRET!) as User
+        if (auth_user != null)
+            return true
+    } catch (e) {
+        if (e instanceof jwt.TokenExpiredError) {
+            const decoded_token = jwt.decode(auth_token.value) as User
+            const new_token = await tryUpdateToken(decoded_token)
+            if (new_token) {
+                cookiesStore.set('auth_token', new_token, {httpOnly: true, maxAge: 3600 * 24 * 7})
+                return true
+            }
+        }
+        cookiesStore.delete("auth_token")
+    }
+    return false
+}
+
+
+export async function tryUpdateToken(decoded_token: User) {
+    const found_user = await getUserByName(decoded_token.name)
+    if (found_user != null && found_user.password == decoded_token.password) {
+        return jwt.sign(
+            {
+                id: decoded_token.id,
+                name: decoded_token.name,
+                password: decoded_token.password,
+                role: found_user.role
+            },
+            process.env.JWT_SECRET!,
+            {expiresIn: expirationTime}
+        );
+    }
+    return null;
 }

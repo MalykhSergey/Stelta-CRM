@@ -23,7 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "mobx": "^6.13.5",
     "mobx-react-lite": "^4.0.7",
-    "next": "15.1.2",
+    "next": "^15.3.0-canary.5",
     "pg": "^8.13.1",
     "react": "19.0.0",
     "react-currency-input-field": "^3.9.0",
@@ -40,18 +40,18 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/pg": "^8.11.10",
-    "@types/react": "19.0.2",
-    "@types/react-dom": "19.0.2",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^8",
-    "eslint-config-next": "15.1.2",
+    "eslint-config-next": "15.2.2",
     "jsdom": "^25.0.1",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8"
   },
   "overrides": {
-    "@types/react": "19.0.2",
-    "@types/react-dom": "19.0.2"
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4"
   }
 }

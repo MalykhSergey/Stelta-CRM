@@ -1,10 +1,10 @@
-import { checkAuth } from "@/models/User/UserService";
+import {getUserCredentials} from "@/models/User/UserService";
 import "@/static/styles/buttons.css";
 import "@/static/styles/inputs.css";
-import { Inconsolata, Montserrat, Roboto } from 'next/font/google';
+import {Inconsolata, Montserrat, Roboto} from 'next/font/google';
 import "../static/styles/globals.css";
-import { AuthProvider } from "./AuthContext";
-import { AlertContainer } from "./components/Alerts/Alert";
+import {AuthProvider} from "./AuthContext";
+import {AlertContainer} from "./components/Alerts/Alert";
 import Header from "./components/Header/Header";
 import styles from "./layout.module.css";
 
@@ -23,23 +23,23 @@ const InconsolateFont = Inconsolata({
 })
 
 export default async function RootLayout({
-    children,
-}: Readonly<{
+                                             children,
+                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const auth_user = await checkAuth()
+    const auth_user = await getUserCredentials()
     return (
         <html lang="en">
-            <body className={`${MontserratFont.variable} ${RobotoFont.variable} ${InconsolateFont.variable}`}>
-                <div className='background'></div>
-                <AlertContainer></AlertContainer>
-                <AuthProvider initialAuth={{ ...auth_user }}>
-                    <Header></Header>
-                    <div className={styles.content}>
-                        {children}
-                    </div>
-                </AuthProvider>
-            </body>
+        <body className={`${MontserratFont.variable} ${RobotoFont.variable} ${InconsolateFont.variable}`}>
+        <div className='background'></div>
+        <AlertContainer></AlertContainer>
+        <AuthProvider initialAuth={{...auth_user}}>
+            <Header></Header>
+            <div className={styles.content}>
+                {children}
+            </div>
+        </AuthProvider>
+        </body>
         </html>
     );
 }
