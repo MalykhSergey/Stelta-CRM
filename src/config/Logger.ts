@@ -39,21 +39,21 @@ if (process.env.MEMORY_LOGGER === 'true') {
         console.log(`external: ${process.memoryUsage().external / (1024 * 1024)}`)
     }, 1500)
 }
-console.log = (...args) => {
-    logger.info(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
-};
-
-console.error = (...args) => {
-    logger.error(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
-};
-
-console.warn = (...args) => {
-    logger.warn(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
-};
-
-console.info = (...args) => {
-    logger.info(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
-};
+// console.log = (...args) => {
+//     logger.info(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
+// };
+//
+// console.error = (...args) => {
+//     logger.error(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
+// };
+//
+// console.warn = (...args) => {
+//     logger.warn(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
+// };
+//
+// console.info = (...args) => {
+//     logger.info(args.map(arg => typeof arg === "object" ? JSON.stringify(arg) : arg).join(' '));
+// };
 
 const logger = winston.createLogger({
     level: process.env.LOG_LEVEL,
