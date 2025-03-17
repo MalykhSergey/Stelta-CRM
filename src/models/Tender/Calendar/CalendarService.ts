@@ -132,7 +132,7 @@ export class CalendarService {
             event_data.end = { dateTime: currentDate.toISOString(), timeZone }
             await calendar.events.update({
                 calendarId: process.env.CALENDAR_ID,
-                eventId: `document_request${document_request.id}`,
+                eventId: `documentrequest${document_request.id}`,
                 requestBody: event_data,
             });
         }
