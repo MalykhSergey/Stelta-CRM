@@ -55,6 +55,7 @@ export async function POST(request: Request) {
                 logger.info(`Попытка загрузить файл по пути: ${file_name}. Разрешено: ${process.env.FILE_UPLOAD_PATH!}`);
                 return new Response('Доступ запрещён!', {status: 403});
             }
+            logger.info(`${user.name} start upload file ${file_name}`);
             await mkdir(folderPath, {recursive: true})
             writer = Writable.toWeb(fs.createWriteStream(file_name, {autoClose: true})).getWriter();
             while (true) {
@@ -72,13 +73,14 @@ export async function POST(request: Request) {
                 rm(folderPath,{recursive:true})
             }
             if (error.code == 'ECONNRESET'){
+                logger.info(`${user.name} stop upload file ${file_name}`);
                 return new Response('Загрузка прервана клиентом', {status: 200})
             }
             logger.error("Ошибка записи файла", error)
             return new Response('{"error":"Ошибка на стороне сервера"}', {status: 503})
         }
         TransactionManager.commit(transaction)
-        logger.info(`${user.name} upload file ${fileNameParam} in tender ${tenderId} parent ${parentId} type ${fileType}`);
+        logger.info(`${user.name} end upload file ${file_name}`);
         return new Response(JSON.stringify(newFile), {status: 200})
     }
     return new Response('{"error":"Отсутсвуют обязательные параметры!"}', {status: 403})

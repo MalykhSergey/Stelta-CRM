@@ -15,7 +15,7 @@ export async function deleteHandler(fileName: FileName) {
             await tenderStorage.deleteFile(transaction, fileName)
             await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${FileName.getFolderPath(fileName)}`, {recursive: true})
             TransactionManager.commit(transaction)
-            logger.info(`${user.name} delete file ${fileName.name} in tender ${fileName.tenderId} parent ${fileName.parentId} type ${fileName.fileType}`);
+            logger.info(`${user.name} delete file ${FileName.getFilePath(fileName)}`);
         } catch (e) {
             TransactionManager.roll_back(transaction)
             return handleDatabaseError(e, {}, 'Ошибка удаления файла!');
