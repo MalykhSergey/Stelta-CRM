@@ -1021,15 +1021,6 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3307 (class 2606 OID 16491)
--- Name: tenders tenders_unique_1; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenders
-    ADD CONSTRAINT tenders_unique_1 UNIQUE (lot_number);
-
-
---
 -- TOC entry 3309 (class 2606 OID 16493)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --

@@ -144,9 +144,6 @@ export class Tender {
 
     setLotNumber(value: string): Result<string, string> {
         this.lotNumber = value
-        if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
-        }
         return { ok: true, value: '' }
     }
 
