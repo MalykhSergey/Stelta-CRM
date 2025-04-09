@@ -1,6 +1,5 @@
 import {Tender} from "@/models/Tender/Tender";
 import {showMessage} from "@/app/components/Alerts/Alert";
-import {createContactPerson} from "@/models/Company/ContactPerson/ContactPersonService";
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
 import {deleteTender, updateTenderById} from "@/models/Tender/TenderService";
 import Company from "@/models/Company/Company";
@@ -94,7 +93,14 @@ export default class TenderFlowService {
             if (this.tender.company.id == 0) {
                 showMessage("Выберите организацию!", "error")
             }
-            const result = await createContactPerson({...this.tender.contactPerson}, this.tender.company.id)
+
+            const result = await (await fetch(`/api/contact_person?companyId=${this.tender.company.id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.tender.contactPerson)
+            })).json()
             if (result?.error) {
                 showMessage(result.error)
                 return
