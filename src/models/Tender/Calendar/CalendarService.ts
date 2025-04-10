@@ -105,7 +105,7 @@ export class CalendarService {
             const eventId = `tender${tender.id}${type}`;
             const eventData = {
                 id: eventId,
-                summary: `${tender.name}`,
+                summary: `${tender.shortName}`,
                 description: `${getStatusName(tender.status)}`,
                 start: { dateTime: currentDate.toISOString(), timeZone },
                 end: { dateTime: currentDate.toISOString(), timeZone },
