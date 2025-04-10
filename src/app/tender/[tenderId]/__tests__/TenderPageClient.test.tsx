@@ -114,7 +114,7 @@ describe('TenderPageClient Component', () => {
                 expect.objectContaining({
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({...tenderMock, status: 2})
+                    body: JSON.stringify({...tenderMock, status: 3})
                 })
             );
             expect(showMessage).toHaveBeenCalledWith("Данные успешно сохранены!", "successful");
