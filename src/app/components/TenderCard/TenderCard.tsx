@@ -71,8 +71,8 @@ export default function TenderCard(props: { tender: Tender }) {
             dateSpan = <span className={styles.label}>Подведение итогов: </span>
             break
         case 6:
-            dateField = convertDate(props.tender.date_finish)
-            dateSpan = <span className={styles.label}>Подведение итогов: </span>
+            dateField = convertDate(props.tender.contractDate)
+            dateSpan = <span className={styles.label}>Дата подписания контракта: </span>
             break
     }
     const title = reduceTitle(props.tender.shortName);
