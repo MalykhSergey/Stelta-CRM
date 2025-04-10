@@ -87,9 +87,10 @@ export default class TenderFlowService {
     }
 
     async updateStageHandler(stage: number) {
-        if (await this.saveHandler()) {
-            this.tender.status = stage
-        }
+        const previous = this.tender.status
+        this.tender.status = stage
+        if (!(await this.saveHandler()))
+            this.tender.status = previous
     }
 
     async deleteHandler() {
