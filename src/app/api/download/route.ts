@@ -4,12 +4,10 @@ import path from "path";
 import {access} from "node:fs/promises";
 import fs from "fs/promises";
 import {Readable} from "node:stream";
-import {authAction} from "@/models/User/UserService";
+import {authorize} from "@/models/User/UserService";
 
 export async function GET(request: NextRequest) {
-    const result = await authAction(async () => {
-    })
-    if (result) {
+    if (!(await authorize())) {
         return new Response('Доступ запрещён!', {status: 403});
     }
     const searchParams = request.nextUrl.searchParams
