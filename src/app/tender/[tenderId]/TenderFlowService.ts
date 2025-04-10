@@ -47,7 +47,7 @@ export default class TenderFlowService {
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
     }
 
-    async saveHandler() {
+    async saveHandler(): Promise<boolean> {
         // Обновить контактное лицо в организациях, т.к. могло быть добавлено новое
         if ((this.tender.status == 0 || this.tender.status == 1) && this.tender.contactPerson.id == 0) {
             if (this.tender.company.id == 0) {
@@ -63,7 +63,7 @@ export default class TenderFlowService {
             })).json()
             if (result?.error) {
                 showMessage(result.error)
-                return
+                return false
             }
             showMessage("Создано новое контактное лицо!", "successful")
             this.tender.contactPerson.id = result
@@ -71,16 +71,19 @@ export default class TenderFlowService {
             this.tender.company.addContactPerson(new_contact_person)
         }
         const result = await updateTenderById(JSON.stringify(this.tender))
-        if (result?.error)
+        if (result?.error) {
             showMessage(result.error)
-        else {
+            return false;
+        } else {
             showMessage("Данные успешно сохранены!", "successful")
         }
+        return true;
     }
 
     async updateStageHandler(stage: number) {
-        this.tender.status = stage
-        this.saveHandler()
+        if (await this.saveHandler()){
+            this.tender.status = stage
+        }
     }
 
     async deleteHandler() {
