@@ -1,10 +1,10 @@
-import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson"
-import { makeAutoObservable } from "mobx"
-import { Result } from "../../app/Result"
+import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson"
+import {makeAutoObservable} from "mobx"
+import {Result} from "../../app/Result"
 import Company from "../Company/Company"
-import { DocumentRequest } from "./DocumentRequest"
+import {DocumentRequest} from "./DocumentRequest"
 import FileName from "./FileName"
-import { RebiddingPrice } from "./RebiddingPrice"
+import {RebiddingPrice} from "./RebiddingPrice"
 
 export class Tender {
     public id: number = 0
@@ -21,8 +21,13 @@ export class Tender {
     public date1_finish = ''
     public date2_finish = ''
     public date_finish = ''
+    // Используется в разделе поиска, для поиска по всем датам тендера (левая граница).
     public startDateRange = 0
+    // Используется в разделе поиска, для поиска по всем датам тендера (правая граница).
+    // Нужен, чтобы если указана дата для следующего этапа, то тендер не выпадал при поиске.
+    // Пример. Тендер на этапе подготовки заявки, но уже известна дата начала и окончания (дата сл. этапа).
     public endDateRange = 0
+    // Используется в разделе торги, для поиска по отображаемым датам.
     public statusDate = 0
     public contractDate = ''
     public contractNumber = ''
@@ -33,6 +38,10 @@ export class Tender {
     public documentRequests: DocumentRequest[] = []
 
     constructor() {
+    }
+
+    public get isValid(): boolean {
+        return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.contactPerson.phoneNumber != '' && this.contactPerson.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,7 +71,8 @@ export class Tender {
         const date1 = new Date(row.date1_finish).getTime()
         const date2 = new Date(row.date2_finish).getTime()
         const date3 = new Date(row.date_finish).getTime()
-        tender.endDateRange = Math.max(date1, date2, date3)
+        const date4 = new Date(row.contract_date).getTime()
+        tender.endDateRange = Math.max(date1, date2, date3, date4)
         for (let i = 0; i < 6; i++) {
             if (row[`comment${i}`] != null)
                 tender.comments[i] = row[`comment${i}`]
@@ -116,9 +126,9 @@ export class Tender {
     setStatus(value: string): Result<string, string> {
         this.status = Number.parseInt(value)
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     toggleIsSpecial() {
@@ -132,78 +142,78 @@ export class Tender {
     setName(value: string): Result<string, string> {
         this.name = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setShortName(value: string): Result<string, string> {
         this.shortName = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setRegNumber(value: string): Result<string, string> {
         this.regNumber = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setLotNumber(value: string): Result<string, string> {
         this.lotNumber = value
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setInitialMaxPrice(value: string): Result<string, string> {
         this.initialMaxPrice = value.replace(',', '.')
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setPrice(value: string): Result<string, string> {
         this.price = value.replace(',', '.')
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setDate1_start(value: string) {
         this.date1_start = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setDate1_finish(value: string) {
         this.date1_finish = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setDate2_finish(value: string) {
         this.date2_finish = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setDate_finish(value: string) {
         this.date_finish = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setContactPerson(value: ContactPerson) {
@@ -213,17 +223,17 @@ export class Tender {
     setContractNumber(value: string): Result<string, string> {
         this.contractNumber = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     setContractDate(value: string): Result<string, string> {
         this.contractDate = value
         if (value == "") {
-            return { ok: false, error: 'Поле не должно быть пустым!' }
+            return {ok: false, error: 'Поле не должно быть пустым!'}
         }
-        return { ok: true, value: '' }
+        return {ok: true, value: ''}
     }
 
     public removeFileFromStagedFileNames(fileName: FileName, arrayIndex: number): void {
@@ -248,17 +258,13 @@ export class Tender {
         this.stagedFileNames[arrayIndex].push(fileName);
     }
 
-    public get isValid(): boolean {
-        return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.contactPerson.phoneNumber != '' && this.contactPerson.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
-    }
-
-    public isEditable(isAuth:boolean){
+    public isEditable(isAuth: boolean) {
         let isEditable = {
             status: isAuth,
             isSpecial: false,
             company: false,
             name: false,
-            shortName:isAuth,
+            shortName: isAuth,
             regNumber: false,
             lotNumber: false,
             initialMaxPrice: false,
@@ -298,7 +304,7 @@ export class Tender {
     }
 
     public getStatusDate() {
-        switch (this.status) {
+        switch (Math.abs(this.status)) {
             case 1:
                 return new Date(this.date1_start).getTime()
             case 2:
@@ -309,6 +315,8 @@ export class Tender {
                 return new Date(this.date2_finish).getTime()
             case 5:
                 return new Date(this.date_finish).getTime()
+            case 6:
+                return new Date(this.contractDate).getTime()
             default:
                 return 0
         }
