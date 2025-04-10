@@ -1,7 +1,7 @@
 import { showMessage } from "@/app/components/Alerts/Alert";
 import { ContactPersonStore } from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonStore";
 import styles from "@/app/tender/TenderForm/TenderForm.module.css";
-import { TenderFormField } from "@/app/tender/TenderForm/TenderFormField";
+import { TableFormField } from "@/app/components/TableField/TableFormField";
 import Company from "@/models/Company/Company";
 import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
 import { deleteContactPerson, updateContactPerson } from "@/models/Company/ContactPerson/ContactPersonService";
@@ -100,7 +100,7 @@ const ContactPersonForm = observer(
                         <span className='under-input-error'>{props.errors['ContactPersonName' + store.company.id]}</span>}
                 </div>
                 <div className={style.formGroup}>
-                    <TenderFormField
+                    <TableFormField
                         propertyName={`phoneNumber${store.company.id}`}
                         value={store.contactPerson.phoneNumber}
                         label="Номер телефона:"
@@ -116,7 +116,7 @@ const ContactPersonForm = observer(
                     />
                 </div>
                 <div className={style.formGroup}>
-                    <TenderFormField
+                    <TableFormField
                         propertyName={`email${store.company.id}`}
                         value={store.contactPerson.email}
                         label="Электронная почта:"

@@ -1,8 +1,8 @@
-import styles from './TenderForm.module.css';
+import styles from '../../tender/TenderForm/TenderForm.module.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
 
-interface TenderFormFieldProps {
+interface TableFormFieldProps {
     label: string;
     propertyName: string;
     value: string | number;
@@ -12,7 +12,7 @@ interface TenderFormFieldProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
-export const TenderFormField = (props: TenderFormFieldProps) => {
+export const TableFormField = (props: TableFormFieldProps) => {
     return (
         <>
             <label htmlFor={props.propertyName} className={styles.label}>{props.label}</label>

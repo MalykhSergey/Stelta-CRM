@@ -1,6 +1,6 @@
 import { ContactPersonStore } from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonStore";
 import styles from "@/app/tender/TenderForm/TenderForm.module.css";
-import { TenderFormField } from "@/app/tender/TenderForm/TenderFormField";
+import { TableFormField } from "@/app/components/TableField/TableFormField";
 import Company from "@/models/Company/Company";
 import { ContactPerson } from "@/models/Company/ContactPerson/ContactPerson";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
@@ -57,7 +57,7 @@ const ContactPersonForm = observer(
                     {props.errors['ContactPersonName'] &&
                         <span className='under-input-error'>{props.errors['ContactPersonName']}</span>}
                 </div>
-                <TenderFormField
+                <TableFormField
                     propertyName="phoneNumber"
                     value={store.contactPerson.phoneNumber}
                     label="Номер телефона:"
@@ -68,7 +68,7 @@ const ContactPersonForm = observer(
                     }}
                     errors={props.errors}
                 />
-                <TenderFormField
+                <TableFormField
                     propertyName="email"
                     value={store.contactPerson.email}
                     label="Электронная почта:"

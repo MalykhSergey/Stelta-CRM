@@ -6,7 +6,7 @@ import {observer, useLocalObservable} from 'mobx-react-lite'
 import {Tender} from '@/models/Tender/Tender'
 import styles from './TenderForm.module.css'
 import CurrencyInput from "react-currency-input-field";
-import {TenderFormField} from "@/app/tender/TenderForm/TenderFormField";
+import {TableFormField} from "@/app/components/TableField/TableFormField";
 import {ContactPersonForm} from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonForm";
 
 interface TenderFormProps {
@@ -90,13 +90,13 @@ const TenderForm = observer((props: TenderFormProps) => {
                 {errors['Company'] && <span></span>} {errors['Company'] &&
                 <span className={styles.error}>{errors['Company']}</span>}
             </div>
-            <TenderFormField propertyName="Name" value={props.tender.name} label="Полное наименование:"
-                             onChange={handleChange} isEditable={props.isEditable.name} errors={errors}
-                             type="textarea"/>
-            <TenderFormField propertyName={'RegNumber'} value={props.tender.regNumber} label={"Реестровый номер  :"}
-                             onChange={handleChange} isEditable={props.isEditable.regNumber} errors={errors}/>
-            <TenderFormField propertyName={'LotNumber'} value={props.tender.lotNumber} label={"Лот номер:"}
-                             onChange={handleChange} isEditable={props.isEditable.lotNumber} errors={errors}/>
+            <TableFormField propertyName="Name" value={props.tender.name} label="Полное наименование:"
+                            onChange={handleChange} isEditable={props.isEditable.name} errors={errors}
+                            type="textarea"/>
+            <TableFormField propertyName={'RegNumber'} value={props.tender.regNumber} label={"Реестровый номер  :"}
+                            onChange={handleChange} isEditable={props.isEditable.regNumber} errors={errors}/>
+            <TableFormField propertyName={'LotNumber'} value={props.tender.lotNumber} label={"Лот номер:"}
+                            onChange={handleChange} isEditable={props.isEditable.lotNumber} errors={errors}/>
             <label className={styles.label} htmlFor="InitialMaxPrice">НМЦК:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
@@ -147,20 +147,20 @@ const TenderForm = observer((props: TenderFormProps) => {
                 </div>
             </div>
             {errors["Price"] && <><span></span><span className='under-input-error'>{errors["Price"]}</span></>}
-            <TenderFormField propertyName="Date1_start" value={props.tender.date1_start} label="Дата начала 1-го этапа:"
-                             onChange={handleChange} isEditable={props.isEditable.date1_start} errors={errors}
-                             type="datetime-local"/>
-            <TenderFormField propertyName="Date1_finish" value={props.tender.date1_finish}
-                             label="Дата окончания 1-го этапа:"
-                             onChange={handleChange} isEditable={props.isEditable.date1_finish} errors={errors}
-                             type="datetime-local"/>
-            <TenderFormField propertyName="Date2_finish" value={props.tender.date2_finish}
-                             label="Дата окончания 2-го этапа:"
-                             onChange={handleChange} isEditable={props.isEditable.date2_finish} errors={errors}
-                             type="datetime-local"/>
-            <TenderFormField propertyName="Date_finish" value={props.tender.date_finish} label="Подведение итогов:"
-                             onChange={handleChange} isEditable={props.isEditable.date_finish} errors={errors}
-                             type="datetime-local"/>
+            <TableFormField propertyName="Date1_start" value={props.tender.date1_start} label="Дата начала 1-го этапа:"
+                            onChange={handleChange} isEditable={props.isEditable.date1_start} errors={errors}
+                            type="datetime-local"/>
+            <TableFormField propertyName="Date1_finish" value={props.tender.date1_finish}
+                            label="Дата окончания 1-го этапа:"
+                            onChange={handleChange} isEditable={props.isEditable.date1_finish} errors={errors}
+                            type="datetime-local"/>
+            <TableFormField propertyName="Date2_finish" value={props.tender.date2_finish}
+                            label="Дата окончания 2-го этапа:"
+                            onChange={handleChange} isEditable={props.isEditable.date2_finish} errors={errors}
+                            type="datetime-local"/>
+            <TableFormField propertyName="Date_finish" value={props.tender.date_finish} label="Подведение итогов:"
+                            onChange={handleChange} isEditable={props.isEditable.date_finish} errors={errors}
+                            type="datetime-local"/>
             <ContactPersonForm company={props.tender.company} contactPerson={props.tender.contactPerson} errors={errors}
                                isEditable={props.isEditable.contactPerson}/>
         </div>
