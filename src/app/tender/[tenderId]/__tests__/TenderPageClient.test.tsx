@@ -4,7 +4,7 @@ import TenderPageClient from '../TenderPageClient';
 import React from 'react';
 import {Tender} from '@/models/Tender/Tender';
 import Company from "@/models/Company/Company";
-import {deleteTender, updateTenderById} from "@/models/Tender/TenderService";
+import {deleteTender} from "@/models/Tender/TenderService";
 import {showMessage} from "@/app/components/Alerts/Alert";
 
 vi.mock('@/app/AuthContext', () => ({
@@ -22,7 +22,6 @@ vi.mock('@/app/components/Alerts/Alert', () => ({
 }));
 
 vi.mock('@/models/Tender/TenderService', () => ({
-    updateTenderById: vi.fn(),
     deleteTender: vi.fn()
 }));
 
@@ -89,7 +88,15 @@ describe('TenderPageClient Component', () => {
         expect(screen.getByText('Не участвуем')).toBeInTheDocument();
     });
 
-    it('при клике на зеленую кнопку вызывает updateTenderById и выводит уведомление об успехе', async () => {
+    it('при клике на зеленую кнопку вызывает fetch и выводит уведомление об успехе', async () => {
+        const mockFetch = vi.fn(() =>
+            Promise.resolve(new Response(JSON.stringify({ success: true }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            }))
+        );
+        global.fetch = mockFetch;
+
         render(
             <TenderPageClient
                 tender={JSON.stringify({...tenderMock, status: 2})}
@@ -101,13 +108,19 @@ describe('TenderPageClient Component', () => {
         const greenButton = screen.getByText('Сметный расчёт');
         fireEvent.click(greenButton);
 
-        // Дождемся выполнения асинхронного обработчика saveHandler
         await waitFor(() => {
-            expect(updateTenderById).toHaveBeenCalled();
-            // Проверяем, что showMessage вызван с сообщением об успешном сохранении
+            expect(mockFetch).toHaveBeenCalledWith(
+                `/api/tender/${tenderMock.id}`,
+                expect.objectContaining({
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({...tenderMock, status: 2})
+                })
+            );
             expect(showMessage).toHaveBeenCalledWith("Данные успешно сохранены!", "successful");
         });
     });
+
 
     it('при клике на кнопку "Удалить" для тендера со status = 0 вызывает deleteTender и перенаправляет на "/"', async () => {
         // Создаем тендер со status = 0 (для которого рендерится кнопка "Удалить")
@@ -125,8 +138,6 @@ describe('TenderPageClient Component', () => {
 
         await waitFor(() => {
             expect(deleteTender).toHaveBeenCalledWith(tenderDataStatus0.id);
-            // После успешного удаления происходит переход на главную страницу
-            // expect(push).toHaveBeenCalledWith('/');
         });
     });
 });
