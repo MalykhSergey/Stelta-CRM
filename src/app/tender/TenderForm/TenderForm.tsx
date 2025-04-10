@@ -12,23 +12,7 @@ import {ContactPersonForm} from "@/app/tender/TenderForm/ContactPersonForm/Conta
 interface TenderFormProps {
     tender: Tender,
     companies: Company[],
-    isEditable: {
-        status: boolean,
-        isSpecial: boolean,
-        company: boolean,
-        name: boolean,
-        regNumber: boolean,
-        lotNumber: boolean,
-        initialMaxPrice: boolean,
-        price: boolean,
-        date1_start: boolean,
-        date1_finish: boolean,
-        date2_finish: boolean,
-        date_finish: boolean,
-        contactPerson: boolean,
-        phoneNumber: boolean,
-        email: boolean
-    }
+    isAuth:boolean
 }
 
 const TenderForm = observer((props: TenderFormProps) => {
@@ -43,13 +27,14 @@ const TenderForm = observer((props: TenderFormProps) => {
             delete errors[name]
         }
     }
+    const isEditable = props.tender.isEditable(props.isAuth);
     return (
         <div className={`${styles.form} card`}>
             <label className={styles.label} htmlFor='Status'>Статус:</label>
             <div className={styles.formGroup}>
                 <select id='Status' name="Status" value={props.tender.status} className={styles.input}
                         onChange={handleChange}
-                        disabled={!props.isEditable.status}>
+                        disabled={!isEditable.status}>
                     {props.tender.status < 0 &&
                         <>
                             <option value="-4">{getStatusName(-4)}</option>
@@ -68,7 +53,7 @@ const TenderForm = observer((props: TenderFormProps) => {
             <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
             <div className={styles.formGroup}>
                 <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={props.tender.isSpecial}
-                       onChange={() => props.tender.toggleIsSpecial()} disabled={!props.isEditable.isSpecial}/>
+                       onChange={() => props.tender.toggleIsSpecial()} disabled={!isEditable.isSpecial}/>
             </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
@@ -80,7 +65,7 @@ const TenderForm = observer((props: TenderFormProps) => {
                                     props.tender.setCompany(selected_company);
                             }}
                             value={props.tender.company.id}
-                            disabled={!props.isEditable.company}>
+                            disabled={!isEditable.company}>
                         <option key={"option0"} value={0} disabled={true}>Выберите организацию</option>
                         {props.companies.map(company =>
                             <option key={"option" + company.id} value={company.id}>{company.name}</option>
@@ -90,13 +75,16 @@ const TenderForm = observer((props: TenderFormProps) => {
                 {errors['Company'] && <span></span>} {errors['Company'] &&
                 <span className={styles.error}>{errors['Company']}</span>}
             </div>
+            <TableFormField propertyName="ShortName" value={props.tender.shortName} label="Сокращённое наименование:"
+                            onChange={handleChange} isEditable={isEditable.shortName} errors={errors}
+                            type="text"/>
             <TableFormField propertyName="Name" value={props.tender.name} label="Полное наименование:"
-                            onChange={handleChange} isEditable={props.isEditable.name} errors={errors}
+                            onChange={handleChange} isEditable={isEditable.name} errors={errors}
                             type="textarea"/>
             <TableFormField propertyName={'RegNumber'} value={props.tender.regNumber} label={"Реестровый номер  :"}
-                            onChange={handleChange} isEditable={props.isEditable.regNumber} errors={errors}/>
+                            onChange={handleChange} isEditable={isEditable.regNumber} errors={errors}/>
             <TableFormField propertyName={'LotNumber'} value={props.tender.lotNumber} label={"Лот номер:"}
-                            onChange={handleChange} isEditable={props.isEditable.lotNumber} errors={errors}/>
+                            onChange={handleChange} isEditable={isEditable.lotNumber} errors={errors}/>
             <label className={styles.label} htmlFor="InitialMaxPrice">НМЦК:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
@@ -105,7 +93,7 @@ const TenderForm = observer((props: TenderFormProps) => {
                         id="InitialMaxPrice"
                         value={props.tender.initialMaxPrice}
                         className={styles.input}
-                        disabled={!props.isEditable.initialMaxPrice}
+                        disabled={!isEditable.initialMaxPrice}
                         allowNegativeValue={false}
                         onValueChange={value => {
                             const result = props.tender.setInitialMaxPrice(value ? value : '')
@@ -117,7 +105,7 @@ const TenderForm = observer((props: TenderFormProps) => {
                         }}
                         suffix="₽"
                     />
-                    {props.isEditable.initialMaxPrice &&
+                    {isEditable.initialMaxPrice &&
                         <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
@@ -131,7 +119,7 @@ const TenderForm = observer((props: TenderFormProps) => {
                         id="Price"
                         value={props.tender.rebiddingPrices.length == 0 ? props.tender.price : props.tender.rebiddingPrices.at(-1)?.price}
                         className={styles.input}
-                        disabled={!props.isEditable.price}
+                        disabled={!isEditable.price}
                         allowNegativeValue={false}
                         onValueChange={value => {
                             const result = props.tender.setPrice(value ? value : '')
@@ -143,26 +131,26 @@ const TenderForm = observer((props: TenderFormProps) => {
                         }}
                         suffix="₽"
                     />
-                    {props.isEditable.price && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
+                    {isEditable.price && <FontAwesomeIcon icon={faPenToSquare} className={styles.icon}/>}
                 </div>
             </div>
             {errors["Price"] && <><span></span><span className='under-input-error'>{errors["Price"]}</span></>}
             <TableFormField propertyName="Date1_start" value={props.tender.date1_start} label="Дата начала 1-го этапа:"
-                            onChange={handleChange} isEditable={props.isEditable.date1_start} errors={errors}
+                            onChange={handleChange} isEditable={isEditable.date1_start} errors={errors}
                             type="datetime-local"/>
             <TableFormField propertyName="Date1_finish" value={props.tender.date1_finish}
                             label="Дата окончания 1-го этапа:"
-                            onChange={handleChange} isEditable={props.isEditable.date1_finish} errors={errors}
+                            onChange={handleChange} isEditable={isEditable.date1_finish} errors={errors}
                             type="datetime-local"/>
             <TableFormField propertyName="Date2_finish" value={props.tender.date2_finish}
                             label="Дата окончания 2-го этапа:"
-                            onChange={handleChange} isEditable={props.isEditable.date2_finish} errors={errors}
+                            onChange={handleChange} isEditable={isEditable.date2_finish} errors={errors}
                             type="datetime-local"/>
             <TableFormField propertyName="Date_finish" value={props.tender.date_finish} label="Подведение итогов:"
-                            onChange={handleChange} isEditable={props.isEditable.date_finish} errors={errors}
+                            onChange={handleChange} isEditable={isEditable.date_finish} errors={errors}
                             type="datetime-local"/>
             <ContactPersonForm company={props.tender.company} contactPerson={props.tender.contactPerson} errors={errors}
-                               isEditable={props.isEditable.contactPerson}/>
+                               isEditable={isEditable.contactPerson}/>
         </div>
     )
 })

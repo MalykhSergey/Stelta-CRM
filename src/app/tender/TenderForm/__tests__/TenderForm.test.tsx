@@ -16,33 +16,16 @@ describe('TenderForm', () => {
     mockTender.id = 1;
     mockTender.name = 'Тестовый тендер';
     mockTender.company = mockCompanies[0];
+    mockTender.status = 0;
     mockTender.contactPerson = new ContactPerson(1, 'Иван Иванов', '1234567890', 'test@test.com');
     makeAutoObservable(mockTender)
 
-    const mockIsEditable = {
-        status: true,
-        isSpecial: true,
-        company: true,
-        name: true,
-        regNumber: true,
-        lotNumber: true,
-        initialMaxPrice: true,
-        price: true,
-        date1_start: true,
-        date1_finish: true,
-        date2_finish: true,
-        date_finish: true,
-        contactPerson: true,
-        phoneNumber: true,
-        email: true
-    };
-
-    const setup = (isEditable = mockIsEditable) => {
+    const setup = () => {
         return render(
             <TenderForm
                 tender={mockTender}
                 companies={mockCompanies}
-                isEditable={isEditable}
+                isAuth={true}
             />
         );
     };
@@ -89,20 +72,6 @@ describe('TenderForm', () => {
 
         expect(mockTender.company.id).toBe(2);
     });
-
-    // it('должен быть недоступным для редактирования при isEditable=false', () => {
-    //     const nonEditableProps = Object.keys(mockIsEditable).reduce((acc, key) => ({
-    //         ...acc,
-    //         [key]: false
-    //     }), {});
-
-    //     setup(nonEditableProps);
-
-    //     const inputs = screen.getAllByRole('textbox');
-    //     inputs.forEach(input => {
-    //         expect(input).toBeDisabled();
-    //     });
-    // });
 
     it('должен отображать ошибки валидации', () => {
         setup();

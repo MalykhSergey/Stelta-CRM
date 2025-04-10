@@ -22,7 +22,7 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
 
     return (<div id={styles.content}>
         <div id={styles.leftPanel}>
-            <TenderForm tender={tender} companies={tenderFlowService.companies} isEditable={isEditable}/>
+            <TenderForm tender={tender} companies={tenderFlowService.companies} isAuth={tenderFlowService.isAuth}/>
         </div>
         <div id={styles.rightPanel}>
             <DocumentsForm title='Документы тендера' tenderId={tender.id} fileNames={tender.stagedFileNames[0]}
