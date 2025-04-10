@@ -3,20 +3,21 @@
     flex-direction: row;
     gap: 20px;
 }
-#leftPanel{
-    min-width: 275px;
-}
+
 @media only screen and (max-width: 600px) {
     .content {
-        display: flex;
         flex-wrap: wrap;
     }
+}
+
+#leftPanel{
+    min-width: 275px;
+    max-width: 300px;
 }
 
 .tenders {
     display: grid;
     grid-template-columns: repeat(5,1fr);
-    /*align-items: start;*/
     align-self: flex-start;
     gap: 20px;
 }
@@ -25,6 +26,10 @@
     .tenders {
         display: flex;
         flex-direction: column;
+    }
+    #leftPanel{
+        max-width: unset;
+        width: 100%;
     }
 }
 

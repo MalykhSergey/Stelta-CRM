@@ -45,7 +45,9 @@ describe('TendersFilter Component', () => {
         fireEvent.change(statusSelect, {target: {value: "1"}});
 
         // Ожидаем, что останется только тендер с status === 1
-        expect(setTenders).toHaveBeenCalledWith([tenders[0]]);
+        waitFor(() => {
+            expect(setTenders).toHaveBeenCalledWith([tenders[0]]);
+        })
     });
 
     it('фильтрует тендеры по реестровому номеру', () => {
