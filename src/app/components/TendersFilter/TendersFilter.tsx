@@ -81,7 +81,7 @@ export default function TendersFilter(props: {
                 </select>
             </div>
             <div className='column'>
-                <label htmlFor="filter_name" className={styles.filterLabel}>Полное наименование:</label>
+                <label htmlFor="filter_name" className={styles.filterLabel}>Наименование:</label>
                 <input id="filter_name" ref={fullName} type="text" className={styles.filterInput}
                        placeholder="Наименование"
                        onChange={debouncedChangeFilter}/>
