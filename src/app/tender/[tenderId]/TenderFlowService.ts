@@ -1,7 +1,7 @@
 import {Tender} from "@/models/Tender/Tender";
 import {showMessage} from "@/app/components/Alerts/Alert";
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson";
-import {deleteTender, updateTenderById} from "@/models/Tender/TenderService";
+import {deleteTender} from "@/models/Tender/TenderService";
 import Company from "@/models/Company/Company";
 import {Role, User} from "@/models/User/User";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -52,8 +52,8 @@ export default class TenderFlowService {
         if ((this.tender.status == 0 || this.tender.status == 1) && this.tender.contactPerson.id == 0) {
             if (this.tender.company.id == 0) {
                 showMessage("Выберите организацию!", "error")
+                return false
             }
-
             const result = await (await fetch(`/api/contact_person?companyId=${this.tender.company.id}`, {
                 method: 'POST',
                 headers: {
@@ -70,7 +70,13 @@ export default class TenderFlowService {
             const new_contact_person = new ContactPerson(this.tender.contactPerson.id, this.tender.contactPerson.name, this.tender.contactPerson.phoneNumber, this.tender.contactPerson.email)
             this.tender.company.addContactPerson(new_contact_person)
         }
-        const result = await updateTenderById(JSON.stringify(this.tender))
+        const result = await (await fetch(`/api/tender/${this.tender.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.tender)
+        })).json()
         if (result?.error) {
             showMessage(result.error)
             return false;
@@ -81,7 +87,7 @@ export default class TenderFlowService {
     }
 
     async updateStageHandler(stage: number) {
-        if (await this.saveHandler()){
+        if (await this.saveHandler()) {
             this.tender.status = stage
         }
     }

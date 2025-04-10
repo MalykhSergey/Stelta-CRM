@@ -64,9 +64,8 @@ export async function deleteRebiddingPriceById(tenderId: number, rebiddingPriceI
     })
 }
 
-export async function updateTenderById(tender_string: string) {
+export async function updateTenderById(tender: Tender) {
     return authAction(async (user: User) => {
-        const tender = JSON.parse(tender_string) as Tender
         logger.info(`${user.name} updates tender ${tender.id}`);
         CalendarService.handleTenderEvents(tender);
         return await tenderStorage.update(tender);
