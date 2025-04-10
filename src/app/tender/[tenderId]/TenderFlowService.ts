@@ -36,23 +36,6 @@ export default class TenderFlowService {
     tender: Tender;
     companies: Company[];
     isAuth = false;
-    isEditable = {
-        status: this.isAuth,
-        isSpecial: false,
-        company: false,
-        name: false,
-        regNumber: false,
-        lotNumber: false,
-        initialMaxPrice: false,
-        price: false,
-        date1_start: false,
-        date1_finish: false,
-        date2_finish: false,
-        date_finish: false,
-        contactPerson: false,
-        phoneNumber: false,
-        email: false,
-    };
     private router: AppRouterInstance;
 
     constructor(tender: string, companies: string, user: User, router: AppRouterInstance) {
@@ -62,29 +45,6 @@ export default class TenderFlowService {
         this.tender = Tender.fromJSON(tender)
         if (this.tender.company.id != 0)
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
-        if (this.isAuth) {
-            this.isEditable.status = true;
-            if (this.tender.status == 0) this.isEditable = {
-                status: true,
-                isSpecial: true,
-                company: true,
-                name: true,
-                regNumber: true,
-                lotNumber: true,
-                initialMaxPrice: true,
-                price: true,
-                date1_start: true,
-                date1_finish: true,
-                date2_finish: true,
-                date_finish: true,
-                contactPerson: true,
-                phoneNumber: true,
-                email: true,
-            };
-            if (this.tender.status <= 2) this.isEditable.date1_finish = true
-            if (this.tender.status <= 3) this.isEditable.date2_finish = true
-            if (this.tender.status <= 4) this.isEditable.date_finish = true
-        }
     }
 
     async saveHandler() {
@@ -136,7 +96,7 @@ export default class TenderFlowService {
     };
 
     editableStageForm(formNumber: number): boolean {
-        return Math.abs(this.tender.status) == TenderFlowService.stageConfig[formNumber];
+        return Math.abs(this.tender.status) == TenderFlowService.stageConfig[formNumber] && this.isAuth;
     }
 
     showNextStageButton(): boolean {

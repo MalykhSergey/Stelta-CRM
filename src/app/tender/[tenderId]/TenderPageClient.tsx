@@ -18,7 +18,7 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
     const router = useRouter();
     const tenderFlowService = useLocalObservable(() => new TenderFlowService(props.tender, props.companies, user, router));
     const tender = tenderFlowService.tender;
-    const isEditable = tenderFlowService.isEditable;
+    const isEditable = tender.isEditable(tenderFlowService.isAuth);
 
     return (<div id={styles.content}>
         <div id={styles.leftPanel}>

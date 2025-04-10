@@ -241,6 +241,49 @@ export class Tender {
         return this.name != '' && this.regNumber != '' && this.lotNumber != '' && this.initialMaxPrice != '' && this.price != '' && this.date1_start != '' && this.date1_finish != '' && this.date2_finish != '' && this.date_finish != '' && this.contactPerson.phoneNumber != '' && this.contactPerson.email != '' && this.contractNumber != '' && this.contractDate != '' && this.contactPerson.isValid()
     }
 
+    public isEditable(isAuth:boolean){
+        let isEditable = {
+            status: isAuth,
+            isSpecial: false,
+            company: false,
+            name: false,
+            regNumber: false,
+            lotNumber: false,
+            initialMaxPrice: false,
+            price: false,
+            date1_start: false,
+            date1_finish: false,
+            date2_finish: false,
+            date_finish: false,
+            contactPerson: false,
+            phoneNumber: false,
+            email: false,
+        };
+        if (isAuth) {
+            if (this.status == 0) isEditable = {
+                status: true,
+                isSpecial: true,
+                company: true,
+                name: true,
+                regNumber: true,
+                lotNumber: true,
+                initialMaxPrice: true,
+                price: true,
+                date1_start: true,
+                date1_finish: true,
+                date2_finish: true,
+                date_finish: true,
+                contactPerson: true,
+                phoneNumber: true,
+                email: true,
+            };
+            if (this.status <= 2) isEditable.date1_finish = true
+            if (this.status <= 3) isEditable.date2_finish = true
+            if (this.status <= 4) isEditable.date_finish = true
+        }
+        return isEditable;
+    }
+
     public getStatusDate() {
         switch (this.status) {
             case 1:
