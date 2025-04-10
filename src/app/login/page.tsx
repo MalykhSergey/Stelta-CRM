@@ -1,9 +1,8 @@
 "use client"
-import { useRouter } from "next/navigation"
-import { FormEvent, useEffect } from "react"
-import { login } from "../../models/User/UserService"
-import { useAuth } from "../AuthContext"
-import { showMessage } from "../components/Alerts/Alert"
+import {useRouter} from "next/navigation"
+import {FormEvent, useEffect} from "react"
+import {useAuth} from "../AuthContext"
+import {showMessage} from "../components/Alerts/Alert"
 import styles from "./page.module.css"
 
 export default function LoginPage() {
@@ -18,9 +17,14 @@ export default function LoginPage() {
     const loginHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const loginForm = new FormData(e.currentTarget)
-        const result = await login(loginForm)
+        const name = loginForm.get("name") as string
+        const result = await (await fetch(`/api/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(
+                {name: name, password: loginForm.get("password")})
+        })).json()
         if (!("error" in result)) {
-            const name = loginForm.get("name") as string
             showMessage(`Добро пожаловать ${name}!`, "successful")
             authContext.setUser(result)
             router.push('/')
@@ -33,11 +37,11 @@ export default function LoginPage() {
             <h1 className={`${styles.header}`}>Вход в систему</h1>
             <div>
                 <label className={styles.label} htmlFor="name">Имя пользователя:</label>
-                <input type="text" id="name" name="name" placeholder="Имя пользователя" required />
+                <input type="text" id="name" name="name" placeholder="Имя пользователя" required/>
             </div>
             <div>
                 <label className={styles.label} htmlFor="name">Пароль:</label>
-                <input type="password" id="password" name="password" placeholder="Пароль" required />
+                <input type="password" id="password" name="password" placeholder="Пароль" required/>
             </div>
             <button className={`${styles.submit} BlueButton`}>Войти</button>
         </form>

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import {cookies} from 'next/headers'
 import {Role, User} from './User'
 import {createUser, deleteUser as UserStorage_deleteUser, getUserByName, getUsers, hash_password} from "./UserStorage"
+import {redirect} from "next/navigation";
 
 export async function register(registerForm: FormData) {
     const name = registerForm.get('name') as string
@@ -28,10 +29,10 @@ export async function loadUsers() {
 
 const expirationTime = process.env.JWT_EXP_TIME || '1h';
 
-export async function login(loginForm: FormData) {
-    const user = await getUserByName(loginForm.get('name') as string)
+export async function login(name: string, password: string) {
+    const user = await getUserByName(name)
     if (user) {
-        const hashed_password = hash_password(loginForm.get("password") as string, user.salt)
+        const hashed_password = hash_password(password, user.salt)
         if (user.password != hashed_password)
             return {error: "Неправильный пароль!"}
         user.password = hashed_password
@@ -55,6 +56,7 @@ export async function login(loginForm: FormData) {
 export async function logout() {
     const cookieStorage = await cookies()
     cookieStorage.delete("auth_token")
+    redirect("/login");
 }
 
 export async function authAction<T>(handler: (user: User) => Promise<T>) {

@@ -31,7 +31,7 @@ export default function Header() {
                         className={`${styles.navLink} ${pathname.includes('analytics') ? styles.active : ''}`}>Аналитика</Link>
                 </>
                 }
-                {authContext.user.name ? <Link href="/logout" className={styles.navLink}>{authContext.user.name} | Выйти</Link> :
+                {authContext.user.name ? <a href="/api/logout" className={styles.navLink}>{authContext.user.name} | Выйти</a> :
                     <Link href="/login"
                         className={`${styles.navLink} ${pathname == '/login' ? styles.active : ''}`}>Войти</Link>}
             </div>
