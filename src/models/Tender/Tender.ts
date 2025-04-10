@@ -12,6 +12,7 @@ export class Tender {
     public isSpecial: boolean = false
     public company: Company = new Company(0, '');
     public name: string = ''
+    public shortName: string = ''
     public regNumber: string = ''
     public lotNumber: string = ''
     public initialMaxPrice: string = ''
@@ -45,6 +46,7 @@ export class Tender {
             tender.company.name = row.company_name
         }
         tender.name = row.name
+        tender.shortName = row.short_name
         tender.lotNumber = row.lot_number
         tender.regNumber = row.register_number
         tender.initialMaxPrice = row.initial_max_price
@@ -81,6 +83,7 @@ export class Tender {
         const company = new Company(obj.company.id, obj.company.name)
         tender.company = makeAutoObservable(company)
         tender.name = obj.name
+        tender.shortName = obj.shortName
         tender.regNumber = obj.regNumber
         tender.lotNumber = obj.lotNumber
         tender.initialMaxPrice = obj.initialMaxPrice
@@ -128,6 +131,14 @@ export class Tender {
 
     setName(value: string): Result<string, string> {
         this.name = value
+        if (value == "") {
+            return { ok: false, error: 'Поле не должно быть пустым!' }
+        }
+        return { ok: true, value: '' }
+    }
+
+    setShortName(value: string): Result<string, string> {
+        this.shortName = value
         if (value == "") {
             return { ok: false, error: 'Поле не должно быть пустым!' }
         }
@@ -247,6 +258,7 @@ export class Tender {
             isSpecial: false,
             company: false,
             name: false,
+            shortName:isAuth,
             regNumber: false,
             lotNumber: false,
             initialMaxPrice: false,
@@ -265,6 +277,7 @@ export class Tender {
                 isSpecial: true,
                 company: true,
                 name: true,
+                shortName: true,
                 regNumber: true,
                 lotNumber: true,
                 initialMaxPrice: true,
