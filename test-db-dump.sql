@@ -351,7 +351,7 @@ CREATE MATERIALIZED VIEW public.tender_status_cache AS
 
 CREATE TABLE public.tenders (
     id integer NOT NULL,
-    type smallint DEFAULT 0 CHECK (funding_type <= 3) NOT NULL,
+    type smallint DEFAULT 0 CHECK (type <= 3) NOT NULL,
     status smallint DEFAULT 0 CHECK (abs(status) <= 6) NOT NULL,
     funding_type smallint DEFAULT 0 CHECK (funding_type <= 2) NOT NULL,
     name character varying DEFAULT 'Полное наименование тендера'::character varying NOT NULL,

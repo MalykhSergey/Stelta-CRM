@@ -73,11 +73,6 @@ const TenderForm = observer((props: TenderFormProps) => {
                     <option value="2">{getFundingTypeName(FundingType.Budget)}</option>
                 </select>
             </div>
-            <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>
-            <div className={styles.formGroup}>
-                <input type="checkbox" name="IsSpecial" id="IsSpecial" checked={props.tender.isSpecial}
-                       onChange={() => props.tender.toggleIsSpecial()} disabled={!isEditable.isSpecial}/>
-            </div>
             <label className={styles.label} htmlFor="Company">Организация:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>

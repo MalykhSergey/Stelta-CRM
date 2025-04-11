@@ -304,7 +304,7 @@ export class Tender {
             phoneNumber: false,
             email: false,
         };
-        if (isAuth) {
+        if (isAuth && this.status>=0) {
             if (this.status == 0) isEditable = {
                 type: isAuth,
                 status: true,

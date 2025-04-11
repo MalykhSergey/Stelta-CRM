@@ -11,7 +11,7 @@ test('Проверить изменение дат для 1 этапа', async (
 })
 test('Проверить что остальные поля заблокированы', async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/tender/15")
-    await expect(page.locator('input[type="checkbox"]')).toBeDisabled();
+    await expect(page.getByLabel('Тип:')).toBeDisabled();
     await expect(page.getByLabel('Организация:')).toBeDisabled();
     await expect(page.getByLabel('Полное наименование:')).toBeDisabled();
     await expect(page.getByLabel('Реестровый номер :')).toBeDisabled();
