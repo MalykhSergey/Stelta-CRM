@@ -28,23 +28,20 @@ export function handleDatabaseError(
     if (e instanceof DatabaseError) {
         for (const [code, message] of Object.entries(errorMap)) {
             if (e.code === code) {
-                return { error: message };
+                return {error: message};
             }
         }
         for (const [code, message] of Object.entries(default_errors)) {
             if (e.code === code) {
-                return { error: message };
+                return {error: message};
             }
         }
-        // Логирование необработанной ошибки базы данных
-        logger.error(defaultMessage, { code: e.code, details: e.detail });
-    } else {
-        // Логирование необработанных ошибок, не относящихся к базе данных
-        logger.error(defaultMessage, e);
     }
-    return { error: defaultMessage };
+    logger.error(defaultMessage, e);
+    return {error: defaultMessage};
 }
-const default_errors={'55P03':'Временно заблокировано вами или другим пользователем!',}
+
+const default_errors = {'55P03': 'Временно заблокировано вами или другим пользователем!',}
 /**
  * Пул соединений. Не использовать conn.query для транзакций!
  */

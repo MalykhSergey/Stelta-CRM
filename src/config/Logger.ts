@@ -1,8 +1,25 @@
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
+import {inspect} from "node:util";
 
 const logDir = process.env.LOG_DIR || 'logs';
 const transports = [];
+
+const customFormat = winston.format.printf((info) => {
+    let message = info.message;
+    const splat = info[Symbol.for('splat')];
+    if (Array.isArray(splat) && splat.length > 0) {
+        const extra = splat
+            .map(item =>
+                typeof item === 'object'
+                    ? inspect(item, { depth: null, colors: false })
+                    : item
+            )
+            .join(' ');
+        message += ` ${extra}`;
+    }
+    return `${info.timestamp} ${info.level}: ${message}`;
+});
 
 if (process.env.LOG_TO_CONSOLE === 'true') {
     transports.push(
@@ -10,9 +27,8 @@ if (process.env.LOG_TO_CONSOLE === 'true') {
             format: winston.format.combine(
                 winston.format.colorize(),
                 winston.format.timestamp({format: 'DD.MM.YYYY HH:mm:ss'}),
-                winston.format.printf(({timestamp, level, message}) => {
-                    return `${timestamp} ${level}: ${message}`;
-                })
+                winston.format.splat(),
+                customFormat
             )
         })
     );
@@ -28,9 +44,8 @@ if (process.env.LOG_TO_FILE === 'true') {
             maxFiles: '14d',
             format: winston.format.combine(
                 winston.format.timestamp({ format: 'DD.MM.YYYY HH:mm:ss' }),
-                winston.format.printf(({ timestamp, level, message }) => {
-                    return `${timestamp} ${level}: ${message}`;
-                })
+                winston.format.splat(),
+                customFormat
             )
         })
     );
