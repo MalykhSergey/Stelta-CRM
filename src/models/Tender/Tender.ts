@@ -6,9 +6,11 @@ import {DocumentRequest} from "./DocumentRequest"
 import FileName from "./FileName"
 import {RebiddingPrice} from "./RebiddingPrice"
 import {FundingType} from "@/models/Tender/FundingType";
+import {TenderType} from "@/models/Tender/TenderType";
 
 export class Tender {
     public id: number = 0
+    public type: TenderType = 0
     public status: number = 0
     public fundingType: FundingType = 0
     public isSpecial: boolean = false
@@ -51,6 +53,7 @@ export class Tender {
     static fromQueryRow(row: any) {
         const tender = new Tender()
         tender.id = row.id
+        tender.type = row.type
         tender.status = row.status
         tender.fundingType = row.funding_type
         tender.isSpecial = row.is_special
@@ -92,6 +95,7 @@ export class Tender {
         const obj = JSON.parse(data)
         const tender = new Tender()
         tender.id = obj.id
+        tender.type = obj.type
         tender.status = obj.status
         tender.fundingType = obj.fundingType
         tender.isSpecial = obj.isSpecial
@@ -126,6 +130,14 @@ export class Tender {
             fileNames: FileName[]
         }) => makeAutoObservable(new DocumentRequest(value.id, value.date, value.fileNames)))
         return makeAutoObservable(tender)
+    }
+
+    setType(value: string): Result<string, string> {
+        this.type = Number.parseInt(value)
+        if (value == "") {
+            return {ok: false, error: 'Поле не должно быть пустым!'}
+        }
+        return {ok: true, value: ''}
     }
 
     setStatus(value: string): Result<string, string> {
@@ -273,8 +285,9 @@ export class Tender {
 
     public isEditable(isAuth: boolean) {
         let isEditable = {
+            type: false,
             status: isAuth,
-            fundingType:isAuth,
+            fundingType: isAuth,
             isSpecial: false,
             company: false,
             name: false,
@@ -293,8 +306,9 @@ export class Tender {
         };
         if (isAuth) {
             if (this.status == 0) isEditable = {
+                type: isAuth,
                 status: true,
-                fundingType:isAuth,
+                fundingType: isAuth,
                 isSpecial: true,
                 company: true,
                 name: true,

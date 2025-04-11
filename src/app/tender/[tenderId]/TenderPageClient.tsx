@@ -38,15 +38,15 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
             <CommentsForm tender={tender}/>
             {tenderFlowService.isAuth && <div className={styles.buttonRow}>
                 {tenderFlowService.showPrevStageButton() && <button className='OrangeButton'
-                                                                    onClick={() => tenderFlowService.updateStageHandler(tender.status - 1)}>{tenderFlowService.getPrevStageButtonLabel(tender.status)}</button>}
+                                                                    onClick={() => tenderFlowService.prevStageTender()}>{tenderFlowService.getPrevStageButtonLabel(tender.status)}</button>}
                 {tenderFlowService.showNextStageButton() && <button className='GreenButton'
-                                                                    onClick={() => tenderFlowService.updateStageHandler(tender.status + 1)}>{tenderFlowService.getNextStageLabel(tender.status)}</button>}
+                                                                    onClick={() => tenderFlowService.nextStageTender()}>{tenderFlowService.getNextStageLabel(tender.status)}</button>}
                 <PrimaryButton onClick={() => tenderFlowService.saveHandler()}>Сохранить</PrimaryButton>
                 {tender.status == 0 && <button className='RedButton'
                                                onClick={() => tenderFlowService.deleteHandler()}>Удалить</button>}
                 {tenderFlowService.showLooseStageButton() &&
                     <button className='RedButton'
-                            onClick={() => tenderFlowService.updateStageHandler(-tender.status)}>{tenderFlowService.getLooseButtonLabel(tender.status)}</button>}
+                            onClick={() => tenderFlowService.looseTender()}>{tenderFlowService.getLooseButtonLabel(tender.status)}</button>}
             </div>}
         </div>
     </div>);

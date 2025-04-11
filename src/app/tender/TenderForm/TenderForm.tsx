@@ -9,11 +9,12 @@ import CurrencyInput from "react-currency-input-field";
 import {TableFormField} from "@/app/components/TableField/TableFormField";
 import {ContactPersonForm} from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonForm";
 import {FundingType, getFundingTypeName} from "@/models/Tender/FundingType";
+import {getTenderTypeName, TenderType} from "@/models/Tender/TenderType";
 
 interface TenderFormProps {
     tender: Tender,
     companies: Company[],
-    isAuth:boolean
+    isAuth: boolean
 }
 
 const TenderForm = observer((props: TenderFormProps) => {
@@ -49,6 +50,17 @@ const TenderForm = observer((props: TenderFormProps) => {
                     <option value="4">{getStatusName(4)}</option>
                     <option value="5">{getStatusName(5)}</option>
                     <option value="6">{getStatusName(6)}</option>
+                </select>
+            </div>
+            <label className={styles.label} htmlFor='Type'>Тип:</label>
+            <div className={styles.formGroup}>
+                <select id='Type' name="Type" value={props.tender.type} className={styles.input}
+                        onChange={handleChange}
+                        disabled={!isEditable.type}>
+                    <option value="0">{getTenderTypeName(TenderType.Tender)}</option>
+                    <option value="1">{getTenderTypeName(TenderType.Special)}</option>
+                    <option value="2">{getTenderTypeName(TenderType.Order)}</option>
+                    <option value="3">{getTenderTypeName(TenderType.Offer)}</option>
                 </select>
             </div>
             <label className={styles.label} htmlFor='FundingType'>Принадлежность:</label>

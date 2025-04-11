@@ -5,6 +5,7 @@ import {deleteTender} from "@/models/Tender/TenderService";
 import Company from "@/models/Company/Company";
 import {Role, User} from "@/models/User/User";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
+import TenderStageStrategy from "@/app/tender/[tenderId]/TenderStrategy";
 
 enum ActiveTenderStatus {
     Stage0 = 0,
@@ -31,8 +32,6 @@ export default class TenderFlowService {
         [ActiveTenderStatus.Stage1_2]: 'Дозапрос',
         [ActiveTenderStatus.Win]: 'Переторжка',
     };
-    private static stageConfig = [0, 1, 3, 5];
-
     tender: Tender;
     companies: Company[];
     isAuth = false;
@@ -86,7 +85,7 @@ export default class TenderFlowService {
         return true;
     }
 
-    async updateStageHandler(stage: number) {
+    private async updateStageHandler(stage: number) {
         const previous = this.tender.status
         this.tender.status = stage
         if (!(await this.saveHandler()))
@@ -102,11 +101,13 @@ export default class TenderFlowService {
     }
 
     showStageForm(formNumber: number): boolean {
-        return Math.abs(this.tender.status) >= TenderFlowService.stageConfig[formNumber];
+        const strategy = TenderStageStrategy.getStrategy(this.tender);
+        return strategy.showStageForm(formNumber);
     };
 
     editableStageForm(formNumber: number): boolean {
-        return Math.abs(this.tender.status) == TenderFlowService.stageConfig[formNumber] && this.isAuth;
+        const strategy = TenderStageStrategy.getStrategy(this.tender);
+        return strategy.isActiveStageForm(formNumber) && this.isAuth;
     }
 
     showNextStageButton(): boolean {
@@ -131,5 +132,20 @@ export default class TenderFlowService {
 
     getPrevStageButtonLabel(status: ActiveTenderStatus): string {
         return TenderFlowService.PREV_STAGE_BUTTON_LABELS[status] || '';
+    }
+
+    looseTender() {
+        const strategy = TenderStageStrategy.getStrategy(this.tender);
+        this.updateStageHandler(strategy.looseStage())
+    }
+
+    nextStageTender() {
+        const strategy = TenderStageStrategy.getStrategy(this.tender);
+        this.updateStageHandler(strategy.nextStage())
+    }
+
+    prevStageTender() {
+        const strategy = TenderStageStrategy.getStrategy(this.tender);
+        this.updateStageHandler(strategy.prevStage())
     }
 }
