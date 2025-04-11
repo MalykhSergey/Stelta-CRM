@@ -1,8 +1,12 @@
 import Link from 'next/link';
-import { formatValue } from "react-currency-input-field";
-import { Tender } from '../../../models/Tender/Tender';
+import {formatValue} from "react-currency-input-field";
+import {Tender} from '@/models/Tender/Tender';
 import styles from './TenderCard.module.css';
+import logo_styles from './types_logos.module.css';
 import "./statuses.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faBriefcase, faDollarSign, faHandshake} from "@fortawesome/free-solid-svg-icons";
+import {getTenderTypeName, TenderType} from "@/models/Tender/TenderType";
 
 function convertDate(value: string) {
     const tender_date = new Date(value)
@@ -15,7 +19,8 @@ function convertDate(value: string) {
     const converted_date = tender_date.toLocaleString().split(',')
     return (
         <>
-            <div className={`${styles.info} ${date_hot_style}`}>{converted_date[0]} {converted_date[1].slice(0, -3)}</div>
+            <div
+                className={`${styles.info} ${date_hot_style}`}>{converted_date[0]} {converted_date[1].slice(0, -3)}</div>
         </>)
 }
 
@@ -23,10 +28,10 @@ const MAX_TITLE_LENGTH = 100
 
 function reduceTitle(title: string): { begin: string, middle: string, end: string } {
     if (title.length <= MAX_TITLE_LENGTH)
-        return { begin: title, middle: "", end: "" }
+        return {begin: title, middle: "", end: ""}
     const words = title.split(' ')
     if (words.length <= 5)
-        return { begin: title, middle: "", end: "" }
+        return {begin: title, middle: "", end: ""}
     let begin_index = 1
     let end_index = 3
     let sum: number = words[0].length + words[1].length + words[words.length - 3].length + words[words.length - 2].length + words[words.length - 1].length
@@ -40,13 +45,34 @@ function reduceTitle(title: string): { begin: string, middle: string, end: strin
         begin_index++
         sum += words[begin_index].length
     }
-    return { begin: words.slice(0, begin_index).join(' '), middle: " " + words.slice(begin_index, words.length - end_index).join(' ') + " ", end: words.slice(words.length - end_index).join(' ') }
+    return {
+        begin: words.slice(0, begin_index).join(' '),
+        middle: " " + words.slice(begin_index, words.length - end_index).join(' ') + " ",
+        end: words.slice(words.length - end_index).join(' ')
+    }
+}
+
+function TenderLogo(props: { tender: Tender }) {
+    const type = props.tender.type;
+    if (type == TenderType.Tender)
+        return <div className={styles.emptyType}/>;
+    const icons = [faHandshake, faBriefcase, faDollarSign,];
+    const logos = [logo_styles.special, logo_styles.order, logo_styles.commercial];
+    return (
+        <div className={styles.tenderType}>
+            <div className={`${logo_styles.logo} ${logos[type - 1]}`}>
+                <FontAwesomeIcon icon={icons[type - 1]}/>
+            </div>
+            <div>{getTenderTypeName(type)}</div>
+        </div>
+    );
 }
 
 export default function TenderCard(props: { tender: Tender }) {
     let dateSpan
     let dateField
-    switch (Math.abs(props.tender.status)) {
+    const status = Math.abs(props.tender.status);
+    switch (status) {
         case 0:
             dateField = <></>
             break
@@ -78,15 +104,16 @@ export default function TenderCard(props: { tender: Tender }) {
     const title = reduceTitle(props.tender.shortName);
     return (
         <Link className={`card ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}
-            target='_blank'>
-            <div className={'indicator status-' + props.tender.status}>{props.tender.isSpecial && '✔'}</div>
+              target='_blank'>
+            <div className={'indicator status-' + status}/>
             <span className={styles.label}>{props.tender.company.name}</span>
             <div className={styles.indicator}></div>
             <div className={styles.title}>
                 {title.begin}
-                {title.middle != "" && <span className={styles.titleMiddle} full-text={title.middle} />}
+                {title.middle != "" && <span className={styles.titleMiddle} full-text={title.middle}/>}
                 {title.end}
             </div>
+            <TenderLogo tender={props.tender}/>
             <span className={styles.label}>НМЦК: </span>
             <div className={styles.info}>{
                 formatValue({

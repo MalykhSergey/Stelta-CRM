@@ -6,11 +6,11 @@ export enum TenderType {
 }
 
 export function getTenderTypeName(tenderType: TenderType): string {
-    switch (tenderType){
+    switch (tenderType) {
         case TenderType.Tender:
-            return "Тендер"
+            return "Обычный"
         case TenderType.Special:
-            return "Тендер - подыгрыш"
+            return "Подыгрыш"
         case TenderType.Order:
             return "Заказ"
         case TenderType.Offer:

@@ -1,0 +1,28 @@
+.logo {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.special {
+    color: rgb(73, 73, 73);
+    background-color: rgb(209, 209, 209);
+}
+
+.commercial {
+    color: rgb(45, 72, 30);
+    background-color: rgb(195, 222, 180);
+}
+
+.commercial>*{
+    font-size: 16px;
+}
+
+.order {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 220, 94);
+}
