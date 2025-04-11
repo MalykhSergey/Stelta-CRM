@@ -6,7 +6,7 @@ import Company from "@/models/Company/Company";
 import {Role, User} from "@/models/User/User";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-enum TenderStatus {
+enum ActiveTenderStatus {
     Stage0 = 0,
     Stage1_1 = 1,
     Stage1_2 = 2,
@@ -16,20 +16,20 @@ enum TenderStatus {
 }
 
 export default class TenderFlowService {
-    private static readonly NEXT_STAGE_LABELS: Record<TenderStatus, string> = {
-        [TenderStatus.Stage0]: 'Участвовать',
-        [TenderStatus.Stage1_1]: 'Подать заявку',
-        [TenderStatus.Stage1_2]: 'Сметный расчёт',
-        [TenderStatus.Stage2_1]: 'Подать заявку',
-        [TenderStatus.Win]: 'Победа',
-        [TenderStatus.ContractSigned]: 'Договор подписан',
+    private static readonly NEXT_STAGE_LABELS: Record<ActiveTenderStatus, string> = {
+        [ActiveTenderStatus.Stage0]: 'Участвовать',
+        [ActiveTenderStatus.Stage1_1]: 'Подать заявку',
+        [ActiveTenderStatus.Stage1_2]: 'Сметный расчёт',
+        [ActiveTenderStatus.Stage2_1]: 'Подать заявку',
+        [ActiveTenderStatus.Win]: 'Победа',
+        [ActiveTenderStatus.ContractSigned]: 'Договор подписан',
     };
-    private static readonly LOOSE_BUTTON_LABELS: Partial<Record<TenderStatus, string>> = {
-        [TenderStatus.Win]: 'Проиграли',
+    private static readonly LOOSE_BUTTON_LABELS: Partial<Record<ActiveTenderStatus, string>> = {
+        [ActiveTenderStatus.Win]: 'Проиграли',
     };
-    private static readonly PREV_STAGE_BUTTON_LABELS: Partial<Record<TenderStatus, string>> = {
-        [TenderStatus.Stage1_2]: 'Дозапрос',
-        [TenderStatus.Win]: 'Переторжка',
+    private static readonly PREV_STAGE_BUTTON_LABELS: Partial<Record<ActiveTenderStatus, string>> = {
+        [ActiveTenderStatus.Stage1_2]: 'Дозапрос',
+        [ActiveTenderStatus.Win]: 'Переторжка',
     };
     private static stageConfig = [0, 1, 3, 5];
 
@@ -113,7 +113,7 @@ export default class TenderFlowService {
         return this.tender.status >= 0 && this.tender.status < 6;
     }
 
-    getNextStageLabel(status: TenderStatus): string {
+    getNextStageLabel(status: ActiveTenderStatus): string {
         return TenderFlowService.NEXT_STAGE_LABELS[status] || '';
     }
 
@@ -121,7 +121,7 @@ export default class TenderFlowService {
         return this.tender.status > 0 && this.tender.status < 5;
     }
 
-    getLooseButtonLabel(status: TenderStatus): string {
+    getLooseButtonLabel(status: ActiveTenderStatus): string {
         return TenderFlowService.LOOSE_BUTTON_LABELS[status] || 'Не участвуем';
     }
 
@@ -129,7 +129,7 @@ export default class TenderFlowService {
         return this.tender.status > 0 && this.tender.status < 6 && (this.tender.status & 1) == 0;
     }
 
-    getPrevStageButtonLabel(status: TenderStatus): string {
+    getPrevStageButtonLabel(status: ActiveTenderStatus): string {
         return TenderFlowService.PREV_STAGE_BUTTON_LABELS[status] || '';
     }
 }

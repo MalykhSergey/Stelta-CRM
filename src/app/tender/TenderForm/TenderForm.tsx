@@ -8,6 +8,7 @@ import styles from './TenderForm.module.css'
 import CurrencyInput from "react-currency-input-field";
 import {TableFormField} from "@/app/components/TableField/TableFormField";
 import {ContactPersonForm} from "@/app/tender/TenderForm/ContactPersonForm/ContactPersonForm";
+import {FundingType, getFundingTypeName} from "@/models/Tender/FundingType";
 
 interface TenderFormProps {
     tender: Tender,
@@ -48,6 +49,16 @@ const TenderForm = observer((props: TenderFormProps) => {
                     <option value="4">{getStatusName(4)}</option>
                     <option value="5">{getStatusName(5)}</option>
                     <option value="6">{getStatusName(6)}</option>
+                </select>
+            </div>
+            <label className={styles.label} htmlFor='FundingType'>Принадлежность:</label>
+            <div className={styles.formGroup}>
+                <select id='FundingType' name="FundingType" value={props.tender.fundingType} className={styles.input}
+                        onChange={handleChange}
+                        disabled={!isEditable.fundingType}>
+                    <option value="0">{getFundingTypeName(FundingType.Low)}</option>
+                    <option value="1">{getFundingTypeName(FundingType.High)}</option>
+                    <option value="2">{getFundingTypeName(FundingType.Budget)}</option>
                 </select>
             </div>
             <label className={styles.label} htmlFor="IsSpecial">Подыгрыш:</label>

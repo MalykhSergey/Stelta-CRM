@@ -1,14 +1,16 @@
 import {ContactPerson} from "@/models/Company/ContactPerson/ContactPerson"
 import {makeAutoObservable} from "mobx"
-import {Result} from "../../app/Result"
+import {Result} from "@/app/Result"
 import Company from "../Company/Company"
 import {DocumentRequest} from "./DocumentRequest"
 import FileName from "./FileName"
 import {RebiddingPrice} from "./RebiddingPrice"
+import {FundingType} from "@/models/Tender/FundingType";
 
 export class Tender {
     public id: number = 0
     public status: number = 0
+    public fundingType: FundingType = 0
     public isSpecial: boolean = false
     public company: Company = new Company(0, '');
     public name: string = ''
@@ -16,6 +18,7 @@ export class Tender {
     public regNumber: string = ''
     public lotNumber: string = ''
     public initialMaxPrice: string = ''
+    // Цена 1-го предложения. (Если переторжек нет.)
     public price: string = ''
     public date1_start = ''
     public date1_finish = ''
@@ -49,6 +52,7 @@ export class Tender {
         const tender = new Tender()
         tender.id = row.id
         tender.status = row.status
+        tender.fundingType = row.funding_type
         tender.isSpecial = row.is_special
         if (row.company_id) {
             tender.company.id = row.company_id
@@ -89,6 +93,7 @@ export class Tender {
         const tender = new Tender()
         tender.id = obj.id
         tender.status = obj.status
+        tender.fundingType = obj.fundingType
         tender.isSpecial = obj.isSpecial
         const company = new Company(obj.company.id, obj.company.name)
         tender.company = makeAutoObservable(company)
@@ -125,6 +130,14 @@ export class Tender {
 
     setStatus(value: string): Result<string, string> {
         this.status = Number.parseInt(value)
+        if (value == "") {
+            return {ok: false, error: 'Поле не должно быть пустым!'}
+        }
+        return {ok: true, value: ''}
+    }
+
+    setFundingType(value: string): Result<string, string> {
+        this.fundingType = Number.parseInt(value)
         if (value == "") {
             return {ok: false, error: 'Поле не должно быть пустым!'}
         }
@@ -261,6 +274,7 @@ export class Tender {
     public isEditable(isAuth: boolean) {
         let isEditable = {
             status: isAuth,
+            fundingType:isAuth,
             isSpecial: false,
             company: false,
             name: false,
@@ -280,6 +294,7 @@ export class Tender {
         if (isAuth) {
             if (this.status == 0) isEditable = {
                 status: true,
+                fundingType:isAuth,
                 isSpecial: true,
                 company: true,
                 name: true,
