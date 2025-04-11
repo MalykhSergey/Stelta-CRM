@@ -6,6 +6,7 @@ import Company from "@/models/Company/Company";
 import {Role, User} from "@/models/User/User";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import TenderStageStrategy from "@/app/tender/[tenderId]/TenderStrategy";
+import {TenderType} from "@/models/Tender/TenderType";
 
 enum ActiveTenderStatus {
     Stage0 = 0,
@@ -34,6 +35,7 @@ export default class TenderFlowService {
     };
     tender: Tender;
     companies: Company[];
+    strategy: TenderStageStrategy;
     isAuth = false;
     private router: AppRouterInstance;
 
@@ -44,6 +46,7 @@ export default class TenderFlowService {
         this.tender = Tender.fromJSON(tender)
         if (this.tender.company.id != 0)
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
+        this.strategy = TenderStageStrategy.getStrategy(this.tender)
     }
 
     async saveHandler(): Promise<boolean> {
@@ -85,13 +88,6 @@ export default class TenderFlowService {
         return true;
     }
 
-    private async updateStageHandler(stage: number) {
-        const previous = this.tender.status
-        this.tender.status = stage
-        if (!(await this.saveHandler()))
-            this.tender.status = previous
-    }
-
     async deleteHandler() {
         const result = await deleteTender(this.tender.id)
         if (result?.error)
@@ -100,14 +96,17 @@ export default class TenderFlowService {
             this.router.push('/')
     }
 
+    changeType(type: TenderType) {
+        this.tender.type = type;
+        this.strategy = TenderStageStrategy.getStrategy(this.tender)
+    }
+
     showStageForm(formNumber: number): boolean {
-        const strategy = TenderStageStrategy.getStrategy(this.tender);
-        return strategy.showStageForm(formNumber);
+        return this.strategy.showStageForm(formNumber);
     };
 
     editableStageForm(formNumber: number): boolean {
-        const strategy = TenderStageStrategy.getStrategy(this.tender);
-        return strategy.isActiveStageForm(formNumber) && this.isAuth;
+        return this.strategy.isActiveStageForm(formNumber) && this.isAuth;
     }
 
     showNextStageButton(): boolean {
@@ -135,17 +134,28 @@ export default class TenderFlowService {
     }
 
     looseTender() {
-        const strategy = TenderStageStrategy.getStrategy(this.tender);
-        this.updateStageHandler(strategy.looseStage())
+
+        this.updateStageHandler(this.strategy.looseStage())
     }
 
     nextStageTender() {
-        const strategy = TenderStageStrategy.getStrategy(this.tender);
-        this.updateStageHandler(strategy.nextStage())
+
+        this.updateStageHandler(this.strategy.nextStage())
     }
 
     prevStageTender() {
-        const strategy = TenderStageStrategy.getStrategy(this.tender);
-        this.updateStageHandler(strategy.prevStage())
+
+        this.updateStageHandler(this.strategy.prevStage())
+    }
+
+    isEditable() {
+        return this.strategy.isEditable(this.isAuth)
+    }
+
+    private async updateStageHandler(stage: number) {
+        const previous = this.tender.status
+        this.tender.status = stage
+        if (!(await this.saveHandler()))
+            this.tender.status = previous
     }
 }

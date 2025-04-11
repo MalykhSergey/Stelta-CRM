@@ -1,5 +1,6 @@
 import {Tender} from "@/models/Tender/Tender";
 import {TenderType} from "@/models/Tender/TenderType";
+import {FundingType} from "@/models/Tender/FundingType";
 
 
 export default abstract class TenderStageStrategy {
@@ -9,7 +10,7 @@ export default abstract class TenderStageStrategy {
         this.tender = tender;
     }
 
-    static getStrategy(tender: Tender):TenderStageStrategy {
+    static getStrategy(tender: Tender): TenderStageStrategy {
         switch (tender.type) {
             case TenderType.Tender:
                 return new FullStageStrategy(tender);
@@ -18,20 +19,73 @@ export default abstract class TenderStageStrategy {
             case TenderType.Order:
                 return new SkipFirstStageStrategy(tender);
             case TenderType.Offer:
-                return new SkipFirstStageStrategy(tender);
+                return new OfferStrategy(tender);
         }
     }
-    abstract showStageForm(formNumber: number):boolean;
+
+    abstract showStageForm(formNumber: number): boolean;
+
     abstract isActiveStageForm(formNumber: number): boolean;
 
-    nextStage():number{
-        return this.tender.status+1
+    nextStage(): number {
+        return this.tender.status + 1
     }
-    prevStage(){
-        return this.tender.status-1
+
+    prevStage() {
+        return this.tender.status - 1
     }
-    looseStage(){
+
+    looseStage() {
         return -this.tender.status
+    }
+
+    public isEditable(isAuth: boolean) {
+        let isEditable = {
+            type: false,
+            status: isAuth,
+            fundingType: isAuth,
+            isSpecial: false,
+            company: false,
+            name: false,
+            shortName: isAuth,
+            regNumber: false,
+            lotNumber: false,
+            initialMaxPrice: false,
+            price: false,
+            date1_start: false,
+            date1_finish: false,
+            date2_finish: false,
+            date_finish: false,
+            contactPerson: false,
+            phoneNumber: false,
+            email: false,
+        };
+        if (isAuth && this.tender.status >= 0) {
+            if (this.tender.status == 0) isEditable = {
+                type: isAuth,
+                status: true,
+                fundingType: isAuth,
+                isSpecial: true,
+                company: true,
+                name: true,
+                shortName: true,
+                regNumber: true,
+                lotNumber: true,
+                initialMaxPrice: true,
+                price: true,
+                date1_start: true,
+                date1_finish: true,
+                date2_finish: true,
+                date_finish: true,
+                contactPerson: true,
+                phoneNumber: true,
+                email: true,
+            };
+            if (this.tender.status <= 2) isEditable.date1_finish = true
+            if (this.tender.status <= 3) isEditable.date2_finish = true
+            if (this.tender.status <= 4) isEditable.date_finish = true
+        }
+        return isEditable;
     }
 }
 
@@ -58,8 +112,41 @@ class SkipFirstStageStrategy extends TenderStageStrategy {
     isActiveStageForm(formNumber: number): boolean {
         return Math.abs(this.tender.status) == SkipFirstStageStrategy.stageConfig[formNumber];
     }
+
     nextStage(): number {
         if (this.tender.status == 0) return 3;
         return super.nextStage()
+    }
+}
+
+class OfferStrategy extends SkipFirstStageStrategy {
+    constructor(tender: Tender) {
+        super(tender);
+        this.tender.fundingType = FundingType.Budget;
+    }
+
+    isEditable(isAuth: boolean): {
+        initialMaxPrice: boolean;
+        date1_finish: boolean;
+        date2_finish: boolean;
+        contactPerson: boolean;
+        lotNumber: boolean;
+        type: boolean;
+        regNumber: boolean;
+        phoneNumber: boolean;
+        fundingType: boolean;
+        isSpecial: boolean;
+        price: boolean;
+        name: boolean;
+        date_finish: boolean;
+        company: boolean;
+        shortName: boolean;
+        date1_start: boolean;
+        email: boolean;
+        status: boolean
+    } {
+        const isEditable = super.isEditable(isAuth);
+        isEditable.fundingType = false;
+        return isEditable;
     }
 }

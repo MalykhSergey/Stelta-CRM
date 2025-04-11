@@ -18,11 +18,11 @@ const TenderPageClient = observer((props: { tender: string, companies: string })
     const router = useRouter();
     const tenderFlowService = useLocalObservable(() => new TenderFlowService(props.tender, props.companies, user, router));
     const tender = tenderFlowService.tender;
-    const isEditable = tender.isEditable(tenderFlowService.isAuth);
+    const isEditable = tenderFlowService.isEditable();
 
     return (<div id={styles.content}>
         <div id={styles.leftPanel}>
-            <TenderForm tender={tender} companies={tenderFlowService.companies} isAuth={tenderFlowService.isAuth}/>
+            <TenderForm tenderFlowService={tenderFlowService}/>
         </div>
         <div id={styles.rightPanel}>
             <DocumentsForm title='Документы тендера' tenderId={tender.id} fileNames={tender.stagedFileNames[0]}

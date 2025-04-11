@@ -283,55 +283,6 @@ export class Tender {
         this.stagedFileNames[arrayIndex].push(fileName);
     }
 
-    public isEditable(isAuth: boolean) {
-        let isEditable = {
-            type: false,
-            status: isAuth,
-            fundingType: isAuth,
-            isSpecial: false,
-            company: false,
-            name: false,
-            shortName: isAuth,
-            regNumber: false,
-            lotNumber: false,
-            initialMaxPrice: false,
-            price: false,
-            date1_start: false,
-            date1_finish: false,
-            date2_finish: false,
-            date_finish: false,
-            contactPerson: false,
-            phoneNumber: false,
-            email: false,
-        };
-        if (isAuth && this.status>=0) {
-            if (this.status == 0) isEditable = {
-                type: isAuth,
-                status: true,
-                fundingType: isAuth,
-                isSpecial: true,
-                company: true,
-                name: true,
-                shortName: true,
-                regNumber: true,
-                lotNumber: true,
-                initialMaxPrice: true,
-                price: true,
-                date1_start: true,
-                date1_finish: true,
-                date2_finish: true,
-                date_finish: true,
-                contactPerson: true,
-                phoneNumber: true,
-                email: true,
-            };
-            if (this.status <= 2) isEditable.date1_finish = true
-            if (this.status <= 3) isEditable.date2_finish = true
-            if (this.status <= 4) isEditable.date_finish = true
-        }
-        return isEditable;
-    }
-
     public getStatusDate() {
         switch (Math.abs(this.status)) {
             case 1:
