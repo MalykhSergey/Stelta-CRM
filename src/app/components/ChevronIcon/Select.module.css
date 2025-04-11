@@ -1,0 +1,15 @@
+.select:focus + .chevronIcon {
+    transform: rotate(180deg);
+}
+
+.select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.chevronIcon {
+    transition: transform .3s;
+    margin-left: -30px;
+    pointer-events: none;
+}
