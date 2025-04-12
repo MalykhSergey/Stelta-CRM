@@ -1,90 +1,38 @@
 "use server"
-import {CountInDate, CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics"
-import getStatusName from "../Tender/Status"
-import {
-    loadCommonAnalytics,
-    loadCompanyAnalyticsByStatus,
-    loadCumulativeAnalyticsByDate,
-    loadStatusAnalyticsByCompany,
-    loadStatusAnalyticsByDate
-} from "./AnalyticsStorage"
-import {CommonAnalytics} from "./CommonAnalytics"
-import {CompanyAnalyticsDTO} from "./CompanyAnalytics"
-import {StatusAnalytics} from "./StatusAnalytics"
+import TableHeader from "@/models/Analytics/Table/TableHeader";
+import HeaderCell from "@/models/Analytics/Table/HeaderCell";
+import Table from "@/models/Analytics/Table/Table";
+import AnalyticStorage from "@/models/Analytics/AnalyticsStorage";
 
-export async function getCommonAnalytics() {
-    const result = await loadCommonAnalytics()
-    const analytics = new CommonAnalytics()
-    for (const row of result) {
-        if (row.is_special) {
-            analytics.special_count += row.count
-            analytics.special_price += Number.parseFloat(row.sum)
-        } else if (row.status >= 5) {
-            analytics.win_count += row.count
-            analytics.win_price = Number.parseFloat(row.sum)
-        } else if (row.status == -4) {
-            analytics.loose_count = row.count
-            analytics.loose_price = Number.parseFloat(row.sum)
-        } else if (row.status < 0) {
-            analytics.not_participate_count += row.count
-            analytics.not_participate_price += Number.parseFloat(row.sum)
-        }
+class AnalyticsService {
+    static async getCompaniesFullAnalytics() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = await AnalyticStorage.getCompaniesFullAnalytics();
+        const headers = [
+            new TableHeader([
+                new HeaderCell("Заказчик", 1, 2),
+                new HeaderCell("Подписание договора/ Договор заключён", 2),
+                new HeaderCell("Тендеры с высокой вероятностью", 2),
+                new HeaderCell("Тендеры с низкой вероятностью", 2),
+                new HeaderCell("Формирование лимита", 2),
+                new HeaderCell("Итог количество", 1, 2),
+                new HeaderCell("Итог сумма", 1, 2),
+            ]),
+            new TableHeader([
+                new HeaderCell("количество"),
+                new HeaderCell("сумма"),
+                new HeaderCell("количество"),
+                new HeaderCell("сумма"),
+                new HeaderCell("количество"),
+                new HeaderCell("сумма"),
+                new HeaderCell("количество"),
+                new HeaderCell("сумма")
+            ])
+        ];
+        return new Table(headers, data);
     }
-    return {...analytics}
 }
 
-export async function getStatusAnalyticsByCompany(company_id: number) {
-    const result = await loadStatusAnalyticsByCompany(company_id)
-    const analytics = new StatusAnalytics()
-    for (const row of result) {
-        if (row.is_special) {
-            analytics.special_count += row.count
-            analytics.special_price += Number.parseFloat(row.sum)
-        } else {
-            const statusName = getStatusName(row.status)
-            analytics.status_counts[statusName] = (analytics.status_counts[statusName] || 0) + row.count
-            analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
-        }
-    }
-    return {...analytics};
-}
-
-export async function getStatusAnalyticsByDateRange(startDate: string, endDate: string) {
-    const result = await loadStatusAnalyticsByDate(startDate, endDate)
-    const analytics = new CumulativeStatusAnalytics()
-    for (const row of result) {
-        if (row.is_special) {
-            analytics.special_count += row.count
-            analytics.special_price += Number.parseFloat(row.sum)
-        } else {
-            const statusName = getStatusName(row.status)
-            analytics.status_counts[statusName] = (analytics.status_counts[statusName] || 0) + row.count
-            const abs_status = Math.abs(row.status);
-            analytics.cumulative_status_price[abs_status] = (analytics.cumulative_status_price[abs_status] || 0) + row.count
-            analytics.status_price[statusName] = (analytics.status_price[statusName] || 0) + Number.parseFloat(row.sum)
-        }
-    }
-    for (let i = analytics.cumulative_status_price.length - 2; i != -1; i--) {
-        analytics.cumulative_status_price[i] += analytics.cumulative_status_price[i + 1]
-    }
-    const cfd_result = await loadCumulativeAnalyticsByDate(startDate, endDate)
-    for (const row of cfd_result) {
-        analytics.status_counts_history[row.status].push({...new CountInDate(parseInt(row.date), row.count_tenders, row.cumulative_tenders)})
-    }
-    return {...analytics}
-}
-
-export async function getCompanyAnalyticsByStatus(status: number) {
-    const result = await loadCompanyAnalyticsByStatus(status)
-    const analytics_list = []
-    for (const row of result) {
-        analytics_list.push({
-            ...new CompanyAnalyticsDTO({
-                id: row.id,
-                name: row.name,
-                contactPersons: []
-            }, row.count, Number.parseFloat(row.sum))
-        })
-    }
-    return analytics_list
+export async function getCompaniesFullAnalytics() {
+    return AnalyticsService.getCompaniesFullAnalytics();
 }

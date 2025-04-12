@@ -1,0 +1,12 @@
+table, th, td {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+table {
+    background-color: white;
+}
+
+table,th,tr,td {
+    border-radius: 10px;
+}

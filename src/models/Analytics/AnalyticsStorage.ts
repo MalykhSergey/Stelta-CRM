@@ -1,90 +1,28 @@
-"use server"
-import connection from "../../config/Database";
+import connection from "@/config/Database";
 
-export async function loadCommonAnalytics() {
-    return (await connection.query(`
-        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(COALESCE(reb_price, tenders.price))::numeric
-        FROM tenders
-        LEFT JOIN (
-            SELECT DISTINCT ON (tender_id) 
-                tender_id, 
-                price AS reb_price
-            FROM rebidding_prices
-            ORDER BY tender_id, id DESC
-        ) AS reb_prices ON reb_prices.tender_id = tenders.id
-        GROUP BY status, is_special`)).rows
-}
-
-export async function loadStatusAnalyticsByCompany(company_id: number) {
-    return (await connection.query(`
-        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(COALESCE(reb_price, tenders.price))::numeric 
-        FROM tenders 
-        LEFT JOIN (
-            SELECT DISTINCT ON (tender_id) 
-                tender_id, 
-                price AS reb_price
-            FROM rebidding_prices
-            ORDER BY tender_id, id DESC
-        ) AS reb_prices ON reb_prices.tender_id = tenders.id
-        WHERE company_id = $1 
-        GROUP BY status, is_special`, [company_id])).rows
-}
-
-export async function loadStatusAnalyticsByDate(start_date: string, finish_date: string) {
-    return (await connection.query(`
-        SELECT status, CAST(count(tenders.id) AS INTEGER) AS count, is_special, sum(COALESCE(reb_price, tenders.price))::numeric
-        FROM tenders 
-        LEFT JOIN (
-            SELECT DISTINCT ON (tender_id) 
-                tender_id, 
-                price AS reb_price
-            FROM rebidding_prices
-            ORDER BY tender_id, id DESC
-        ) AS reb_prices ON reb_prices.tender_id = tenders.id
-        WHERE 
-            (date1_start >= $1::timestamp AND date1_start <= $2::timestamp) OR 
-             (date1_finish >= $1::timestamp AND date1_finish <= $2::timestamp) OR 
-             (date2_finish >= $1::timestamp AND date2_finish <= $2::timestamp) OR 
-             (date_finish >= $1::timestamp AND date_finish <= $2::timestamp)
-        GROUP BY status, is_special;
-`, [start_date, finish_date])).rows
-}
-
-export async function loadCumulativeAnalyticsByDate(start_date: string, finish_date: string) {
-    return (await connection.query(`
-    SELECT CAST(EXTRACT(EPOCH FROM "date") * 1000 AS BIGINT) AS "date", status, count_tenders, cumulative_tenders
-    FROM tender_status_cache
-    WHERE "date" >= $1::date AND "date" <= $2::date
-    ORDER BY "date", status;`, [start_date, finish_date])).rows
-}
-
-export async function loadCompanyAnalyticsByStatus(status: number) {
-    if (status == -1)
-        return (await connection.query(`
-        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count, sum(COALESCE(reb_price, tenders.price))::numeric
-        FROM tenders 
-        JOIN companies ON tenders.company_id = companies.id 
-        LEFT JOIN (
-            SELECT DISTINCT ON (tender_id) 
-                tender_id, 
-                price AS reb_price
-            FROM rebidding_prices
-            ORDER BY tender_id, id DESC
-        ) AS reb_prices ON reb_prices.tender_id = tenders.id
-        WHERE status != -4 AND status < 0
-        GROUP BY companies.id, companies.name `)).rows
-    else
-        return (await connection.query(`
-        SELECT companies.id, companies.name, CAST(count(tenders.id) AS INTEGER) AS count, sum(COALESCE(reb_price, tenders.price))::numeric
-        FROM tenders 
-        JOIN companies ON tenders.company_id = companies.id 
-        LEFT JOIN (
-            SELECT DISTINCT ON (tender_id) 
-                tender_id, 
-                price AS reb_price
-            FROM rebidding_prices
-            ORDER BY tender_id, id DESC
-        ) AS reb_prices ON reb_prices.tender_id = tenders.id
-        WHERE status = $1
-        GROUP BY companies.id, companies.name `, [status])).rows
+export default class AnalyticStorage {
+    static async getCompaniesFullAnalytics() {
+        const rows = (await connection.query(`
+            SELECT
+                companies.name AS company_name,
+                SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status >= 5) AS status_high_sum,
+                COUNT(*) FILTER (WHERE status >= 5) AS status_high_count,
+                SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 0) AS funding_low_sum,
+                COUNT(*) FILTER (WHERE status < 5 AND funding_type = 0) AS funding_low_count,
+                SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 1) AS funding_high_sum,
+                COUNT(*) FILTER (WHERE status < 5 AND funding_type = 1) AS funding_high_count,
+                SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 2) AS funding_budget_sum,
+                COUNT(*) FILTER (WHERE status < 5 AND funding_type = 2) AS funding_budget_count,
+                SUM(COALESCE(reb_price, tenders.price)) AS total_sum,
+                COUNT(*) AS total_count
+            FROM public.tenders
+            LEFT JOIN (
+                SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
+                FROM rebidding_prices
+                ORDER BY tender_id, id DESC
+                ) AS reb_prices ON reb_prices.tender_id = tenders.id
+            JOIN public.companies ON tenders.company_id = companies.id
+            GROUP BY companies.name;`)).rows
+        return rows
+    }
 }
