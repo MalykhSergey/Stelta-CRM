@@ -1,6 +1,6 @@
 import {useEffect, useRef} from "react";
 import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
-import ChartPlug from "@/app/analytics/ChartPlug";
+import ChartPlug from "@/app/old_analytics/ChartPlug";
 
 export default function BarChart(props: { data: ChartData<'bar', number[], string> }) {
     const chartRef = useRef<HTMLCanvasElement | null>(null);

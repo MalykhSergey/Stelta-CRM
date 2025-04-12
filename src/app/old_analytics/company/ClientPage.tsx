@@ -1,12 +1,12 @@
 "use client"
-import {getStatusAnalyticsByCompany} from "@/models/Analytics/AnalyticsService";
-import {StatusAnalytics} from "@/models/Analytics/StatusAnalytics";
+import {getStatusAnalyticsByCompany} from "@/models/Old_Analytics/AnalyticsService";
+import {StatusAnalytics} from "@/models/Old_Analytics/StatusAnalytics";
 import Company from "@/models/Company/Company";
 import React, {useMemo} from "react";
 import styles from '../page.module.css';
 import {makeAutoObservable} from "mobx";
 import {observer} from "mobx-react-lite";
-import ChartDataType from "@/models/Analytics/ChartDataType";
+import ChartDataType from "@/models/Old_Analytics/ChartDataType";
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
 
 class AnalyticsStore {

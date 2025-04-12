@@ -1,11 +1,11 @@
 "use client"
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {CommonAnalytics} from "@/models/Analytics/CommonAnalytics";
+import {CommonAnalytics} from "@/models/Old_Analytics/CommonAnalytics";
 import styles from '../page.module.css';
 import {makeAutoObservable} from "mobx";
 import {observer} from "mobx-react-lite";
 import {useMemo} from "react";
-import ChartDataType from "@/models/Analytics/ChartDataType";
+import ChartDataType from "@/models/Old_Analytics/ChartDataType";
 
 class AnalyticsStore {
     data: CommonAnalytics

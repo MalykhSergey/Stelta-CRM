@@ -1,9 +1,9 @@
 "use client"
-import BarChart from "@/app/analytics/date/BarChart";
+import BarChart from "@/app/old_analytics/date/BarChart";
 import DoughnutChart from "@/app/components/DoughnutChart/DoughnutChart";
-import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
-import ChartDataType from "@/models/Analytics/ChartDataType";
-import {CountInDate, CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
+import {getStatusAnalyticsByDateRange} from "@/models/Old_Analytics/AnalyticsService";
+import ChartDataType from "@/models/Old_Analytics/ChartDataType";
+import {CountInDate, CumulativeStatusAnalytics} from "@/models/Old_Analytics/CumulativeStatusAnalytics";
 import getStatusName from "@/models/Tender/Status";
 import {makeAutoObservable} from "mobx";
 import {observer} from "mobx-react-lite";

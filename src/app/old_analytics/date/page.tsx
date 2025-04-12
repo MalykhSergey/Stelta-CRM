@@ -1,7 +1,7 @@
-import {getStatusAnalyticsByDateRange} from "@/models/Analytics/AnalyticsService";
+import {getStatusAnalyticsByDateRange} from "@/models/Old_Analytics/AnalyticsService";
 import DateRangeAnalyticsClient from "./ClientPage";
 import {Metadata} from "next";
-import {CumulativeStatusAnalytics} from "@/models/Analytics/CumulativeStatusAnalytics";
+import {CumulativeStatusAnalytics} from "@/models/Old_Analytics/CumulativeStatusAnalytics";
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {

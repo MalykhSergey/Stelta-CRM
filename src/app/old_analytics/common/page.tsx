@@ -1,6 +1,6 @@
-import {getCommonAnalytics} from "@/models/Analytics/AnalyticsService";
-import CommonAnalyticsClient from "@/app/analytics/common/ClientPage";
-import {CommonAnalytics} from "@/models/Analytics/CommonAnalytics";
+import {getCommonAnalytics} from "@/models/Old_Analytics/AnalyticsService";
+import CommonAnalyticsClient from "@/app/old_analytics/common/ClientPage";
+import {CommonAnalytics} from "@/models/Old_Analytics/CommonAnalytics";
 import {Metadata} from "next";
 
 

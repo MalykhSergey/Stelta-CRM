@@ -1,6 +1,6 @@
 import {getCompanies} from "@/models/Company/CompanyService";
 import CompanyAnalyticsClient from "./ClientPage";
-import {getStatusAnalyticsByCompany} from "@/models/Analytics/AnalyticsService";
+import {getStatusAnalyticsByCompany} from "@/models/Old_Analytics/AnalyticsService";
 import {Metadata} from "next";
 
 export const dynamic = 'force-dynamic'

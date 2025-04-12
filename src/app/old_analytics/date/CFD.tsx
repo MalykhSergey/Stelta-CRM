@@ -3,7 +3,7 @@ import {useEffect, useRef, useState} from "react";
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm';
 import dayjs from "dayjs";
 import styles from './CFD.module.css'
-import ChartPlug from "@/app/analytics/ChartPlug";
+import ChartPlug from "@/app/old_analytics/ChartPlug";
 
 export default function CFD(props: { data: ChartData<'line'> }) {
     const canvas_ref = useRef<HTMLCanvasElement | null>(null);

@@ -2,9 +2,9 @@
 import {Chart, ChartData, ChartOptions} from 'chart.js/auto';
 import {useEffect, useRef} from 'react';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import ChartDataType from "@/models/Analytics/ChartDataType";
+import ChartDataType from "@/models/Old_Analytics/ChartDataType";
 import {formatValue} from "react-currency-input-field";
-import ChartPlug from "@/app/analytics/ChartPlug";
+import ChartPlug from "@/app/old_analytics/ChartPlug";
 
 Chart.register(ChartDataLabels);
 const centerTextPlugin = {

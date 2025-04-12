@@ -12,14 +12,14 @@ export default function LayoutPage({children,}: {
         <>
             <div id={styles.tabBar}>
                 <Link href='./common'
-                      className={`${styles.tab} ${pathname === '/analytics/common' ? styles.active : ''}`}>Общая</Link>
+                      className={`${styles.tab} ${pathname === '/old_analytics/common' ? styles.active : ''}`}>Общая</Link>
                 <Link href='./company'
-                      className={`${styles.tab} ${pathname === '/analytics/company' ? styles.active : ''}`}>По
+                      className={`${styles.tab} ${pathname === '/old_analytics/company' ? styles.active : ''}`}>По
                     организациям</Link>
-                <Link href='./date' className={`${styles.tab} ${pathname === '/analytics/date' ? styles.active : ''}`}>По
+                <Link href='./date' className={`${styles.tab} ${pathname === '/old_analytics/date' ? styles.active : ''}`}>По
                     дате</Link>
                 <Link href='./status'
-                      className={`${styles.tab} ${pathname === '/analytics/status' ? styles.active : ''}`}>По
+                      className={`${styles.tab} ${pathname === '/old_analytics/status' ? styles.active : ''}`}>По
                     статусу</Link>
             </div>
             <div id={styles.content} className='shadowed'>
