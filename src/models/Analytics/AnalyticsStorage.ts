@@ -1,4 +1,5 @@
 import connection from "@/config/Database";
+import {formatValue} from "react-currency-input-field";
 
 export default class AnalyticStorage {
     static async getCompaniesFullAnalytics() {
@@ -23,6 +24,22 @@ export default class AnalyticStorage {
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
             GROUP BY ROLLUP(companies.name);`)).rows
-        return rows
+        return rows.map(row => {
+            row.status_high_sum = AnalyticStorage.transformNumber(row.status_high_sum || '0')
+            row.funding_high_sum = AnalyticStorage.transformNumber(row.funding_high_sum || '0')
+            row.funding_low_sum = AnalyticStorage.transformNumber(row.funding_low_sum || '0')
+            row.funding_budget_sum = AnalyticStorage.transformNumber(row.funding_budget_sum || '0')
+            row.total_sum = AnalyticStorage.transformNumber(row.total_sum || '0')
+            return row
+        })
+    }
+
+    private static transformNumber(value: string) {
+        return formatValue({
+            value: value,
+            suffix: '₽',
+            groupSeparator: ' ',
+            decimalSeparator: ','
+        })
     }
 }
