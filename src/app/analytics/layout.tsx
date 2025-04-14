@@ -22,8 +22,8 @@ export default function LayoutPage({children,}: {
                       className={`${styles.link} ${pathname === '/analytics/tenders' ? styles.active : ''}`}>Все
                     тендеры</Link>
                 <Link href='./win_loose'
-                      className={`${styles.link} ${pathname === '/analytics/win_loose' ? styles.active : ''}`}>Победа /
-                    Поражение</Link>
+                      className={`${styles.link} ${pathname === '/analytics/win_loose' ? styles.active : ''}`}>Победили /
+                    Проиграли</Link>
             </div>
             <a className={styles.download} href={`../api${pathname}/${searchParams.toString()}`} download>Экспорт в
                 Excel <FontAwesomeIcon icon={faFileExcel}/></a>
