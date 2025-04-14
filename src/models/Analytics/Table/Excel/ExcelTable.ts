@@ -35,10 +35,7 @@ export default abstract class ExcelTable extends Table<Workbook> {
             const row = this.sheet.addRow(values);
             const isLast = rowIdx === this.data.length - 1;
             row.eachCell((cell, i) => {
-                if (column_types[i - 1] == DataType.Int) {
-                    cell.value = parseInt(cell.value as string);
-                } else if (column_types[i - 1] == DataType.Float) {
-                    cell.value = parseFloat(cell.value as string);
+                if (column_types[i - 1] == DataType.Float) {
                     cell.numFmt = cell.numFmt = '#,##0.00 ₽'
                 }
                 cell.border = this._getBorder('#EEEEEE');

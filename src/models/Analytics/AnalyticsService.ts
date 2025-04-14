@@ -10,7 +10,7 @@ class AnalyticsService {
         const headers = [
             new TableHeader([
                 new HeaderCell("Заказчик", 1, 2),
-                new HeaderCell("Подписание договора/ Договор заключён", 2),
+                new HeaderCell("Подписание договора / Договор заключён", 2),
                 new HeaderCell("Тендеры с высокой вероятностью", 2),
                 new HeaderCell("Тендеры с низкой вероятностью", 2),
                 new HeaderCell("Формирование лимита", 2),

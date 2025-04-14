@@ -5,19 +5,20 @@ import {getFundingTypeName} from "@/models/Tender/FundingType";
 
 export default class AnalyticStorage {
     static async getCompaniesFullAnalytics(format: boolean = true) {
+
         const rows = (await connection.query(`
             SELECT
                 COALESCE(companies.name, 'Общий итог') AS company_name,
-                COALESCE(COUNT(*) FILTER (WHERE status >= 5), 0) AS status_high_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status >= 5), 0) AS status_high_sum,
-                COALESCE(COUNT(*) FILTER (WHERE status < 5 AND funding_type = 1), 0) AS funding_high_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 1), 0) AS funding_high_sum,
-                COALESCE(COUNT(*) FILTER (WHERE status < 5 AND funding_type = 0), 0) AS funding_low_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 0), 0) AS funding_low_sum,
-                COALESCE(COUNT(*) FILTER (WHERE status < 5 AND funding_type = 2), 0) AS funding_budget_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 2), 0) AS funding_budget_sum,
-                COALESCE(COUNT(*), 0) AS total_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)), 0) AS total_sum
+                COALESCE(COUNT(*) FILTER (WHERE status >= 5), 0)${format?'':'::int'} AS status_high_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status >= 5), 0)${format?'':'::float'} AS status_high_sum,
+                COALESCE(COUNT(*) FILTER (WHERE status < 5 AND funding_type = 1), 0)${format?'':'::int'} AS funding_high_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 1), 0)${format?'':'::float'} AS funding_high_sum,
+                COALESCE(COUNT(*) FILTER (WHERE status < 5 AND funding_type = 0), 0)${format?'':'::int'} AS funding_low_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 0), 0)${format?'':'::float'} AS funding_low_sum,
+                COALESCE(COUNT(*) FILTER (WHERE status < 5 AND funding_type = 2), 0)${format?'':'::int'} AS funding_budget_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 5 AND funding_type = 2), 0)${format?'':'::float'} AS funding_budget_sum,
+                COALESCE(COUNT(*), 0)${format?'':'::int'} AS total_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)), 0)${format?'':'::float'} AS total_sum
             FROM public.tenders
             LEFT JOIN (
                 SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
@@ -26,16 +27,18 @@ export default class AnalyticStorage {
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
             GROUP BY ROLLUP(companies.name)
-            ORDER BY companies.name NULLS LAST;`)).rows
-        if (format)
+            ORDER BY companies.name NULLS LAST;`
+        )).rows
+        if (format) {
             return rows.map(row => {
-                row.status_high_sum = AnalyticStorage.transformNumber(row.status_high_sum || '0')
-                row.funding_high_sum = AnalyticStorage.transformNumber(row.funding_high_sum || '0')
-                row.funding_low_sum = AnalyticStorage.transformNumber(row.funding_low_sum || '0')
-                row.funding_budget_sum = AnalyticStorage.transformNumber(row.funding_budget_sum || '0')
-                row.total_sum = AnalyticStorage.transformNumber(row.total_sum || '0')
+                row.status_high_sum = AnalyticStorage.transformNumber(row.status_high_sum)
+                row.funding_high_sum = AnalyticStorage.transformNumber(row.funding_high_sum)
+                row.funding_low_sum = AnalyticStorage.transformNumber(row.funding_low_sum)
+                row.funding_budget_sum = AnalyticStorage.transformNumber(row.funding_budget_sum)
+                row.total_sum = AnalyticStorage.transformNumber(row.total_sum)
                 return row;
             })
+        }
         return rows
     }
 
@@ -79,12 +82,12 @@ export default class AnalyticStorage {
 
     static async getCompaniesWinLooseAnalytics(format: boolean = true) {
         const rows = (await connection.query(`
-            SELECT
+        SELECT
                 COALESCE(companies.name, 'Общий итог') AS company_name,
-                COALESCE(COUNT(*) FILTER (WHERE status >= 5), 0) AS win_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status >= 5), 0) AS win_sum,
-                COALESCE(COUNT(*) FILTER (WHERE status <= -4), 0) AS loose_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status <= -4), 0) AS loose_sum
+                COALESCE(COUNT(*) FILTER (WHERE status >= 5), 0)${format ? '' : '::int'} AS win_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status >= 5), 0)${format ? '' : '::float'} AS win_sum,
+                COALESCE(COUNT(*) FILTER (WHERE status <= -4), 0)${format ? '' : '::int'} AS loose_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status <= -4), 0)${format ? '' : '::float'} AS loose_sum
             FROM public.tenders
             LEFT JOIN (
                 SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
@@ -94,12 +97,13 @@ export default class AnalyticStorage {
             JOIN public.companies ON tenders.company_id = companies.id
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`)).rows
-        if (format)
+        if (format) {
             return rows.map(row => {
                 row.win_sum = AnalyticStorage.transformNumber(row.win_sum)
                 row.loose_sum = AnalyticStorage.transformNumber(row.loose_sum)
                 return row
             })
+        }
         return rows
     }
 
