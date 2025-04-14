@@ -7,10 +7,6 @@ export default class TableHeader {
         if (initialCells) this.cells = initialCells;
     }
 
-    addCell(cell: HeaderCell): void {
-        this.cells.push(cell);
-    }
-
     getCells(): HeaderCell[] {
         return this.cells;
     }
