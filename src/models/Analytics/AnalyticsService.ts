@@ -31,9 +31,9 @@ class AnalyticsService {
         return {headers: headers, data: data, colSizes: [0.2]};
     }
 
-    static async getCompaniesWinLooseAnalytics() {
+    static async getCompaniesWinLooseAnalytics(format:boolean) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data = await AnalyticStorage.getCompaniesWinLooseAnalytics();
+        const data = await AnalyticStorage.getCompaniesWinLooseAnalytics(format);
         const headers = [
             new TableHeader([
                 new HeaderCell("Заказчик", 1, 2),
@@ -50,9 +50,9 @@ class AnalyticsService {
         return {headers: headers, data: data, colSizes: []};
     }
 
-    static async getTendersAnalytics() {
+    static async getTendersAnalytics(format:boolean) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data = await AnalyticStorage.getTendersAnalytics();
+        const data = await AnalyticStorage.getTendersAnalytics(format);
         const headers = [
             new TableHeader([
                 new HeaderCell("Заказчик"),
@@ -70,10 +70,10 @@ export async function getCompaniesFullAnalytics(format:boolean) {
     return AnalyticsService.getCompaniesFullAnalytics(format);
 }
 
-export async function getCompaniesWinLooseAnalytics() {
-    return AnalyticsService.getCompaniesWinLooseAnalytics();
+export async function getCompaniesWinLooseAnalytics(format:boolean) {
+    return AnalyticsService.getCompaniesWinLooseAnalytics(format);
 }
 
-export async function getTendersAnalytics() {
-    return AnalyticsService.getTendersAnalytics();
+export async function getTendersAnalytics(format:boolean) {
+    return AnalyticsService.getTendersAnalytics(format);
 }
