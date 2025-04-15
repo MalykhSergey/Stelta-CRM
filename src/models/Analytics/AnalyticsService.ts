@@ -47,7 +47,7 @@ class AnalyticsService {
                 new HeaderCell("сумма (без НДС)"),
             ])
         ];
-        return {headers: headers, data: data, colSizes: []};
+        return {headers: headers, data: data, colSizes: [0.4]};
     }
 
     static async getTendersAnalytics(startDate:Date,endDate:Date,format:boolean) {

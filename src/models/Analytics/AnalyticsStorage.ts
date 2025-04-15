@@ -46,7 +46,7 @@ export default class AnalyticStorage {
             SELECT
                 companies.name AS company_name,
                 tenders.name,
-                COALESCE(reb_price, tenders.price) AS price,
+                COALESCE(reb_price, tenders.price)${format?'':'::float'} AS price,
                 TO_CHAR(date2_finish, 'DD.MM.YYYY'),
                 CASE
                     WHEN status >= 5 THEN 'Подписание договора / Договор подписан'

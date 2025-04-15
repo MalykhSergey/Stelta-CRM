@@ -22,7 +22,7 @@ export default class TendersAnalytics extends ExcelTable {
             {width: 100},
             {width: 20},
             {width: 20},
-            {width: 40},
+            {width: 50},
         ];
     }
 }
