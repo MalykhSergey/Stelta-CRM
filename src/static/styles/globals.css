@@ -45,6 +45,7 @@ body {
 
 a {
     text-decoration: none;
+    height: fit-content;
 }
 
 .fullWidth {
