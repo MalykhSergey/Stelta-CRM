@@ -50,12 +50,7 @@ export default class AnalyticStorage {
                 COALESCE(reb_price, tenders.price) AS price,
                 TO_CHAR(date2_finish, 'DD.MM.YYYY'),
                 CASE
-                    WHEN status >= 5 THEN 
-                        CASE status
-                            WHEN 5 THEN '${getStatusName(5)}'
-                            WHEN 6 THEN '${getStatusName(6)}'
-                            ELSE 'Неизвестный статус'
-                        END
+                    WHEN status >= 5 THEN 'Подписание договора / Договор подписан'
                     ELSE 
                         CASE funding_type
                             WHEN 0 THEN '${getFundingTypeName(0)}'
@@ -72,7 +67,7 @@ export default class AnalyticStorage {
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
             WHERE date1_start >= $1 and date1_start <= $2
-            ORDER BY company_name;`,[startDate,endDate])).rows
+            ORDER BY CASE WHEN status >= 5 THEN 0 ELSE 1 END, funding_type desc;`,[startDate,endDate])).rows
         if (format)
             return rows
                 .map(row => {
