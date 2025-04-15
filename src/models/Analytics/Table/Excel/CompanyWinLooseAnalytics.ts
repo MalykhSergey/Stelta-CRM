@@ -30,9 +30,9 @@ export default class CompanyWinLooseAnalytics extends ExcelTable {
         this.sheet.columns = [
             {width: 50},
             {width: 20},
+            {width: 25},
             {width: 20},
-            {width: 20},
-            {width: 20},
+            {width: 25},
         ];
     }
 }

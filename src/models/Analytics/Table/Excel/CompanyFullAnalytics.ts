@@ -41,16 +41,16 @@ export default class CompanyFullAnalytics extends ExcelTable {
         this.drawHeaders(headers);
         this.sheet.columns = [
             {width: 50},
-            {width: 20,},
             {width: 20},
+            {width: 25},
             {width: 20},
+            {width: 25},
             {width: 20},
+            {width: 25},
             {width: 20},
+            {width: 25},
             {width: 20},
-            {width: 20},
-            {width: 20},
-            {width: 20},
-            {width: 20},
+            {width: 25},
         ];
     }
 }
