@@ -20,9 +20,10 @@ export default class TendersAnalytics extends ExcelTable {
         this.sheet.columns = [
             {width: 50},
             {width: 100},
-            {width: 20},
-            {width: 20},
+            {width: 25},
+            {width: 30},
             {width: 50},
         ];
+        this.sheet.getColumn('D').alignment = {horizontal: 'center', vertical: 'middle'};
     }
 }

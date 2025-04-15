@@ -64,7 +64,7 @@ export default abstract class ExcelTable extends Table<Workbook> {
             row.font = {bold: true, size: 14};
             row.alignment = {vertical: "middle", horizontal: 'center', wrapText: true};
             if (i == 0)
-                row.height = 100;
+                row.height = 50;
             row.eachCell((cell: Cell) => {
                 cell.fill = {
                     type: 'pattern',
