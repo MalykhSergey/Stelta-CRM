@@ -4,8 +4,7 @@ import getStatusName from "@/models/Tender/Status";
 import {getFundingTypeName} from "@/models/Tender/FundingType";
 
 export default class AnalyticStorage {
-    static async getCompaniesFullAnalytics(format: boolean = true) {
-
+    static async getCompaniesFullAnalytics(startDate:Date,endDate:Date,format:boolean) {
         const rows = (await connection.query(`
             SELECT
                 COALESCE(companies.name, 'Общий итог') AS company_name,
@@ -26,9 +25,10 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
+            WHERE date1_start >= $1 and date1_start <= $2
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`
-        )).rows
+            , [startDate.toISOString().slice(0,10), endDate.toISOString().slice(0,10)])).rows
         if (format) {
             return rows.map(row => {
                 row.status_high_sum = AnalyticStorage.transformNumber(row.status_high_sum)
@@ -42,7 +42,7 @@ export default class AnalyticStorage {
         return rows
     }
 
-    static async getTendersAnalytics(format: boolean = true) {
+    static async getTendersAnalytics(startDate:Date,endDate:Date,format:boolean) {
         const rows = (await connection.query(`
             SELECT
                 companies.name AS company_name,
@@ -70,7 +70,9 @@ export default class AnalyticStorage {
                 FROM rebidding_prices
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
-            JOIN public.companies ON tenders.company_id = companies.id;`)).rows
+            JOIN public.companies ON tenders.company_id = companies.id
+            WHERE date1_start >= $1 and date1_start <= $2
+            ORDER BY company_name;`,[startDate,endDate])).rows
         if (format)
             return rows
                 .map(row => {
@@ -80,7 +82,7 @@ export default class AnalyticStorage {
         return rows
     }
 
-    static async getCompaniesWinLooseAnalytics(format: boolean = true) {
+    static async getCompaniesWinLooseAnalytics(startDate:Date,endDate:Date,format:boolean) {
         const rows = (await connection.query(`
         SELECT
                 COALESCE(companies.name, 'Общий итог') AS company_name,
@@ -95,8 +97,9 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
+            WHERE date1_start >= $1 and date1_start <= $2
             GROUP BY ROLLUP(companies.name)
-            ORDER BY companies.name NULLS LAST;`)).rows
+            ORDER BY companies.name NULLS LAST;`,[startDate,endDate])).rows
         if (format) {
             return rows.map(row => {
                 row.win_sum = AnalyticStorage.transformNumber(row.win_sum)
