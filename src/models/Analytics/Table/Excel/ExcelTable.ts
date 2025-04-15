@@ -1,4 +1,4 @@
-import ExcelJS from 'exceljs';
+import ExcelJS, {Cell, Row} from 'exceljs';
 
 import Workbook from "exceljs/index";
 import Table from "@/models/Analytics/Table/Table";
@@ -20,6 +20,7 @@ export default abstract class ExcelTable extends Table<Workbook> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data: Record<string, any>[],
         colSizes: number[] = [],
+        readonly rollup: boolean
     ) {
         super(headers, data, colSizes)
     }
@@ -39,8 +40,7 @@ export default abstract class ExcelTable extends Table<Workbook> {
                     cell.numFmt = cell.numFmt = '#,##0.00 ₽'
                 }
                 cell.border = this._getBorder('#EEEEEE');
-                cell.alignment = {horizontal: 'right'};
-                if (isLast) {
+                if (this.rollup && isLast) {
                     cell.fill = {
                         type: 'pattern',
                         pattern: 'solid',
@@ -58,6 +58,24 @@ export default abstract class ExcelTable extends Table<Workbook> {
                 cell.font ??= {size: 14};
             });
         });
+    }
+
+
+    drawHeaders(headers: Row[]) {
+        headers.forEach((row, i) => {
+            row.font = {bold: true, size: 14};
+            row.alignment = {vertical: "middle", horizontal: 'center', wrapText: true};
+            if (i == 0)
+                row.height = 100;
+            row.eachCell((cell: Cell) => {
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: {argb: 'FFEFEFEF'},
+                };
+                cell.border = this._getBorder('#DDDDDD');
+            })
+        })
     }
 
     protected _getBorder(color: string): ExcelJS.Borders {
