@@ -11,21 +11,21 @@ class AnalyticsService {
             new TableHeader([
                 new HeaderCell("Заказчик", 1, 2),
                 new HeaderCell("Подписание договора / Договор заключён", 2),
-                new HeaderCell("Тендеры с высокой вероятностью", 2),
-                new HeaderCell("Тендеры с низкой вероятностью", 2),
+                new HeaderCell("Тендеры с высокой вероятностью победы", 2),
+                new HeaderCell("Тендеры с низкой вероятностью победы", 2),
                 new HeaderCell("Формирование лимита", 2),
                 new HeaderCell("Итог количество", 1, 2),
-                new HeaderCell("Итог сумма", 1, 2),
+                new HeaderCell("Итог сумма (без НДС)", 1, 2),
             ]),
             new TableHeader([
                 new HeaderCell("количество"),
-                new HeaderCell("сумма"),
+                new HeaderCell("сумма (без НДС)"),
                 new HeaderCell("количество"),
-                new HeaderCell("сумма"),
+                new HeaderCell("сумма (без НДС)"),
                 new HeaderCell("количество"),
-                new HeaderCell("сумма"),
+                new HeaderCell("сумма (без НДС)"),
                 new HeaderCell("количество"),
-                new HeaderCell("сумма")
+                new HeaderCell("сумма (без НДС)")
             ])
         ];
         return {headers: headers, data: data, colSizes: [0.2]};
@@ -37,14 +37,14 @@ class AnalyticsService {
         const headers = [
             new TableHeader([
                 new HeaderCell("Заказчик", 1, 2),
-                new HeaderCell("Победа", 2),
+                new HeaderCell("Победили", 2),
                 new HeaderCell("Проиграли", 2),
             ]),
             new TableHeader([
                 new HeaderCell("количество"),
-                new HeaderCell("сумма"),
+                new HeaderCell("сумма (без НДС)"),
                 new HeaderCell("количество"),
-                new HeaderCell("сумма"),
+                new HeaderCell("сумма (без НДС)"),
             ])
         ];
         return {headers: headers, data: data, colSizes: []};
@@ -57,8 +57,8 @@ class AnalyticsService {
             new TableHeader([
                 new HeaderCell("Заказчик"),
                 new HeaderCell("Объект"),
-                new HeaderCell("Стоимость"),
-                new HeaderCell("Дата"),
+                new HeaderCell("Стоимость (без НДС)"),
+                new HeaderCell("Дата предоставления ТКП"),
                 new HeaderCell("Статус"),
             ])
         ];
