@@ -17,18 +17,6 @@ export default class CompanyWinLooseAnalytics extends ExcelTable {
         const header_row_1 = this.headers[0].getCells();
         const header_row_2 = this.headers[1].getCells().map(value => value.title);
         const headers = [this.sheet.addRow([]), this.sheet.addRow([0, ...header_row_2])]
-        headers.forEach((row, i) => {
-            row.font = {bold: true, size: 14};
-            row.fill = {
-                type: 'pattern',
-                pattern: 'solid',
-                fgColor: {argb: 'FFEFEFEF'},
-            };
-            row.border = this._getBorder('#DDDDDD');
-            if (i == 0)
-                row.height = 100;
-            row.alignment = {vertical: "middle", horizontal: 'center', wrapText: true};
-        })
         this.sheet.mergeCells('A1:A2');
         this.sheet.mergeCells('B1:C1');
         this.sheet.mergeCells('D1:E1');
@@ -38,9 +26,9 @@ export default class CompanyWinLooseAnalytics extends ExcelTable {
         b1.value = header_row_1[1].title
         const d1 = this.sheet.getCell('D1');
         d1.value = header_row_1[2].title
-
+        this.drawHeaders(headers)
         this.sheet.columns = [
-            {width: 30},
+            {width: 50},
             {width: 20},
             {width: 20},
             {width: 20},

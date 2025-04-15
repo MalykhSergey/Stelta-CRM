@@ -18,6 +18,9 @@ th {
     background: #efefef;
     border: 1px solid #dddddd;
 }
+td:nth-child(1){
+    text-align: left;
+}
 td{
     padding: 4px 8px;
     border: 1px solid #eee;

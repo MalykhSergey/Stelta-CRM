@@ -26,7 +26,7 @@ export default function LayoutPage({children,}: {
                     Победили / Проиграли
                 </Link>
             </div>
-            <a className={styles.download} href={`../api${pathname}/${searchParams.toString()}`} download>
+            <a className={styles.download} href={`../api${pathname}/?${searchParams.toString()}`} download>
                 Экспорт в Excel <FontAwesomeIcon icon={faFileExcel}/>
             </a>
             <DateRangeForm/>
