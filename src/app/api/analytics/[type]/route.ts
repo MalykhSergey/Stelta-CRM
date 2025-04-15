@@ -9,10 +9,11 @@ import {NextRequest} from "next/server";
 import getParamsDates from "@/app/components/DateRangeForm/GetParamsDates";
 import TendersAnalytics from "@/models/Analytics/Table/Excel/TendersAnalytics";
 
-export async function GET(
-    request: NextRequest,
-    {params}: { params: { type: string } }
-) {
+export async function GET(request: NextRequest, {
+    params,
+}: {
+    params: Promise<{ type: string }>
+}) {
     let tableData;
     let table;
     const searchParams = request.nextUrl.searchParams
@@ -20,7 +21,7 @@ export async function GET(
     const end_param = searchParams.get('end') as string
     const {startDate, endDate} = getParamsDates(start_param, end_param)
     let file_name;
-    switch (params.type) {
+    switch ((await params).type) {
         case "company": {
             tableData = await getCompaniesFullAnalytics(startDate, endDate, false)
             table = new CompanyFullAnalytics(tableData.headers, tableData.data, tableData.colSizes, true);

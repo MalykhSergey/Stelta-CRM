@@ -1,6 +1,4 @@
-import ExcelJS, {Cell, Row} from 'exceljs';
-
-import Workbook from "exceljs/index";
+import {Borders, Cell, Row, Workbook} from 'exceljs';
 import Table from "@/models/Analytics/Table/Table";
 import TableHeader from "@/models/Analytics/Table/TableHeader";
 
@@ -12,7 +10,7 @@ export enum DataType {
 
 export default abstract class ExcelTable extends Table<Workbook> {
 
-    workbook = new ExcelJS.Workbook();
+    workbook = new Workbook();
     sheet = this.workbook.addWorksheet('Таблица');
 
     constructor(
@@ -78,7 +76,7 @@ export default abstract class ExcelTable extends Table<Workbook> {
         })
     }
 
-    protected _getBorder(color: string): ExcelJS.Borders {
+    protected _getBorder(color: string): Borders {
         const argb = 'FF' + color.replace('#', '').toUpperCase();
         return {
             top: {style: 'thin', color: {argb}},

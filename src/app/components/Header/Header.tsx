@@ -27,7 +27,7 @@ export default function Header() {
                         className={`${styles.navLink} ${pathname == '/search' ? styles.active : ''}`}>Поиск</Link>
                     <Link href="/companies"
                         className={`${styles.navLink} ${pathname == '/companies' ? styles.active : ''}`}>Организации</Link>
-                    <Link href="/analytics/date"
+                    <Link href="/analytics/company"
                         className={`${styles.navLink} ${pathname.includes('analytics') ? styles.active : ''}`}>Аналитика</Link>
                 </>
                 }
