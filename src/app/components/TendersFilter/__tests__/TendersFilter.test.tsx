@@ -66,13 +66,13 @@ describe('TendersFilter Component', () => {
         })
     });
 
-    it('фильтрует тендеры по полному наименованию (без учёта регистра)', () => {
+    it('фильтрует тендеры по наименованию (без учёта регистра)', () => {
         const setTenders = vi.fn();
         render(
             <TendersFilter allTenders={tenders} setTenders={setTenders} simpleRange={true}/>
         );
 
-        const fullNameInput = screen.getByLabelText("Полное наименование:");
+        const fullNameInput = screen.getByLabelText("Наименование:");
         fireEvent.change(fullNameInput, {target: {value: "tender one"}});
         waitFor(() => {
             expect(setTenders).toHaveBeenCalledWith([tenders[0]]);
