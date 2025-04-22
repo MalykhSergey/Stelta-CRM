@@ -71,3 +71,7 @@ export async function updateTenderById(tender: Tender) {
         return await tenderStorage.update(tender);
     })
 }
+
+export async function search_tenders(status: number | null, name: string, reg_number: string, company_name: string, startDate: string, endDate: string, page: number): Promise<Tender[]> {
+    return tenderStorage.searchTenders(status, name, reg_number, company_name, startDate, endDate, page);
+}

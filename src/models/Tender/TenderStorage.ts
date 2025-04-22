@@ -1,24 +1,24 @@
 import ContactPersonStorage from "@/models/Company/ContactPerson/ContactPersonStorage";
 import TransactionManager from "@/models/TransactionManager";
 import fs from 'fs/promises';
-import { DatabaseError, PoolClient } from "pg";
-import connection, { handleDatabaseError } from "../../config/Database";
-import { ContactPerson } from '../Company/ContactPerson/ContactPerson';
-import FileName, { FileType } from "./FileName";
-import { Tender } from "./Tender";
+import {DatabaseError, PoolClient} from "pg";
+import connection, {handleDatabaseError} from "../../config/Database";
+import {ContactPerson} from '../Company/ContactPerson/ContactPerson';
+import FileName, {FileType} from "./FileName";
+import {Tender} from "./Tender";
 
 class TenderStorage {
 
     async createTender(status = 0) {
         try {
             const tender_id = (await connection.query(`INSERT into tenders("status") values($1) RETURNING ID`, [status])).rows[0].id
-            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tender_id}`, { recursive: true })
+            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tender_id}`, {recursive: true})
             return tender_id
         } catch (e) {
             if (e instanceof DatabaseError)
                 if (e.code == '23505') {
                     const exist_id = (await connection.query(`SELECT id FROM tenders WHERE lot_number = 'Лот №'`)).rows[0].id
-                    return { error: `<a href="/tender/${exist_id}"/><u>Пустой тендер уже существует</u></a>. Заполните полe Лот №!` }
+                    return {error: `<a href="/tender/${exist_id}"/><u>Пустой тендер уже существует</u></a>. Заполните полe Лот №!`}
                 }
             return handleDatabaseError(e, {}, 'Ошибка создания тендера');
         }
@@ -28,7 +28,7 @@ class TenderStorage {
         try {
             await connection.query('SELECT * FROM tenders WHERE id = $1 FOR UPDATE NOWAIT', [tenderId])
             await connection.query(`DELETE FROM tenders WHERE id = $1`, [tenderId])
-            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}`, { recursive: true })
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}`, {recursive: true})
         } catch (e) {
             return handleDatabaseError(e, {
                 '23503': 'Невозможно удалить тендер: имеются связанные данные (дозапросы, переторжки, файлы)!',
@@ -115,7 +115,7 @@ class TenderStorage {
             }
         } catch (e) {
             return handleDatabaseError(e,
-                { '23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!', },
+                {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
                 'Ошибка обновления тендера');
         }
     }
@@ -207,7 +207,7 @@ class TenderStorage {
     async addDocumentRequest(tenderId: number) {
         try {
             const document_request_id = (await connection.query('INSERT INTO document_requests(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id;
-            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${document_request_id}`, { recursive: true })
+            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${document_request_id}`, {recursive: true})
             return document_request_id
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка создания дозапроса документов!');
@@ -217,7 +217,7 @@ class TenderStorage {
     async addRebiddingPrice(tenderId: number) {
         try {
             const rebidding_price_id = (await connection.query('INSERT INTO rebidding_prices(tender_id) VALUES ($1) RETURNING id', [tenderId])).rows[0].id;
-            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebidding_price_id}`, { recursive: true })
+            await fs.mkdir(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebidding_price_id}`, {recursive: true})
             return rebidding_price_id
         } catch (e) {
             return handleDatabaseError(e, {}, 'Ошибка создания переторжки!');
@@ -231,10 +231,9 @@ class TenderStorage {
             await transaction.query('SELECT * FROM document_requests WHERE id = $1 FOR UPDATE NOWAIT', [documentRequestId])
             await transaction.query('DELETE FROM document_requests_files WHERE document_request_id = $1 returning id', [documentRequestId])
             await transaction.query('DELETE FROM document_requests WHERE id = $1', [documentRequestId])
-            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, { recursive: true })
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.DocumentRequest}/${documentRequestId}`, {recursive: true})
             TransactionManager.commit(transaction)
         } catch (e) {
-            console.log(e)
             TransactionManager.roll_back(transaction)
             return handleDatabaseError(e, {}, 'Ошибка удаления дозапроса документов!');
         }
@@ -247,12 +246,27 @@ class TenderStorage {
             await transaction.query('SELECT * FROM rebidding_prices WHERE id = $1 FOR UPDATE NOWAIT', [rebiddingPriceId])
             await transaction.query('DELETE FROM rebidding_prices_files WHERE rebidding_price_id = $1 returning id', [rebiddingPriceId])
             await transaction.query('DELETE FROM rebidding_prices WHERE id = $1', [rebiddingPriceId])
-            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, { recursive: true })
+            await fs.rm(`${process.env.FILE_UPLOAD_PATH}/${tenderId}/${FileType.RebiddingPrice}/${rebiddingPriceId}`, {recursive: true})
             TransactionManager.commit(transaction)
         } catch (e) {
             TransactionManager.roll_back(transaction)
             return handleDatabaseError(e, {}, 'Ошибка удаления переторжки!');
         }
+    }
+
+    async searchTenders(status: number, name: string, reg_number: string, company_name: string, start: string, end: string, page:number): Promise<Tender[]> {
+        return connection.query(`
+        SELECT tenders.*, companies.id AS company_id, companies.name AS company_name FROM tenders
+        LEFT JOIN companies ON companies.id = company_id
+        WHERE 
+        ($1::int IS NULL) AND
+        ($2 = '' OR tenders.name ILIKE '%' || $2 || '%') AND
+        ($3 = '' OR register_number ILIKE '%' || $3 || '%') AND
+        ($4 = '' OR companies.name ILIKE '%' || $4 || '%') AND
+        ($5 = '' OR date1_start >= $5::date) AND
+        ($6 = '' OR date1_start <= $6::date)
+        LIMIT 50 OFFSET $7
+        `, [status, name, reg_number, company_name, start, end, page*50]).then(value => value.rows.map(row => Tender.fromQueryRow(row)))
     }
 
 }
