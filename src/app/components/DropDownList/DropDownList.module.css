@@ -1,7 +1,25 @@
-#ContactPersonNameContainer{
+.container {
     position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
 }
-#searchList {
+
+/* Иконка поворачивается при фокусе input */
+.input:focus + .chevron {
+    transform: rotate(180deg);
+}
+
+.chevron {
+    position: absolute;
+    right: 12px;
+    transition: transform 0.3s;
+    pointer-events: none;
+}
+
+/* Список по умолчанию скрыт */
+.listContainer {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -21,27 +39,19 @@
     z-index: 2;
 }
 
-#ContactPersonName:focus + #chevronIcon {
-    transform: rotate(180deg);
-}
-#ContactPersonName:focus ~ #searchList {
+/* Показ списка при фокусе input */
+.input:focus ~ .listContainer {
     visibility: visible;
     opacity: 1;
 }
 
-#chevronIcon {
-    transition: transform .3s;
-    margin-left: -30px;
-    pointer-events: none;
-}
-
-.searchItem {
+.item {
     padding: 12px;
     font-size: 16px;
     color: black;
     cursor: pointer;
 }
 
-.searchItem:hover {
+.item:hover {
     background-color: var(--border);
 }
