@@ -5,6 +5,7 @@ import {cookies} from 'next/headers'
 import {Role, User} from './User'
 import {createUser, deleteUser as UserStorage_deleteUser, getUserByName, getUsers, hash_password} from "./UserStorage"
 import {redirect} from "next/navigation";
+import {StringValue} from "ms";
 
 export async function register(registerForm: FormData) {
     const name = registerForm.get('name') as string
@@ -27,7 +28,7 @@ export async function loadUsers() {
     return getUsers();
 }
 
-const expirationTime = process.env.JWT_EXP_TIME || '1h';
+const expirationTime = process.env.JWT_EXP_TIME as StringValue || '1h';
 
 export async function login(name: string, password: string) {
     const user = await getUserByName(name)
