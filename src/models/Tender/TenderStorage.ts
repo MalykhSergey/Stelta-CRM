@@ -57,7 +57,7 @@ class TenderStorage {
             SET type               = $1,
                 status             = $2,
                 funding_type       = $3,
-                is_special         = $4,
+                parent_id          = $4,
                 company_id         = $5,
                 name               = $6,
                 short_name         = $7,
@@ -83,7 +83,7 @@ class TenderStorage {
                 tender.type,
                 tender.status,
                 tender.fundingType,
-                tender.isSpecial,
+                tender.parentContract.parent_id,
                 tender.company.id ? tender.company.id : null,
                 tender.name,
                 tender.shortName,
@@ -131,9 +131,15 @@ class TenderStorage {
 
     async getById(id: number): Promise<Tender> {
         const tenders_row = (await connection.query(`
-            SELECT tenders.*, CAST(date1_start AS CHAR(16)), CAST(date1_finish AS CHAR(16)), CAST(date2_finish AS CHAR(16)), CAST(date_finish AS CHAR(16)), CAST(contract_date AS CHAR(10)), companies.id AS company_id, companies.name AS company_name
+            SELECT tenders.*,
+            CAST(tenders.date1_start AS CHAR(16)), CAST(tenders.date1_finish AS CHAR(16)),
+            CAST(tenders.date2_finish AS CHAR(16)), CAST(tenders.date_finish AS CHAR(16)),
+            CAST(tenders.contract_date AS CHAR(10)),
+            companies.name AS company_name,
+            parent.contract_number as parent_contract_number
             FROM tenders
-            LEFT JOIN  companies ON companies.id = company_id 
+            LEFT JOIN  companies ON companies.id = tenders.company_id
+            LEFT JOIN  tenders as parent ON tenders.parent_id = parent.id 
             WHERE tenders.id =  $1`, [id])).rows
         const tender = Tender.fromQueryRow(tenders_row[0])
         const contactPersons = await ContactPersonStorage.getContactPersonsByCompanyId(tender.company.id)

@@ -7,13 +7,14 @@ import FileName from "./FileName"
 import {RebiddingPrice} from "./RebiddingPrice"
 import {FundingType} from "@/models/Tender/FundingType";
 import {TenderType} from "@/models/Tender/TenderType";
+import ParentContract from "@/models/Tender/ParentContract";
 
 export class Tender {
     public id: number = 0
     public type: TenderType = 0
     public status: number = 0
     public fundingType: FundingType = 0
-    public isSpecial: boolean = false
+    public parentContract: ParentContract = new ParentContract(0, '')
     public company: Company = new Company(0, '');
     public name: string = ''
     public shortName: string = ''
@@ -56,7 +57,8 @@ export class Tender {
         tender.type = row.type
         tender.status = row.status
         tender.fundingType = row.funding_type
-        tender.isSpecial = row.is_special
+        tender.parentContract.parent_id = row.parent_id
+        tender.parentContract.contract_number = row.parent_contract_number
         if (row.company_id) {
             tender.company.id = row.company_id
             tender.company.name = row.company_name
@@ -98,7 +100,7 @@ export class Tender {
         tender.type = obj.type
         tender.status = obj.status
         tender.fundingType = obj.fundingType
-        tender.isSpecial = obj.isSpecial
+        tender.parentContract = obj.parentContract
         const company = new Company(obj.company.id, obj.company.name)
         tender.company = makeAutoObservable(company)
         tender.name = obj.name
@@ -156,8 +158,8 @@ export class Tender {
         return {ok: true, value: ''}
     }
 
-    toggleIsSpecial() {
-        this.isSpecial = !this.isSpecial
+    setParentContract(parentContract: ParentContract) {
+        this.parentContract = parentContract
     }
 
     setCompany(value: Company) {
