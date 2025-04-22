@@ -6,6 +6,7 @@ import connection, {handleDatabaseError} from "../../config/Database";
 import {ContactPerson} from '../Company/ContactPerson/ContactPerson';
 import FileName, {FileType} from "./FileName";
 import {Tender} from "./Tender";
+import ParentContract from "@/models/Tender/ParentContract";
 
 class TenderStorage {
 
@@ -179,6 +180,10 @@ class TenderStorage {
         return tender
     }
 
+    async getParentContracts():Promise<ParentContract[]>{
+        return (await connection.query(`SELECT id as parent_id, contract_number FROM TENDERS WHERE contract_number IS NOT NULL`)).rows
+    }
+
     async addFile(transaction: PoolClient, tenderId: number, fileName: string, stage: number, documentRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
         try {
             if (documentRequestId)
@@ -260,7 +265,7 @@ class TenderStorage {
         }
     }
 
-    async searchTenders(status: number, name: string, reg_number: string, company_name: string, start: string, end: string, page:number): Promise<Tender[]> {
+    async searchTenders(status: number|null, name: string, reg_number: string, company_name: string, start: string, end: string, page:number): Promise<Tender[]> {
         return connection.query(`
         SELECT tenders.*, companies.id AS company_id, companies.name AS company_name FROM tenders
         LEFT JOIN companies ON companies.id = company_id
