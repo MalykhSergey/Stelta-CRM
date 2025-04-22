@@ -12,11 +12,12 @@ import DocumentsForm from "@/app/tender/DocumentForm/DocumentsForm";
 import TenderFlowService from "@/app/tender/[tenderId]/TenderFlowService";
 import {useAuth} from "@/app/AuthContext";
 import {useRouter} from "next/navigation";
+import ParentContract from "@/models/Tender/ParentContract";
 
-const TenderPageClient = observer((props: { tender: string, companies: string }) => {
+const TenderPageClient = observer((props: { tender: string, companies: string, parent_contacts: ParentContract[] }) => {
     const user = useAuth().user;
     const router = useRouter();
-    const tenderFlowService = useLocalObservable(() => new TenderFlowService(props.tender, props.companies, user, router));
+    const tenderFlowService = useLocalObservable(() => new TenderFlowService(props.tender, props.companies, props.parent_contacts, user, router));
     const tender = tenderFlowService.tender;
     const isEditable = tenderFlowService.isEditable();
 

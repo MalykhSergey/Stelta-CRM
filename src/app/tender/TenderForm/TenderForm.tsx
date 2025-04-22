@@ -9,6 +9,7 @@ import {ContactPersonForm} from "@/app/tender/TenderForm/ContactPersonForm/Conta
 import {FundingType, getFundingTypeName} from "@/models/Tender/FundingType";
 import {getTenderTypeName, TenderType} from "@/models/Tender/TenderType";
 import TenderFlowService from "@/app/tender/[tenderId]/TenderFlowService";
+import DropDownList from "@/app/components/DropDownList/DropDownList";
 
 interface TenderFormProps {
     tenderFlowService: TenderFlowService,
@@ -100,10 +101,26 @@ const TenderForm = observer((props: TenderFormProps) => {
             <TableFormField propertyName="Name" value={tender.name} label="Полное наименование:"
                             onChange={handleChange} isEditable={isEditable.name} errors={errors}
                             type="textarea"/>
-            <TableFormField propertyName={'RegNumber'} value={tender.regNumber} label={"Реестровый номер  :"}
-                            onChange={handleChange} isEditable={isEditable.regNumber} errors={errors}/>
-            <TableFormField propertyName={'LotNumber'} value={tender.lotNumber} label={"Лот номер:"}
-                            onChange={handleChange} isEditable={isEditable.lotNumber} errors={errors}/>
+            {tender.type != TenderType.Order &&
+                <TableFormField propertyName={'RegNumber'} value={tender.regNumber} label={"Реестровый номер  :"}
+                                onChange={handleChange} isEditable={isEditable.regNumber} errors={errors}/>}
+            {tender.type != TenderType.Order &&
+                <TableFormField propertyName={'LotNumber'} value={tender.lotNumber} label={"Лот номер:"}
+                                onChange={handleChange} isEditable={isEditable.lotNumber} errors={errors}/>
+            }
+            {tender.type == TenderType.Order &&
+                <>
+                    <label className={styles.label}>Договор:</label>
+                    <div className={styles.formGroup}>
+                        <DropDownList items={props.tenderFlowService.parent_contracts}
+                                      keyField={'parent_id'}
+                                      labelField={'contract_number'}
+                                      onSelect={value => tender.setParentContract(value)}
+                                      defaultValue={tender.parentContract.contract_number}/>
+                    </div>
+                </>
+            }
+
             <label className={styles.label} htmlFor="InitialMaxPrice">НМЦК:</label>
             <div className={styles.formGroup}>
                 <div className={styles.inputRow}>
@@ -154,13 +171,17 @@ const TenderForm = observer((props: TenderFormProps) => {
                 </div>
             </div>
             {errors["Price"] && <><span></span><span className='under-input-error'>{errors["Price"]}</span></>}
-            <TableFormField propertyName="Date1_start" value={tender.date1_start} label="Дата начала 1-го этапа:"
-                            onChange={handleChange} isEditable={isEditable.date1_start} errors={errors}
-                            type="datetime-local"/>
-            <TableFormField propertyName="Date1_finish" value={tender.date1_finish}
-                            label="Дата окончания 1-го этапа:"
-                            onChange={handleChange} isEditable={isEditable.date1_finish} errors={errors}
-                            type="datetime-local"/>
+            {(tender.type != TenderType.Order && tender.type != TenderType.Offer) &&
+                <>
+                    <TableFormField propertyName="Date1_start" value={tender.date1_start}
+                                    label="Дата начала 1-го этапа:"
+                                    onChange={handleChange} isEditable={isEditable.date1_start} errors={errors}
+                                    type="datetime-local"/>
+                    <TableFormField propertyName="Date1_finish" value={tender.date1_finish}
+                                    label="Дата окончания 1-го этапа:"
+                                    onChange={handleChange} isEditable={isEditable.date1_finish} errors={errors}
+                                    type="datetime-local"/>
+                </>}
             <TableFormField propertyName="Date2_finish" value={tender.date2_finish}
                             label="Дата окончания 2-го этапа:"
                             onChange={handleChange} isEditable={isEditable.date2_finish} errors={errors}

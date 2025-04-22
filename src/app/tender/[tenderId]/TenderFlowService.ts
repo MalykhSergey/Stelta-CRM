@@ -7,6 +7,7 @@ import {Role, User} from "@/models/User/User";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import TenderStageStrategy from "@/app/tender/[tenderId]/TenderStrategy";
 import {TenderType} from "@/models/Tender/TenderType";
+import ParentContract from "@/models/Tender/ParentContract";
 
 enum ActiveTenderStatus {
     Stage0 = 0,
@@ -35,15 +36,18 @@ export default class TenderFlowService {
     };
     tender: Tender;
     companies: Company[];
+    parent_contracts: ParentContract[];
     strategy: TenderStageStrategy;
     isAuth = false;
     private router: AppRouterInstance;
 
-    constructor(tender: string, companies: string, user: User, router: AppRouterInstance) {
+    constructor(tender: string, companies: string, parent_contacts: ParentContract[], user: User, router: AppRouterInstance) {
         this.isAuth = user.name != '' && user.role != Role.Viewer;
         this.router = router;
         this.companies = Company.fromJSONArray(companies)
         this.tender = Tender.fromJSON(tender)
+        this.parent_contracts = parent_contacts
+        console.log(parent_contacts)
         if (this.tender.company.id != 0)
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
         this.strategy = TenderStageStrategy.getStrategy(this.tender)
