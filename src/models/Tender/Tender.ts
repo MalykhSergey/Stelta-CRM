@@ -37,6 +37,7 @@ export class Tender {
     public statusDate = 0
     public contractDate = ''
     public contractNumber = ''
+    public isFrameContract = false
     public contactPerson: ContactPerson = new ContactPerson(0, '', '', '')
     public comments: string[] = ['', '', '', '', '', '']
     public stagedFileNames: FileName[][] = [[], [], [], [], [], [], []]
@@ -72,6 +73,7 @@ export class Tender {
         tender.date1_start = row.date1_start
         tender.contractNumber = row.contract_number
         tender.contractDate = row.contract_date
+        tender.isFrameContract = row.is_frame_contract
         tender.date1_finish = row.date1_finish
         tender.date2_finish = row.date2_finish
         tender.date_finish = row.date_finish
@@ -118,6 +120,7 @@ export class Tender {
         tender.statusDate = obj.statusDate
         tender.contractNumber = obj.contractNumber
         tender.contractDate = obj.contractDate
+        tender.isFrameContract = obj.isFrameContract
         tender.contactPerson = makeAutoObservable(new ContactPerson(obj.contactPerson.id, obj.contactPerson.name, obj.contactPerson.phoneNumber, obj.contactPerson.email))
         tender.comments = obj.comments
         tender.stagedFileNames = obj.stagedFileNames
@@ -261,6 +264,10 @@ export class Tender {
             return {ok: false, error: 'Поле не должно быть пустым!'}
         }
         return {ok: true, value: ''}
+    }
+
+    toggleIsFrameContract(){
+        this.isFrameContract = !this.isFrameContract
     }
 
     public removeFileFromStagedFileNames(fileName: FileName, arrayIndex: number): void {

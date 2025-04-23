@@ -18,6 +18,8 @@ export interface DropDownListProps<T> {
     onSelect: (item: T) => void;
     /** Значение по умолчанию */
     defaultValue?: string;
+    /** Значение по умолчанию */
+    emptyValue: T;
     /** Плейсхолдер для поля поиска */
     placeholder?: string;
     /** Заблокировать ввод */
@@ -35,21 +37,32 @@ export function DropDownList<T>({
                                     labelField,
                                     onSelect,
                                     defaultValue = '',
+                                    emptyValue,
                                     placeholder = '',
                                     disabled = false,
                                 }: DropDownListProps<T>) {
     const [query, setQuery] = useState<string>('');
-    useEffect(()=>{setQuery(defaultValue || '')},[defaultValue])
+    const updateQuery = (value: string) => {
+        if (!value)
+            onSelect(emptyValue)
+        setQuery(value)
+    }
+    useEffect(() => {
+        setQuery(defaultValue || '')
+    }, [defaultValue])
     // Фильтрация по подстроке (регистр не учитывается)
     const filteredItems = useMemo(() => {
-        if (!query) return items;
         const lower = query.toLowerCase();
         return items.filter(item => {
             const fieldValue = String(item[labelField] ?? '');
             return fieldValue.toLowerCase().includes(lower);
         });
     }, [items, query, labelField]);
-
+    useEffect(() => {
+        if (filteredItems.length == 1) {
+            onSelect(filteredItems[0])
+        }
+    }, [filteredItems])
     return (
         <div className={styles.container}>
             <input
@@ -58,14 +71,12 @@ export function DropDownList<T>({
                 value={query}
                 placeholder={placeholder}
                 disabled={disabled}
-                onChange={e => setQuery(e.target.value)}
+                onChange={e => updateQuery(e.target.value)}
             />
-
-            <FontAwesomeIcon
+            {!disabled && <FontAwesomeIcon
                 icon={faChevronUp}
                 className={styles.chevron}
-            />
-
+            />}
             {filteredItems.length > 0 && (
                 <div className={styles.listContainer}>
                     {filteredItems.map(item => (

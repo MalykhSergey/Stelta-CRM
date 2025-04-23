@@ -24,18 +24,19 @@ const StageForm3: React.FC<StageForm3Props> = observer(({tender, isEditable}) =>
                                fileNames={tender.stagedFileNames[5]} title='Документы договора'
                                isEditable={isEditable}/>
                 <div id={styles.grid}>
-                    <div className={styles.inputGroup}>
-                        <label htmlFor={`contractDate${tender.id}`}>Дата заключения договора:</label>
-                        <input id={`contractDate${tender.id}`} value={tender.contractDate}
-                               onChange={(e) => tender.setContractDate(e.currentTarget.value)} type="date"
-                               disabled={!isEditable}/>
-                    </div>
-                    <div className={styles.inputGroup}>
-                        <label htmlFor={`contractNumber${tender.id}`}>Номер заключения договора:</label>
-                        <input id={`contractNumber${tender.id}`} value={tender.contractNumber}
-                               onChange={(e) => tender.setContractNumber(e.currentTarget.value)} type="text"
-                               disabled={!isEditable}/>
-                    </div>
+                    <label htmlFor={`contractDate${tender.id}`}>Дата заключения договора:</label>
+                    <input id={`contractDate${tender.id}`} value={tender.contractDate}
+                           onChange={(e) => tender.setContractDate(e.currentTarget.value)} type="date"
+                           disabled={!isEditable}/>
+                    <label htmlFor={`contractNumber${tender.id}`}>Номер заключённого договора:</label>
+                    <input id={`contractNumber${tender.id}`} value={tender.contractNumber}
+                           onChange={(e) => tender.setContractNumber(e.currentTarget.value)} type="text"
+                           disabled={!isEditable}/>
+                    <label htmlFor='isFrameContract'>Рамочный договор:</label>
+                    <input type="checkbox" name="isFrameContract" id="isFrameContract"
+                           checked={tender.isFrameContract}
+                           onChange={()=>tender.toggleIsFrameContract()}
+                           disabled={!isEditable}/>
                 </div>
             </div>
         </ExpandableForm>

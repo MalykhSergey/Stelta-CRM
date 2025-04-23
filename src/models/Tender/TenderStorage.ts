@@ -73,13 +73,14 @@ class TenderStorage {
                 date_finish        = $16,
                 contract_number    = $17,
                 contract_date      = $18,
-                comment0           = $19,
-                comment1           = $20,
-                comment2           = $21,
-                comment3           = $22,
-                comment4           = $23,
-                comment5           = $24
-                WHERE           id = $25
+                is_frame_contract  = $19,
+                comment0           = $20,
+                comment1           = $21,
+                comment2           = $22,
+                comment3           = $23,
+                comment4           = $24,
+                comment5           = $25
+                WHERE           id = $26
             `, [
                 tender.type,
                 tender.status,
@@ -99,6 +100,7 @@ class TenderStorage {
                 tender.date_finish,
                 tender.contractNumber,
                 tender.contractDate,
+                tender.isFrameContract,
                 tender.comments[0],
                 tender.comments[1],
                 tender.comments[2],

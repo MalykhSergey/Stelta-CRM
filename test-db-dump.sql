@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2 (Debian 17.2-1.pgdg120+1)
 -- Dumped by pg_dump version 17rc1
 
--- Started on 2025-04-22 20:54:14
+-- Started on 2025-04-23 19:39:39
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,7 +20,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 3498 (class 1262 OID 16384)
+-- TOC entry 3499 (class 1262 OID 16384)
 -- Name: stelta_crm; Type: DATABASE; Schema: -; Owner: -
 --
 
@@ -40,6 +40,13 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+
+--
+-- TOC entry 3500 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+--
 
 COMMENT ON SCHEMA public IS 'standard public schema';
 
@@ -166,7 +173,7 @@ CREATE SEQUENCE public.date_requests_id_seq
 
 
 --
--- TOC entry 3500 (class 0 OID 0)
+-- TOC entry 3501 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: date_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -255,7 +262,7 @@ CREATE SEQUENCE public.request_prices_id_seq
 
 
 --
--- TOC entry 3501 (class 0 OID 0)
+-- TOC entry 3502 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: request_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -375,6 +382,7 @@ CREATE TABLE public.tenders (
     date_finish timestamp without time zone DEFAULT now() NOT NULL,
     contact_person_id integer,
     parent_id integer,
+    is_frame_contract boolean DEFAULT false NOT NULL,
     CONSTRAINT tenders_funding_type_check CHECK ((funding_type <= 2)),
     CONSTRAINT tenders_status_check CHECK ((abs(status) <= 6)),
     CONSTRAINT tenders_type_check CHECK ((type <= 3))
@@ -382,7 +390,7 @@ CREATE TABLE public.tenders (
 
 
 --
--- TOC entry 234 (class 1259 OID 16469)
+-- TOC entry 234 (class 1259 OID 16468)
 -- Name: tenders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -397,7 +405,7 @@ ALTER TABLE public.tenders ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 235 (class 1259 OID 16470)
+-- TOC entry 235 (class 1259 OID 16469)
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -411,7 +419,7 @@ CREATE TABLE public.users (
 
 
 --
--- TOC entry 236 (class 1259 OID 16476)
+-- TOC entry 236 (class 1259 OID 16475)
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -426,7 +434,7 @@ ALTER TABLE public.users ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 3265 (class 2604 OID 16477)
+-- TOC entry 3265 (class 2604 OID 16476)
 -- Name: document_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -434,7 +442,7 @@ ALTER TABLE ONLY public.document_requests ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
--- TOC entry 3268 (class 2604 OID 16478)
+-- TOC entry 3268 (class 2604 OID 16477)
 -- Name: rebidding_prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -442,7 +450,7 @@ ALTER TABLE ONLY public.rebidding_prices ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 3473 (class 0 OID 16394)
+-- TOC entry 3474 (class 0 OID 16394)
 -- Dependencies: 217
 -- Data for Name: companies; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -469,7 +477,7 @@ INSERT INTO public.companies OVERRIDING SYSTEM VALUE VALUES (45, 'ООО «Ха�
 
 
 --
--- TOC entry 3475 (class 0 OID 16400)
+-- TOC entry 3476 (class 0 OID 16400)
 -- Dependencies: 219
 -- Data for Name: contact_persons; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -569,7 +577,7 @@ INSERT INTO public.contact_persons OVERRIDING SYSTEM VALUE VALUES (82, 'Жанн
 
 
 --
--- TOC entry 3477 (class 0 OID 16410)
+-- TOC entry 3478 (class 0 OID 16410)
 -- Dependencies: 221
 -- Data for Name: document_requests; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -638,7 +646,7 @@ INSERT INTO public.document_requests VALUES (824, '2025-01-05', 26);
 
 
 --
--- TOC entry 3479 (class 0 OID 16415)
+-- TOC entry 3480 (class 0 OID 16415)
 -- Dependencies: 223
 -- Data for Name: document_requests_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -646,7 +654,7 @@ INSERT INTO public.document_requests VALUES (824, '2025-01-05', 26);
 
 
 --
--- TOC entry 3481 (class 0 OID 16421)
+-- TOC entry 3482 (class 0 OID 16421)
 -- Dependencies: 225
 -- Data for Name: rebidding_prices; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -703,7 +711,7 @@ INSERT INTO public.rebidding_prices VALUES (24, 7812.47, 717);
 
 
 --
--- TOC entry 3482 (class 0 OID 16425)
+-- TOC entry 3483 (class 0 OID 16425)
 -- Dependencies: 226
 -- Data for Name: rebidding_prices_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -711,7 +719,7 @@ INSERT INTO public.rebidding_prices VALUES (24, 7812.47, 717);
 
 
 --
--- TOC entry 3487 (class 0 OID 16439)
+-- TOC entry 3488 (class 0 OID 16439)
 -- Dependencies: 231
 -- Data for Name: tender_status_history; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -794,40 +802,40 @@ INSERT INTO public.tender_status_history VALUES (26, 1, '2025-08-28 04:12:27');
 
 
 --
--- TOC entry 3489 (class 0 OID 16447)
+-- TOC entry 3490 (class 0 OID 16447)
 -- Dependencies: 233
 -- Data for Name: tenders; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (3, 0, 4, 0, 'Максимизация соблазнительных технологий лот', 'Максимизация соблазнительных технологий лот', 'Лот 8137737785', 'Реестр 1276564196', 336825.72, 96000.31, '2025-01-01 19:36:08', '2025-01-10 19:36:08', '2025-01-03 19:36:08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 52, '2025-01-19 19:36:08', 164, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (4, 0, 3, 0, 'Разработка современных действий тендер', 'Разработка современных действий тендер', 'Лот 5049995680', 'Реестр 0527654821', 340420.53, 263422.29, '2025-01-03 05:03:50', '2025-02-02 05:03:50', '2025-01-11 05:03:50', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 49, '2025-01-03 05:03:50', 148, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (8, 0, 4, 0, 'Развитие онлайн и офлайн приложений лот', 'Развитие онлайн и офлайн приложений лот', 'Лот 8921961401', 'Реестр 1769496867', 140181.88, 111773.69, '2025-01-04 02:32:03', '2025-01-28 02:32:03', '2025-02-01 02:32:03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 53, '2025-01-19 02:32:03', 172, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (9, 0, 1, 0, 'Управление инновационных инфраструктур тендер', 'Управление инновационных инфраструктур тендер', 'Лот 9309493248', 'Реестр 5755447293', 422811.34, 77040.66, '2025-01-02 12:37:47', '2025-01-02 12:37:47', '2025-01-02 12:37:47', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 39, '2025-01-02 12:37:47', 73, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (10, 0, 4, 0, 'Включение лучших в своём роде инициатив лот', 'Включение лучших в своём роде инициатив лот', 'Лот 0952183845', 'Реестр 2622516491', 38023.42, 33461.24, '2025-01-02 06:00:01', '2025-01-31 06:00:01', '2025-01-22 06:00:01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 37, '2025-01-22 06:00:01', 62, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (13, 0, 3, 0, 'Внедрение наглядных областей интереса лот', 'Внедрение наглядных областей интереса лот', 'Лот 2961096177', 'Реестр 3153336106', 137869.17, 7470.38, '2025-01-04 21:12:43', '2025-01-05 21:12:43', '2025-01-15 21:12:43', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 37, '2025-01-04 21:12:43', 64, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (15, 0, 2, 0, 'Модернизация расширяемых результатов лот', 'Модернизация расширяемых результатов лот', 'Лот 0317261311', 'Реестр 4237730273', 237049.35, 47367.20, '2025-01-02 20:04:41', '2025-01-28 20:04:41', '2025-01-02 20:04:41', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 41, '2025-01-02 20:04:41', 84, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (17, 0, 3, 0, 'Трансформация интегрированных интернет-компаний лот', 'Трансформация интегрированных интернет-компаний лот', 'Лот 9665580850', 'Реестр 9997807223', 398454.62, 98849.50, '2025-01-03 21:35:32', '2025-02-01 21:35:32', '2025-02-01 21:35:32', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 48, '2025-01-03 21:35:32', 144, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (18, 0, 4, 0, 'Включение соблазнительных действий лот', 'Включение соблазнительных действий лот', 'Лот 0394688148', 'Реестр 4969384910', 454245.44, 29940.48, '2025-01-06 12:03:51', '2025-01-20 12:03:51', '2025-01-21 12:03:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 55, '2025-01-09 12:03:51', 179, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (19, 0, 3, 0, 'Перепрофилирование целостных порталов лот', 'Перепрофилирование целостных порталов лот', 'Лот 1372829853', 'Реестр 9759315688', 12676.50, 11703.98, '2025-01-01 22:28:13', '2025-01-04 22:28:13', '2025-01-08 22:28:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40, '2025-01-01 22:28:13', 81, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (20, 0, 4, 0, 'Обеспечение корпоративных инфраструктур лот', 'Обеспечение корпоративных инфраструктур лот', 'Лот 7324277977', 'Реестр 4314227861', 319507.26, 107524.87, '2025-01-01 13:26:50', '2025-01-20 13:26:50', '2025-01-30 13:26:50', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 51, '2025-01-03 13:26:50', 162, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (21, 0, 1, 0, 'Максимизация интерактивных интернет-магазинов лот', 'Максимизация интерактивных интернет-магазинов лот', 'Лот 8000287580', 'Реестр 8520763327', 311300.72, 228415.41, '2025-01-06 03:38:13', '2025-01-06 03:38:13', '2025-01-06 03:38:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 52, '2025-01-06 03:38:13', 165, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (22, 0, 2, 0, 'Распределение корпоративных инициатив лот', 'Распределение корпоративных инициатив лот', 'Лот 2718154868', 'Реестр 6633469740', 57178.11, 47499.77, '2025-01-06 05:19:57', '2025-01-19 05:19:57', '2025-01-06 05:19:57', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 45, '2025-01-06 05:19:57', 105, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (23, 0, 4, 0, 'Переосмысление виртуальных технологий лот', 'Переосмысление виртуальных технологий лот', 'Лот 6699158250', 'Реестр 8067495942', 211644.26, 123654.83, '2025-01-05 15:50:11', '2025-01-26 15:50:11', '2025-01-22 15:50:11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 38, '2025-01-13 15:50:11', 120, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (24, 0, 5, 0, 'Распределение масштабируемых инициатив лот', 'Распределение масштабируемых инициатив лот', 'Лот 3547185683', 'Реестр 8233270407', 78249.80, 38656.79, '2025-01-02 20:30:10', '2025-01-21 20:30:10', '2025-01-25 20:30:10', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 329', '2025-01-05', 55, '2025-01-04 20:30:10', 180, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (25, 0, 1, 0, 'Управление концептуальных областей интереса лот', 'Управление концептуальных областей интереса лот', 'Лот 1933571350', 'Реестр 5696566482', 387142.45, 101159.17, '2025-01-06 12:36:03', '2025-01-06 12:36:03', '2025-01-06 12:36:03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 54, '2025-01-06 12:36:03', 174, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (26, 0, 1, 0, 'Приспособление критически важных интернет-продавцов тендер', 'Приспособление критически важных интернет-продавцов тендер', 'Лот 4784375499', 'Реестр 4770280107', 384700.38, 202352.93, '2025-01-01 12:32:12', '2025-01-01 12:32:12', '2025-01-01 12:32:12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 42, '2025-01-01 12:32:12', 88, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (2, 0, 6, 0, 'Адаптация динамичных интернет-услуг тендер', 'Адаптация динамичных интернет-услуг тендер', 'Лот 3953803026', 'Реестр 0455204815', 257193.47, 95270.95, '2025-01-03 02:05:29', '2025-01-16 02:05:29', '2025-01-04 02:05:29', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 204', '2025-01-26', 49, '2025-01-23 02:05:29', 150, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (5, 0, 6, 0, 'Оцифровка прозрачных отношений тендер', 'Оцифровка прозрачных отношений тендер', 'Лот 7540928489', 'Реестр 6238792657', 397644.11, 74874.54, '2025-01-01 15:09:48', '2025-01-23 15:09:48', '2025-01-19 15:09:48', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 387', '2025-01-28', 38, '2025-01-25 15:09:48', 119, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (6, 0, 5, 0, 'Оптимизация притягательных архитектур лот', 'Оптимизация притягательных архитектур лот', 'Лот 1975780847', 'Реестр 9802425894', 220281.13, 175909.00, '2025-01-04 07:37:23', '2025-01-08 07:37:23', '2025-01-08 07:37:23', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 344', '2025-01-30', 49, '2025-01-27 07:37:23', 149, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (7, 0, 5, 0, 'Производство притягательных интернет-компаний лот', 'Производство притягательных интернет-компаний лот', 'Лот 3457032709', 'Реестр 4505284987', 464282.83, 58434.14, '2025-01-04 18:31:57', '2025-01-27 18:31:57', '2025-01-12 18:31:57', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 444', '2025-01-10', 37, '2025-01-08 18:31:57', 65, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (11, 0, 6, 0, 'Интеграция корпоративных интернет-магазинов лот', 'Интеграция корпоративных интернет-магазинов лот', 'Лот 0129731550', 'Реестр 5555282653', 474650.02, 105641.55, '2025-01-06 09:41:18', '2025-01-16 09:41:18', '2025-01-18 09:41:18', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 890', '2025-01-31', 41, '2025-01-28 09:41:18', 86, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (12, 0, 5, 0, 'Развитие интегрированных интерфейсов тендер', 'Развитие интегрированных интерфейсов тендер', 'Лот 1462704187', 'Реестр 1839618575', 367961.57, 251229.17, '2025-01-04 21:04:48', '2025-01-28 21:04:48', '2025-01-29 21:04:48', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 184', '2025-01-13', 37, '2025-01-11 21:04:48', 65, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (14, 0, 6, 0, 'Оцифровка прибыльных взаимодействий тендер', 'Оцифровка прибыльных взаимодействий тендер', 'Лот 0124792437', 'Реестр 9797256133', 298488.78, 88501.36, '2025-01-04 15:39:55', '2025-01-28 15:39:55', '2025-01-27 15:39:55', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 262', '2025-01-28', 51, '2025-01-25 15:39:55', 159, NULL);
-INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (16, 0, 5, 0, 'Инновация соблазнительных каналов тендер', 'Инновация соблазнительных каналов тендер', 'Лот 7812154476', 'Реестр 6549628749', 18938.18, 4412.52, '2025-01-06 17:58:05', '2025-01-21 17:58:05', '2025-01-22 17:58:05', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 031', '2025-01-26', 51, '2025-01-24 17:58:05', 159, NULL);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (3, 0, 4, 0, 'Максимизация соблазнительных технологий лот', 'Максимизация соблазнительных технологий лот', 'Лот 8137737785', 'Реестр 1276564196', 336825.72, 96000.31, '2025-01-01 19:36:08', '2025-01-10 19:36:08', '2025-01-03 19:36:08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 52, '2025-01-19 19:36:08', 164, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (4, 0, 3, 0, 'Разработка современных действий тендер', 'Разработка современных действий тендер', 'Лот 5049995680', 'Реестр 0527654821', 340420.53, 263422.29, '2025-01-03 05:03:50', '2025-02-02 05:03:50', '2025-01-11 05:03:50', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 49, '2025-01-03 05:03:50', 148, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (8, 0, 4, 0, 'Развитие онлайн и офлайн приложений лот', 'Развитие онлайн и офлайн приложений лот', 'Лот 8921961401', 'Реестр 1769496867', 140181.88, 111773.69, '2025-01-04 02:32:03', '2025-01-28 02:32:03', '2025-02-01 02:32:03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 53, '2025-01-19 02:32:03', 172, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (9, 0, 1, 0, 'Управление инновационных инфраструктур тендер', 'Управление инновационных инфраструктур тендер', 'Лот 9309493248', 'Реестр 5755447293', 422811.34, 77040.66, '2025-01-02 12:37:47', '2025-01-02 12:37:47', '2025-01-02 12:37:47', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 39, '2025-01-02 12:37:47', 73, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (10, 0, 4, 0, 'Включение лучших в своём роде инициатив лот', 'Включение лучших в своём роде инициатив лот', 'Лот 0952183845', 'Реестр 2622516491', 38023.42, 33461.24, '2025-01-02 06:00:01', '2025-01-31 06:00:01', '2025-01-22 06:00:01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 37, '2025-01-22 06:00:01', 62, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (13, 0, 3, 0, 'Внедрение наглядных областей интереса лот', 'Внедрение наглядных областей интереса лот', 'Лот 2961096177', 'Реестр 3153336106', 137869.17, 7470.38, '2025-01-04 21:12:43', '2025-01-05 21:12:43', '2025-01-15 21:12:43', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 37, '2025-01-04 21:12:43', 64, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (15, 0, 2, 0, 'Модернизация расширяемых результатов лот', 'Модернизация расширяемых результатов лот', 'Лот 0317261311', 'Реестр 4237730273', 237049.35, 47367.20, '2025-01-02 20:04:41', '2025-01-28 20:04:41', '2025-01-02 20:04:41', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 41, '2025-01-02 20:04:41', 84, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (17, 0, 3, 0, 'Трансформация интегрированных интернет-компаний лот', 'Трансформация интегрированных интернет-компаний лот', 'Лот 9665580850', 'Реестр 9997807223', 398454.62, 98849.50, '2025-01-03 21:35:32', '2025-02-01 21:35:32', '2025-02-01 21:35:32', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 48, '2025-01-03 21:35:32', 144, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (18, 0, 4, 0, 'Включение соблазнительных действий лот', 'Включение соблазнительных действий лот', 'Лот 0394688148', 'Реестр 4969384910', 454245.44, 29940.48, '2025-01-06 12:03:51', '2025-01-20 12:03:51', '2025-01-21 12:03:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 55, '2025-01-09 12:03:51', 179, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (19, 0, 3, 0, 'Перепрофилирование целостных порталов лот', 'Перепрофилирование целостных порталов лот', 'Лот 1372829853', 'Реестр 9759315688', 12676.50, 11703.98, '2025-01-01 22:28:13', '2025-01-04 22:28:13', '2025-01-08 22:28:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 40, '2025-01-01 22:28:13', 81, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (20, 0, 4, 0, 'Обеспечение корпоративных инфраструктур лот', 'Обеспечение корпоративных инфраструктур лот', 'Лот 7324277977', 'Реестр 4314227861', 319507.26, 107524.87, '2025-01-01 13:26:50', '2025-01-20 13:26:50', '2025-01-30 13:26:50', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 51, '2025-01-03 13:26:50', 162, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (21, 0, 1, 0, 'Максимизация интерактивных интернет-магазинов лот', 'Максимизация интерактивных интернет-магазинов лот', 'Лот 8000287580', 'Реестр 8520763327', 311300.72, 228415.41, '2025-01-06 03:38:13', '2025-01-06 03:38:13', '2025-01-06 03:38:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 52, '2025-01-06 03:38:13', 165, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (22, 0, 2, 0, 'Распределение корпоративных инициатив лот', 'Распределение корпоративных инициатив лот', 'Лот 2718154868', 'Реестр 6633469740', 57178.11, 47499.77, '2025-01-06 05:19:57', '2025-01-19 05:19:57', '2025-01-06 05:19:57', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 45, '2025-01-06 05:19:57', 105, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (23, 0, 4, 0, 'Переосмысление виртуальных технологий лот', 'Переосмысление виртуальных технологий лот', 'Лот 6699158250', 'Реестр 8067495942', 211644.26, 123654.83, '2025-01-05 15:50:11', '2025-01-26 15:50:11', '2025-01-22 15:50:11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 38, '2025-01-13 15:50:11', 120, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (24, 0, 5, 0, 'Распределение масштабируемых инициатив лот', 'Распределение масштабируемых инициатив лот', 'Лот 3547185683', 'Реестр 8233270407', 78249.80, 38656.79, '2025-01-02 20:30:10', '2025-01-21 20:30:10', '2025-01-25 20:30:10', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 329', '2025-01-05', 55, '2025-01-04 20:30:10', 180, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (25, 0, 1, 0, 'Управление концептуальных областей интереса лот', 'Управление концептуальных областей интереса лот', 'Лот 1933571350', 'Реестр 5696566482', 387142.45, 101159.17, '2025-01-06 12:36:03', '2025-01-06 12:36:03', '2025-01-06 12:36:03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 54, '2025-01-06 12:36:03', 174, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (26, 0, 1, 0, 'Приспособление критически важных интернет-продавцов тендер', 'Приспособление критически важных интернет-продавцов тендер', 'Лот 4784375499', 'Реестр 4770280107', 384700.38, 202352.93, '2025-01-01 12:32:12', '2025-01-01 12:32:12', '2025-01-01 12:32:12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 42, '2025-01-01 12:32:12', 88, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (2, 0, 6, 0, 'Адаптация динамичных интернет-услуг тендер', 'Адаптация динамичных интернет-услуг тендер', 'Лот 3953803026', 'Реестр 0455204815', 257193.47, 95270.95, '2025-01-03 02:05:29', '2025-01-16 02:05:29', '2025-01-04 02:05:29', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 204', '2025-01-26', 49, '2025-01-23 02:05:29', 150, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (5, 0, 6, 0, 'Оцифровка прозрачных отношений тендер', 'Оцифровка прозрачных отношений тендер', 'Лот 7540928489', 'Реестр 6238792657', 397644.11, 74874.54, '2025-01-01 15:09:48', '2025-01-23 15:09:48', '2025-01-19 15:09:48', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 387', '2025-01-28', 38, '2025-01-25 15:09:48', 119, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (6, 0, 5, 0, 'Оптимизация притягательных архитектур лот', 'Оптимизация притягательных архитектур лот', 'Лот 1975780847', 'Реестр 9802425894', 220281.13, 175909.00, '2025-01-04 07:37:23', '2025-01-08 07:37:23', '2025-01-08 07:37:23', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 344', '2025-01-30', 49, '2025-01-27 07:37:23', 149, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (7, 0, 5, 0, 'Производство притягательных интернет-компаний лот', 'Производство притягательных интернет-компаний лот', 'Лот 3457032709', 'Реестр 4505284987', 464282.83, 58434.14, '2025-01-04 18:31:57', '2025-01-27 18:31:57', '2025-01-12 18:31:57', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 444', '2025-01-10', 37, '2025-01-08 18:31:57', 65, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (11, 0, 6, 0, 'Интеграция корпоративных интернет-магазинов лот', 'Интеграция корпоративных интернет-магазинов лот', 'Лот 0129731550', 'Реестр 5555282653', 474650.02, 105641.55, '2025-01-06 09:41:18', '2025-01-16 09:41:18', '2025-01-18 09:41:18', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 890', '2025-01-31', 41, '2025-01-28 09:41:18', 86, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (12, 0, 5, 0, 'Развитие интегрированных интерфейсов тендер', 'Развитие интегрированных интерфейсов тендер', 'Лот 1462704187', 'Реестр 1839618575', 367961.57, 251229.17, '2025-01-04 21:04:48', '2025-01-28 21:04:48', '2025-01-29 21:04:48', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 184', '2025-01-13', 37, '2025-01-11 21:04:48', 65, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (14, 0, 6, 0, 'Оцифровка прибыльных взаимодействий тендер', 'Оцифровка прибыльных взаимодействий тендер', 'Лот 0124792437', 'Реестр 9797256133', 298488.78, 88501.36, '2025-01-04 15:39:55', '2025-01-28 15:39:55', '2025-01-27 15:39:55', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 262', '2025-01-28', 51, '2025-01-25 15:39:55', 159, NULL, false);
+INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (16, 0, 5, 0, 'Инновация соблазнительных каналов тендер', 'Инновация соблазнительных каналов тендер', 'Лот 7812154476', 'Реестр 6549628749', 18938.18, 4412.52, '2025-01-06 17:58:05', '2025-01-21 17:58:05', '2025-01-22 17:58:05', NULL, NULL, NULL, NULL, NULL, NULL, 'Контракт 031', '2025-01-26', 51, '2025-01-24 17:58:05', 159, NULL, false);
 
 
 --
--- TOC entry 3485 (class 0 OID 16432)
+-- TOC entry 3486 (class 0 OID 16432)
 -- Dependencies: 229
 -- Data for Name: tenders_files; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -835,7 +843,7 @@ INSERT INTO public.tenders OVERRIDING SYSTEM VALUE VALUES (16, 0, 5, 0, 'Инн�
 
 
 --
--- TOC entry 3491 (class 0 OID 16470)
+-- TOC entry 3492 (class 0 OID 16469)
 -- Dependencies: 235
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -847,7 +855,7 @@ INSERT INTO public.users OVERRIDING SYSTEM VALUE VALUES (7, 'SuperUser', '31b80a
 
 
 --
--- TOC entry 3502 (class 0 OID 0)
+-- TOC entry 3503 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: companies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -856,7 +864,7 @@ SELECT pg_catalog.setval('public.companies_id_seq', 55, true);
 
 
 --
--- TOC entry 3503 (class 0 OID 0)
+-- TOC entry 3504 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: contact_persons_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -865,7 +873,7 @@ SELECT pg_catalog.setval('public.contact_persons_id_seq', 182, true);
 
 
 --
--- TOC entry 3504 (class 0 OID 0)
+-- TOC entry 3505 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: date_requests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -874,7 +882,7 @@ SELECT pg_catalog.setval('public.date_requests_id_seq', 824, true);
 
 
 --
--- TOC entry 3505 (class 0 OID 0)
+-- TOC entry 3506 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: document_requests_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -883,7 +891,7 @@ SELECT pg_catalog.setval('public.document_requests_files_id_seq', 72, true);
 
 
 --
--- TOC entry 3506 (class 0 OID 0)
+-- TOC entry 3507 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: rebidding_prices_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -892,7 +900,7 @@ SELECT pg_catalog.setval('public.rebidding_prices_files_id_seq', 15, true);
 
 
 --
--- TOC entry 3507 (class 0 OID 0)
+-- TOC entry 3508 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: request_prices_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -901,7 +909,7 @@ SELECT pg_catalog.setval('public.request_prices_id_seq', 717, true);
 
 
 --
--- TOC entry 3508 (class 0 OID 0)
+-- TOC entry 3509 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: tender_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -910,7 +918,7 @@ SELECT pg_catalog.setval('public.tender_files_id_seq', 77, true);
 
 
 --
--- TOC entry 3509 (class 0 OID 0)
+-- TOC entry 3510 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: tenders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -919,7 +927,7 @@ SELECT pg_catalog.setval('public.tenders_id_seq', 26, true);
 
 
 --
--- TOC entry 3510 (class 0 OID 0)
+-- TOC entry 3511 (class 0 OID 0)
 -- Dependencies: 236
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
@@ -928,7 +936,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 7, true);
 
 
 --
--- TOC entry 3289 (class 2606 OID 16480)
+-- TOC entry 3290 (class 2606 OID 16479)
 -- Name: companies companies_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -937,7 +945,7 @@ ALTER TABLE ONLY public.companies
 
 
 --
--- TOC entry 3291 (class 2606 OID 16482)
+-- TOC entry 3292 (class 2606 OID 16481)
 -- Name: companies companies_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -946,7 +954,7 @@ ALTER TABLE ONLY public.companies
 
 
 --
--- TOC entry 3293 (class 2606 OID 16484)
+-- TOC entry 3294 (class 2606 OID 16483)
 -- Name: contact_persons contact_persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -955,7 +963,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 3295 (class 2606 OID 16486)
+-- TOC entry 3296 (class 2606 OID 16485)
 -- Name: contact_persons contact_persons_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -964,7 +972,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 3299 (class 2606 OID 16488)
+-- TOC entry 3300 (class 2606 OID 16487)
 -- Name: document_requests_files document_requests_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -973,7 +981,7 @@ ALTER TABLE ONLY public.document_requests_files
 
 
 --
--- TOC entry 3301 (class 2606 OID 16490)
+-- TOC entry 3302 (class 2606 OID 16489)
 -- Name: rebidding_prices prices_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -982,7 +990,7 @@ ALTER TABLE ONLY public.rebidding_prices
 
 
 --
--- TOC entry 3303 (class 2606 OID 16492)
+-- TOC entry 3304 (class 2606 OID 16491)
 -- Name: rebidding_prices_files rebidding_prices_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -991,7 +999,7 @@ ALTER TABLE ONLY public.rebidding_prices_files
 
 
 --
--- TOC entry 3297 (class 2606 OID 16494)
+-- TOC entry 3298 (class 2606 OID 16493)
 -- Name: document_requests requests_dates_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1000,7 +1008,7 @@ ALTER TABLE ONLY public.document_requests
 
 
 --
--- TOC entry 3305 (class 2606 OID 16496)
+-- TOC entry 3306 (class 2606 OID 16495)
 -- Name: tenders_files tender_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1009,7 +1017,7 @@ ALTER TABLE ONLY public.tenders_files
 
 
 --
--- TOC entry 3308 (class 2606 OID 16498)
+-- TOC entry 3309 (class 2606 OID 16497)
 -- Name: tender_status_history tender_status_history_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1018,7 +1026,7 @@ ALTER TABLE ONLY public.tender_status_history
 
 
 --
--- TOC entry 3311 (class 2606 OID 16500)
+-- TOC entry 3312 (class 2606 OID 16499)
 -- Name: tenders tenders_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1027,7 +1035,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3313 (class 2606 OID 16502)
+-- TOC entry 3314 (class 2606 OID 16501)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1036,7 +1044,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3315 (class 2606 OID 16504)
+-- TOC entry 3316 (class 2606 OID 16503)
 -- Name: users users_unique; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1045,7 +1053,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3306 (class 1259 OID 16505)
+-- TOC entry 3307 (class 1259 OID 16504)
 -- Name: idx_tender_status_history_tender_id_changed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1053,7 +1061,7 @@ CREATE INDEX idx_tender_status_history_tender_id_changed_at ON public.tender_sta
 
 
 --
--- TOC entry 3309 (class 1259 OID 16506)
+-- TOC entry 3310 (class 1259 OID 16505)
 -- Name: tender_status_cache_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1061,7 +1069,7 @@ CREATE UNIQUE INDEX tender_status_cache_idx ON public.tender_status_cache USING 
 
 
 --
--- TOC entry 3326 (class 2620 OID 16507)
+-- TOC entry 3327 (class 2620 OID 16506)
 -- Name: tenders tr_log_status_change; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1069,7 +1077,7 @@ CREATE TRIGGER tr_log_status_change AFTER INSERT OR UPDATE OF status ON public.t
 
 
 --
--- TOC entry 3316 (class 2606 OID 16508)
+-- TOC entry 3317 (class 2606 OID 16507)
 -- Name: contact_persons contact_persons_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1078,7 +1086,7 @@ ALTER TABLE ONLY public.contact_persons
 
 
 --
--- TOC entry 3318 (class 2606 OID 16513)
+-- TOC entry 3319 (class 2606 OID 16512)
 -- Name: document_requests_files document_requests_files_document_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1087,7 +1095,7 @@ ALTER TABLE ONLY public.document_requests_files
 
 
 --
--- TOC entry 3319 (class 2606 OID 16518)
+-- TOC entry 3320 (class 2606 OID 16517)
 -- Name: rebidding_prices prices_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1096,7 +1104,7 @@ ALTER TABLE ONLY public.rebidding_prices
 
 
 --
--- TOC entry 3320 (class 2606 OID 16523)
+-- TOC entry 3321 (class 2606 OID 16522)
 -- Name: rebidding_prices_files rebidding_prices_files_rebidding_prices_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1105,7 +1113,7 @@ ALTER TABLE ONLY public.rebidding_prices_files
 
 
 --
--- TOC entry 3317 (class 2606 OID 16528)
+-- TOC entry 3318 (class 2606 OID 16527)
 -- Name: document_requests requests_dates_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1114,7 +1122,7 @@ ALTER TABLE ONLY public.document_requests
 
 
 --
--- TOC entry 3321 (class 2606 OID 16533)
+-- TOC entry 3322 (class 2606 OID 16532)
 -- Name: tenders_files tender_files_tender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1123,7 +1131,7 @@ ALTER TABLE ONLY public.tenders_files
 
 
 --
--- TOC entry 3322 (class 2606 OID 16538)
+-- TOC entry 3323 (class 2606 OID 16537)
 -- Name: tender_status_history tender_status_history_tender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1132,7 +1140,7 @@ ALTER TABLE ONLY public.tender_status_history
 
 
 --
--- TOC entry 3323 (class 2606 OID 16543)
+-- TOC entry 3324 (class 2606 OID 16542)
 -- Name: tenders tenders_company_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1141,7 +1149,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3324 (class 2606 OID 16548)
+-- TOC entry 3325 (class 2606 OID 16547)
 -- Name: tenders tenders_contact_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1150,7 +1158,7 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3325 (class 2606 OID 16562)
+-- TOC entry 3326 (class 2606 OID 16552)
 -- Name: tenders tenders_tenders_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1159,15 +1167,15 @@ ALTER TABLE ONLY public.tenders
 
 
 --
--- TOC entry 3488 (class 0 OID 16442)
--- Dependencies: 232 3494
+-- TOC entry 3489 (class 0 OID 16442)
+-- Dependencies: 232 3495
 -- Name: tender_status_cache; Type: MATERIALIZED VIEW DATA; Schema: public; Owner: -
 --
 
 REFRESH MATERIALIZED VIEW public.tender_status_cache;
 
 
--- Completed on 2025-04-22 20:54:15
+-- Completed on 2025-04-23 19:39:39
 
 --
 -- PostgreSQL database dump complete

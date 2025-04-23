@@ -47,7 +47,6 @@ export default class TenderFlowService {
         this.companies = Company.fromJSONArray(companies)
         this.tender = Tender.fromJSON(tender)
         this.parent_contracts = parent_contacts
-        console.log(parent_contacts)
         if (this.tender.company.id != 0)
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
         this.strategy = TenderStageStrategy.getStrategy(this.tender)
