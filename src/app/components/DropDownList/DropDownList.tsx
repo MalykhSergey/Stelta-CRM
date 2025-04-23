@@ -15,7 +15,9 @@ export interface DropDownListProps<T> {
     /** Ключ поля для отображаемого текста */
     labelField: keyof T;
     /** Коллбэк при выборе элемента */
-    onSelect: (item: T) => void;
+    onSelect?: (item: T) => void;
+    /** Имя поля ввода */
+    name?: string;
     /** Значение по умолчанию */
     defaultValue?: string;
     /** Значение по умолчанию */
@@ -36,6 +38,7 @@ export function DropDownList<T>({
                                     keyField,
                                     labelField,
                                     onSelect,
+                                    name = 'dropdown',
                                     defaultValue = '',
                                     emptyValue,
                                     placeholder = '',
@@ -52,6 +55,7 @@ export function DropDownList<T>({
     }, [defaultValue])
     // Фильтрация по подстроке (регистр не учитывается)
     const filteredItems = useMemo(() => {
+        if (!query) return items;
         const lower = query.toLowerCase();
         return items.filter(item => {
             const fieldValue = String(item[labelField] ?? '');
@@ -66,6 +70,8 @@ export function DropDownList<T>({
     return (
         <div className={styles.container}>
             <input
+                id={name}
+                name={name}
                 type="search"
                 className={styles.input}
                 value={query}
@@ -83,7 +89,7 @@ export function DropDownList<T>({
                         <div
                             key={String(item[keyField])}
                             className={styles.item}
-                            onMouseDown={() => onSelect(item)}
+                            onMouseDown={() => onSelect ? onSelect(item) : setQuery(item[keyField] as string)}
                         >
                             {String(item[labelField])}
                         </div>
