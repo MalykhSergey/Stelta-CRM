@@ -1,0 +1,17 @@
+#form {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: fit-content;
+    margin-bottom: 20px;
+}
+#sendButton{
+    font-weight: 500;
+    font-size: 16px;
+}
+@media only screen and (max-width: 600px) {
+    #inputsContainer{
+        flex-direction: column;
+        width: 100%;
+    }
+}

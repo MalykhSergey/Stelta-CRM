@@ -104,6 +104,69 @@ export default class AnalyticStorage {
         return rows
     }
 
+    public static async getOrdersAnalytics(startDate: Date, endDate: Date, contract_number:string, format: boolean){
+        const rows = (await connection.query(`
+            WITH tenders_data AS (
+                SELECT
+                    tenders.contract_number,
+                    CASE 
+                        WHEN tenders.contract_date > tenders.date1_start THEN TO_CHAR(tenders.contract_date, 'DD.MM.YYYY') 
+                        ELSE '' 
+                    END AS contract_date,
+                    tenders.name,
+                    COALESCE(reb_price, tenders.price)${format?'':'::float'} AS price,  -- Цена дочернего тендера
+                    COALESCE(parent_reb_price, parent.price)${format?'':'::float'} AS parent_price  -- Цена родительского тендера
+                FROM public.tenders
+                LEFT JOIN (
+                    SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
+                    FROM rebidding_prices
+                    ORDER BY tender_id, id DESC
+                ) AS reb_prices ON reb_prices.tender_id = tenders.id -- Переторжки заказов
+                LEFT JOIN (
+                    SELECT DISTINCT ON (tender_id) tender_id, price AS parent_reb_price
+                    FROM rebidding_prices
+                    ORDER BY tender_id, id DESC
+                ) AS parent_reb ON parent_reb.tender_id = tenders.parent_id -- Переторжки родителя
+                JOIN public.companies ON tenders.company_id = companies.id
+                JOIN public.tenders as parent ON parent.id = tenders.parent_id
+                WHERE tenders.date1_start >= $1 AND tenders.date1_start <= $2 AND parent.contract_number = $3
+            )
+            SELECT 
+                contract_number, 
+                contract_date, 
+                name, 
+                price 
+            FROM tenders_data
+            
+            UNION ALL
+            
+            -- Итоговая сумма всех заказов
+            SELECT 
+                NULL, 
+                NULL, 
+                'Итого', 
+                SUM(price) 
+            FROM tenders_data
+            
+            UNION ALL
+            
+            -- Остаток: Итог - сумма родительских цен
+            SELECT 
+                NULL, 
+                NULL, 
+                'Остаток', 
+                SUM(price) - SUM(parent_price) 
+            FROM tenders_data;
+`, [startDate, endDate, contract_number])).rows
+        if (format)
+            return rows
+                .map(row => {
+                    row.price = AnalyticStorage.transformNumber(row.price)
+                    return row
+                })
+        return rows
+    }
+
     private static transformNumber(value: string) {
         return formatValue({
             value: value,
