@@ -49,6 +49,7 @@ export default abstract class TenderStageStrategy {
             name: false,
             shortName: isAuth,
             regNumber: false,
+            parentContract: false,
             lotNumber: false,
             initialMaxPrice: false,
             price: false,
@@ -70,6 +71,7 @@ export default abstract class TenderStageStrategy {
                 name: true,
                 shortName: true,
                 regNumber: true,
+                parentContract: true,
                 lotNumber: true,
                 initialMaxPrice: true,
                 price: true,
@@ -133,6 +135,7 @@ class OfferStrategy extends SkipFirstStageStrategy {
         lotNumber: boolean;
         type: boolean;
         regNumber: boolean;
+        parentContract: boolean,
         phoneNumber: boolean;
         fundingType: boolean;
         isSpecial: boolean;
