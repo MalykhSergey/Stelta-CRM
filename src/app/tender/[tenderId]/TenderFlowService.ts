@@ -8,6 +8,8 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import TenderStageStrategy from "@/app/tender/[tenderId]/TenderStrategy";
 import {TenderType} from "@/models/Tender/TenderType";
 import ParentContract from "@/models/Tender/ParentContract";
+import {enableStaticRendering} from "mobx-react-lite";
+enableStaticRendering(typeof window === "undefined")
 
 enum ActiveTenderStatus {
     Stage0 = 0,
