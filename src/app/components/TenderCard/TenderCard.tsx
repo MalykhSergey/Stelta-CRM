@@ -103,7 +103,7 @@ export default function TenderCard(props: { tender: Tender }) {
     }
     const title = reduceTitle(props.tender.shortName);
     return (
-        <Link className={`card ${styles.hoverCard}`} href={`/tender/${props.tender.id}`}
+        <Link className={`card ${styles.hoverCard} ${styles['type-'+props.tender.type]}`} href={`/tender/${props.tender.id}`}
               target='_blank'>
             <div className={'indicator status-' + status}/>
             <span className={styles.label}>{props.tender.company.name}</span>
