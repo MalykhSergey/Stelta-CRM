@@ -72,11 +72,11 @@
     background-color: white;
 }
 .type-1{
-    background-color: #efefef;
+    background-color: #efefef !important;
 }
 .type-2{
-    background-color: #fff4d5;
+    background-color: #fff4d5 !important;
 }
 .type-3{
-    background-color: #eeffe4;
+    background-color: #eeffe4 !important;
 }

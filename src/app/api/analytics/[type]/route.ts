@@ -44,7 +44,6 @@ export async function GET(request: NextRequest, {
         }
         case "orders": {
             const contract_number = searchParams.get('contract_number') || ''
-            console.log(contract_number)
             tableData = await getOrdersAnalytics(startDate, endDate, contract_number, false)
             table = new OrdersAnalytics(tableData.headers, tableData.data, tableData.colSizes, false);
             file_name = `Аналитика по заказам ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')} для договора ${contract_number}.xlsx`;

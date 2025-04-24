@@ -91,7 +91,7 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start >= $1 and date1_start <= $2
+            WHERE contract_date >= $1 and contract_date <= $2
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`, [startDate, endDate])).rows
         if (format) {

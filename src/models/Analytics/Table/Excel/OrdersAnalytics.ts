@@ -34,6 +34,6 @@ export default class OrdersAnalytics extends ExcelTable {
             {width: 25},
             {width: 30},
         ];
-        this.sheet.getColumn('D').alignment = {horizontal: 'center', vertical: 'middle'};
+        this.sheet.getColumn('C').alignment = {horizontal: 'center', vertical: 'middle'};
     }
 }

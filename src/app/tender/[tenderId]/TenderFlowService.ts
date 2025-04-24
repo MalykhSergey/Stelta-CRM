@@ -79,7 +79,6 @@ export default class TenderFlowService {
         }
         // Устанавливаем parent_id, если есть в таблице
         this.tender.parentContract.parent_id = this.parent_contracts.get(this.tender.parentContract.contract_number) || 0
-        console.log(this.tender.parentContract)
         const result = await (await fetch(`/api/tender/${this.tender.id}`, {
             method: 'POST',
             headers: {
