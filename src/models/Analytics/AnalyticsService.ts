@@ -71,12 +71,12 @@ class AnalyticsService {
         const headers = [
             new TableHeader([
                 new HeaderCell("Номер договора"),
-                new HeaderCell("Дата"),
                 new HeaderCell("Наименование"),
+                new HeaderCell("Дата"),
                 new HeaderCell("Сумма"),
             ])
         ];
-        return {headers: headers, data: data};
+        return {headers: headers, data: data, colSizes:[0.2, 0.5,0.1,0.2]};
     }
 }
 

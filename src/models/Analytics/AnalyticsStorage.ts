@@ -106,57 +106,105 @@ export default class AnalyticStorage {
 
     public static async getOrdersAnalytics(startDate: Date, endDate: Date, contract_number:string, format: boolean){
         const rows = (await connection.query(`
-            WITH tenders_data AS (
-                SELECT
-                    tenders.contract_number,
-                    CASE 
-                        WHEN tenders.contract_date > tenders.date1_start THEN TO_CHAR(tenders.contract_date, 'DD.MM.YYYY') 
-                        ELSE '' 
-                    END AS contract_date,
-                    tenders.name,
-                    COALESCE(reb_price, tenders.price)${format?'':'::float'} AS price,  -- Цена дочернего тендера
-                    COALESCE(parent_reb_price, parent.price)${format?'':'::float'} AS parent_price  -- Цена родительского тендера
-                FROM public.tenders
-                LEFT JOIN (
-                    SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
-                    FROM rebidding_prices
-                    ORDER BY tender_id, id DESC
-                ) AS reb_prices ON reb_prices.tender_id = tenders.id -- Переторжки заказов
-                LEFT JOIN (
-                    SELECT DISTINCT ON (tender_id) tender_id, price AS parent_reb_price
-                    FROM rebidding_prices
-                    ORDER BY tender_id, id DESC
-                ) AS parent_reb ON parent_reb.tender_id = tenders.parent_id -- Переторжки родителя
-                JOIN public.companies ON tenders.company_id = companies.id
-                JOIN public.tenders as parent ON parent.id = tenders.parent_id
-                WHERE tenders.date1_start >= $1 AND tenders.date1_start <= $2 AND parent.contract_number = $3
+            WITH 
+            -- 1) Последние переторжки
+            latest_reb AS (
+              SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
+              FROM rebidding_prices
+              ORDER BY tender_id, id DESC
+            ),
+            
+            -- 2) Данные по всем дочерним тендерам
+            childs AS (
+              SELECT
+                t.contract_number,
+                t.name,
+                CASE 
+                  WHEN t.contract_date > t.date1_start 
+                    THEN TO_CHAR(t.contract_date, 'DD.MM.YYYY') 
+                  ELSE '' 
+                END AS contract_date,
+                COALESCE(lr.reb_price, t.price) AS child_price
+              FROM public.tenders t
+              LEFT JOIN latest_reb lr ON lr.tender_id = t.id
+              WHERE t.date1_start BETWEEN $1 AND $2
+                AND t.parent_id = (
+                  SELECT id 
+                  FROM public.tenders 
+                  WHERE contract_number = $3
+                )
+            ),
+            
+            -- 3) Информация по родительскому договору (единственная строка)
+            parent_info AS (
+              SELECT
+                p.contract_number,
+                p.name        AS parent_name,
+                TO_CHAR(p.contract_date, 'DD.MM.YYYY') AS parent_contract_date,
+                COALESCE(lpr.reb_price, p.price)       AS parent_price
+              FROM public.tenders p
+              LEFT JOIN latest_reb lpr ON lpr.tender_id = p.id
+              WHERE p.contract_number = $3
+              LIMIT 1
+            ),
+            
+            -- 4) Считаем суммы по детям и по родителю
+            summary AS (
+              SELECT
+                SUM(child_price)          AS total_children,
+                (SELECT parent_price FROM parent_info) AS total_parent
+              FROM childs
             )
-            SELECT 
-                contract_number, 
-                contract_date, 
-                name, 
-                price 
-            FROM tenders_data
             
-            UNION ALL
-            
-            -- Итоговая сумма всех заказов
-            SELECT 
-                NULL, 
-                NULL, 
-                'Итого', 
-                COALESCE(SUM(price) - SUM(parent_price),0) 
-            FROM tenders_data
-            
-            UNION ALL
-            
-            -- Остаток: Итог - сумма родительских цен
-            SELECT 
-                NULL, 
-                NULL, 
-                'Остаток', 
-                COALESCE(SUM(price) - SUM(parent_price),0) 
-            FROM tenders_data;
+           SELECT 
+              COALESCE(contract_number, '') as contract_number,
+              COALESCE(name, '') as name,
+              COALESCE(contract_date, '') as contract_date,
+              COALESCE(price, 0)${format ? '' : '::float'} as price
+            FROM (
+              -- 5) Финальная выдача
+              SELECT 
+                contract_number,
+                name,
+                contract_date,
+                child_price as price,
+                1 AS ord
+              FROM childs
+              
+              UNION ALL
+              
+              -- Итого по всем дочерним
+              SELECT
+                NULL,
+                NULL,
+                'Итого',
+                total_children,
+                2
+              FROM summary
+              
+              UNION ALL
+              
+              -- Строка с родительским договором
+              SELECT
+                contract_number,
+                parent_name,
+                parent_contract_date,
+                parent_price,
+                3
+              FROM parent_info
+              
+              UNION ALL
+              
+              -- Остаток (родитель − дети)
+              SELECT
+                NULL,
+                NULL,
+                'Остаток',
+                total_parent - COALESCE(total_children,0),
+                4
+              FROM summary
+            ) AS sorted_data
+            ORDER BY ord;
 `, [startDate, endDate, contract_number])).rows
         if (format)
             return rows

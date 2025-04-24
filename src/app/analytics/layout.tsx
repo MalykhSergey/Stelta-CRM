@@ -21,8 +21,7 @@ export default function LayoutPage({children,}: {
                       className={`${styles.link} ${pathname === '/analytics/tenders' ? styles.active : ''}`}>Все
                     тендеры</Link>
                 <Link href={'./orders?' + searchParams.toString()}
-                      className={`${styles.link} ${pathname === '/analytics/orders' ? styles.active : ''}`}>Все
-                    заказы</Link>
+                      className={`${styles.link} ${pathname === '/analytics/orders' ? styles.active : ''}`}>Заказы по договору</Link>
                 <Link href={'./win_loose?' + searchParams.toString()}
                       className={`${styles.link} ${pathname === '/analytics/win_loose' ? styles.active : ''}`}>
                     Победили / Проиграли

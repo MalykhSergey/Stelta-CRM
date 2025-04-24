@@ -30,6 +30,6 @@ export default async function page({searchParams,}: {
     ];
     return (<>
         <FilterForm fields={fields}/>
-        {new RollupTable(table.headers, table.data).render()}
+        {new RollupTable(table.headers, table.data, table.colSizes, 3).render()}
     </>)
 }
