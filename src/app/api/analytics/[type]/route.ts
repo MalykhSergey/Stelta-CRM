@@ -1,6 +1,7 @@
 import {
     getCompaniesFullAnalytics,
     getCompaniesWinLooseAnalytics,
+    getOrdersAnalytics,
     getTendersAnalytics
 } from "@/models/Analytics/AnalyticsService";
 import CompanyFullAnalytics from "@/models/Analytics/Table/Excel/CompanyFullAnalytics";
@@ -8,6 +9,7 @@ import CompanyWinLooseAnalytics from "@/models/Analytics/Table/Excel/CompanyWinL
 import {NextRequest} from "next/server";
 import getParamsDates from "@/app/components/DateRangeForm/GetParamsDates";
 import TendersAnalytics from "@/models/Analytics/Table/Excel/TendersAnalytics";
+import OrdersAnalytics from "@/models/Analytics/Table/Excel/OrdersAnalytics";
 
 export async function GET(request: NextRequest, {
     params,
@@ -38,6 +40,14 @@ export async function GET(request: NextRequest, {
             tableData = await getTendersAnalytics(startDate, endDate, false)
             table = new TendersAnalytics(tableData.headers, tableData.data, tableData.colSizes, false);
             file_name = `Аналитика по тендерам ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')}.xlsx`;
+            break
+        }
+        case "orders": {
+            const contract_number = searchParams.get('contract_number') || ''
+            console.log(contract_number)
+            tableData = await getOrdersAnalytics(startDate, endDate, contract_number, false)
+            table = new OrdersAnalytics(tableData.headers, tableData.data, tableData.colSizes, false);
+            file_name = `Аналитика по заказам ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')} для договора ${contract_number}.xlsx`;
             break
         }
         default: {
