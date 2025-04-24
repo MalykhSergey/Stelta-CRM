@@ -59,7 +59,7 @@ export class Tender {
         tender.status = row.status
         tender.fundingType = row.funding_type
         tender.parentContract.parent_id = row.parent_id
-        tender.parentContract.contract_number = row.parent_contract_number
+        tender.parentContract.contract_number = row.parent_contract_number || ''
         if (row.company_id) {
             tender.company.id = row.company_id
             tender.company.name = row.company_name

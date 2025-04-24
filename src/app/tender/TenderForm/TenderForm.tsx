@@ -10,7 +10,7 @@ import {FundingType, getFundingTypeName} from "@/models/Tender/FundingType";
 import {getTenderTypeName, TenderType} from "@/models/Tender/TenderType";
 import TenderFlowService from "@/app/tender/[tenderId]/TenderFlowService";
 import DropDownList from "@/app/components/DropDownList/DropDownList";
-import ParentContract from "@/models/Tender/ParentContract";
+import {runInAction} from "mobx";
 
 interface TenderFormProps {
     tenderFlowService: TenderFlowService,
@@ -113,12 +113,9 @@ const TenderForm = observer((props: TenderFormProps) => {
                 <>
                     <label className={styles.label}>Договор:</label>
                     <div className={styles.formGroup}>
-                        <DropDownList items={props.tenderFlowService.parent_contracts}
-                                      keyField={'parent_id'}
-                                      labelField={'contract_number'}
-                                      onSelect={value => tender.setParentContract(value)}
+                        <DropDownList items={Array.from(props.tenderFlowService.parent_contracts.keys())}
+                                      onChange={value => runInAction(() => tender.parentContract.contract_number = value)}
                                       defaultValue={tender.parentContract.contract_number}
-                                      emptyValue={new ParentContract(undefined,'')}
                                       disabled={!isEditable.parentContract}/>
                     </div>
                 </>

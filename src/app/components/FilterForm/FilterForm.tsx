@@ -9,7 +9,7 @@ export type FieldConfig = {
     name: string
     label: string
     type: 'date' | 'text' | 'dropdown'
-    options?: { value: string; label: string }[]
+    values?: string[]
     defaultValue?: string
 }
 
@@ -45,11 +45,10 @@ export function FilterForm({fields}: Props) {
                     <label htmlFor={field.name}>{field.label}</label>
                     {field.type === 'dropdown' ? (
                         <DropDownList key={field.label}
-                                      items={field.options || []}
-                                      labelField={'label'}
-                                      keyField={'value'}
+                                      items={field.values || []}
                                       name={field.name}
                                       defaultValue={initial[field.name]}
+                                      onChange={()=>{}}
                                       />
                     ) : (
                         <input

@@ -17,7 +17,7 @@ export default async function page({searchParams,}: {
     const {startDate, endDate} = getParamsDates(start_param, end_param)
     const contract_number = (await searchParams).contract_number as string || ''
     const contract_numbers = (await getParentContracts()).map(value => {
-        return {value: value.contract_number, label: value.contract_number}
+        return value.contract_number
     });
     const table = await getOrdersAnalytics(startDate, endDate, contract_number, true);
     const fields: FieldConfig[] = [
@@ -25,7 +25,7 @@ export default async function page({searchParams,}: {
         {label: 'До:', name: 'end', type: 'date', defaultValue: endDate.toISOString().slice(0, 10)},
         {
             label: 'Номер договора:', name: 'contract_number', type: 'dropdown',
-            options: contract_numbers,
+            values: contract_numbers,
         },
     ];
     return (<>

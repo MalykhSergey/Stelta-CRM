@@ -36,7 +36,7 @@ export default class TenderFlowService {
     };
     tender: Tender;
     companies: Company[];
-    parent_contracts: ParentContract[];
+    parent_contracts: Map<string, number>;
     strategy: TenderStageStrategy;
     isAuth = false;
     private router: AppRouterInstance;
@@ -46,7 +46,7 @@ export default class TenderFlowService {
         this.router = router;
         this.companies = Company.fromJSONArray(companies)
         this.tender = Tender.fromJSON(tender)
-        this.parent_contracts = parent_contacts
+        this.parent_contracts = new Map(parent_contacts.map(parent_contact => [parent_contact.contract_number, parent_contact.parent_id]))
         if (this.tender.company.id != 0)
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
         this.strategy = TenderStageStrategy.getStrategy(this.tender)
@@ -75,6 +75,9 @@ export default class TenderFlowService {
             const new_contact_person = new ContactPerson(this.tender.contactPerson.id, this.tender.contactPerson.name, this.tender.contactPerson.phoneNumber, this.tender.contactPerson.email)
             this.tender.company.addContactPerson(new_contact_person)
         }
+        // Устанавливаем parent_id, если есть в таблице
+        this.tender.parentContract.parent_id = this.parent_contracts.get(this.tender.parentContract.contract_number) || 0
+        console.log(this.tender.parentContract)
         const result = await (await fetch(`/api/tender/${this.tender.id}`, {
             method: 'POST',
             headers: {

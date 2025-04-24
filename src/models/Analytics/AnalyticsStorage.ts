@@ -145,7 +145,7 @@ export default class AnalyticStorage {
                 NULL, 
                 NULL, 
                 'Итого', 
-                SUM(price) 
+                COALESCE(SUM(price) - SUM(parent_price),0) 
             FROM tenders_data
             
             UNION ALL
@@ -155,7 +155,7 @@ export default class AnalyticStorage {
                 NULL, 
                 NULL, 
                 'Остаток', 
-                SUM(price) - SUM(parent_price) 
+                COALESCE(SUM(price) - SUM(parent_price),0) 
             FROM tenders_data;
 `, [startDate, endDate, contract_number])).rows
         if (format)

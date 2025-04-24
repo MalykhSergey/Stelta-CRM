@@ -1,27 +1,20 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronUp} from '@fortawesome/free-solid-svg-icons';
 import styles from './DropDownList.module.css';
 
 /**
- * Параметры универсального дропдауна со списком строковых полей
- * @template T
+ * Параметры дропдауна со списком строковых полей
  */
-export interface DropDownListProps<T> {
+export interface DropDownListProps {
     /** Массив объектов */
-    items: T[];
-    /** Ключ поля для уникального идентификатора */
-    keyField: keyof T;
-    /** Ключ поля для отображаемого текста */
-    labelField: keyof T;
+    items: string[];
     /** Коллбэк при выборе элемента */
-    onSelect?: (item: T) => void;
+    onChange: (value: string) => void;
     /** Имя поля ввода */
     name?: string;
     /** Значение по умолчанию */
     defaultValue?: string;
-    /** Значение по умолчанию */
-    emptyValue: T;
     /** Плейсхолдер для поля поиска */
     placeholder?: string;
     /** Заблокировать ввод */
@@ -31,42 +24,27 @@ export interface DropDownListProps<T> {
 /**
  * Универсальный компонент DropDownList
  * Выводит инпут с поиском и выпадающий список
- * @template T
  */
-export function DropDownList<T>({
-                                    items,
-                                    keyField,
-                                    labelField,
-                                    onSelect,
-                                    name = 'dropdown',
-                                    defaultValue = '',
-                                    emptyValue,
-                                    placeholder = '',
-                                    disabled = false,
-                                }: DropDownListProps<T>) {
-    const [query, setQuery] = useState<string>('');
-    const updateQuery = (value: string) => {
-        if (!value)
-            onSelect(emptyValue)
-        setQuery(value)
+export function DropDownList({
+                                 items,
+                                 onChange,
+                                 name = 'dropdown',
+                                 defaultValue = '',
+                                 placeholder = '',
+                                 disabled = false,
+                             }: DropDownListProps) {
+    const [value, setValue] = useState(defaultValue)
+    const updateValue = (new_value: string) => {
+        setValue(new_value);
+        onChange(new_value);
     }
-    useEffect(() => {
-        setQuery(defaultValue || '')
-    }, [defaultValue])
-    // Фильтрация по подстроке (регистр не учитывается)
     const filteredItems = useMemo(() => {
-        if (!query) return items;
-        const lower = query.toLowerCase();
+        if (!value) return items;
+        const lower = value.toLowerCase();
         return items.filter(item => {
-            const fieldValue = String(item[labelField] ?? '');
-            return fieldValue.toLowerCase().includes(lower);
+            return item.toLowerCase().includes(lower);
         });
-    }, [items, query, labelField]);
-    useEffect(() => {
-        if (filteredItems.length == 1) {
-            onSelect(filteredItems[0])
-        }
-    }, [filteredItems])
+    }, [items, value]);
     return (
         <div className={styles.container}>
             <input
@@ -74,10 +52,10 @@ export function DropDownList<T>({
                 name={name}
                 type="search"
                 className={styles.input}
-                value={query}
+                value={value}
                 placeholder={placeholder}
                 disabled={disabled}
-                onChange={e => updateQuery(e.target.value)}
+                onChange={e => updateValue(e.target.value)}
             />
             {!disabled && <FontAwesomeIcon
                 icon={faChevronUp}
@@ -85,13 +63,15 @@ export function DropDownList<T>({
             />}
             {filteredItems.length > 0 && (
                 <div className={styles.listContainer}>
-                    {filteredItems.map(item => (
+                    {filteredItems.map((item,id) => (
                         <div
-                            key={String(item[keyField])}
+                            key={id}
                             className={styles.item}
-                            onMouseDown={() => onSelect ? onSelect(item) : setQuery(item[keyField] as string)}
+                            onMouseDown={() => {
+                                updateValue(item)
+                            }}
                         >
-                            {String(item[labelField])}
+                            {item}
                         </div>
                     ))}
                 </div>
