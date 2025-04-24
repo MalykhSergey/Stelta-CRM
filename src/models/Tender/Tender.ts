@@ -71,8 +71,8 @@ export class Tender {
         tender.initialMaxPrice = row.initial_max_price
         tender.price = row.price
         tender.date1_start = row.date1_start
-        tender.contractNumber = row.contract_number
-        tender.contractDate = row.contract_date
+        tender.contractNumber = row.contract_number || ''
+        tender.contractDate = row.contract_date || ''
         tender.isFrameContract = row.is_frame_contract
         tender.date1_finish = row.date1_finish
         tender.date2_finish = row.date2_finish
