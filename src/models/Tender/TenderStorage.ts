@@ -7,6 +7,7 @@ import {ContactPerson} from '../Company/ContactPerson/ContactPerson';
 import FileName, {FileType} from "./FileName";
 import {Tender} from "./Tender";
 import ParentContract from "@/models/Tender/ParentContract";
+import {TenderType} from "@/models/Tender/TenderType";
 
 class TenderStorage {
 
@@ -39,17 +40,13 @@ class TenderStorage {
 
     async update(tender: Tender) {
         try {
-            if (tender.contactPerson.name != '') {
-                if (tender.contactPerson.id != 0) {
-                    const result = await ContactPersonStorage.updateContactPerson(tender.contactPerson.id, tender.contactPerson.name, tender.contactPerson.phoneNumber, tender.contactPerson.email)
-                    if (result?.error)
-                        return result
-                } else {
-                    const result = await ContactPersonStorage.createContactPerson(tender.contactPerson, tender.company.id)
-                    if (result?.error)
-                        return result
-                    tender.contactPerson.id = result
-                }
+            let not_found_parent = false;
+            if (tender.type == TenderType.Order && (!tender.parentContract.parent_id)) {
+                const parentId = await this.getParentContractByNumber(tender.parentContract.contract_number);
+                if (parentId)
+                    tender.parentContract.parent_id = parentId
+                else
+                    not_found_parent = true;
             }
             tender.price = tender.price.replace(',', '.')
             tender.initialMaxPrice = tender.initialMaxPrice.replace(',', '.')
@@ -85,7 +82,7 @@ class TenderStorage {
                 tender.type,
                 tender.status,
                 tender.fundingType,
-                tender.parentContract.parent_id,
+                tender.parentContract.parent_id ? tender.parentContract.parent_id : null,
                 tender.company.id ? tender.company.id : null,
                 tender.name,
                 tender.shortName,
@@ -98,8 +95,8 @@ class TenderStorage {
                 tender.date1_finish,
                 tender.date2_finish,
                 tender.date_finish,
-                tender.contractNumber,
-                tender.contractDate,
+                tender.contractNumber ? tender.contractNumber : null,
+                tender.contractDate ? tender.contractDate : null,
                 tender.isFrameContract,
                 tender.comments[0],
                 tender.comments[1],
@@ -116,6 +113,8 @@ class TenderStorage {
                 rebiddingPrice.price = rebiddingPrice.price.replace(',', '.')
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
+            if (not_found_parent)
+                return {error: 'Тендер сохранён, но договор для связывания не найден!'};
         } catch (e) {
             return handleDatabaseError(e,
                 {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
@@ -182,8 +181,16 @@ class TenderStorage {
         return tender
     }
 
-    async getParentContracts():Promise<ParentContract[]>{
-        return (await connection.query(`SELECT id as parent_id, contract_number FROM TENDERS WHERE contract_number IS NOT NULL`)).rows
+    async getParentContracts(): Promise<ParentContract[]> {
+        return (await connection.query(`SELECT id as parent_id, contract_number FROM TENDERS WHERE contract_number IS NOT NULL LIMIT 300;`)).rows
+    }
+
+    async getParentContractByNumber(contract_number: string): Promise<number | undefined> {
+        const rows = (await connection.query('SELECT id FROM tenders WHERE contract_number = $1;', [contract_number])).rows;
+        if (rows.length > 0) {
+            return rows[0].id
+        }
+        return undefined
     }
 
     async addFile(transaction: PoolClient, tenderId: number, fileName: string, stage: number, documentRequestId?: string | undefined, rebiddingPriceId?: string | undefined) {
@@ -267,7 +274,7 @@ class TenderStorage {
         }
     }
 
-    async searchTenders(status: number|null, name: string, reg_number: string, company_name: string, start: string, end: string, page:number): Promise<Tender[]> {
+    async searchTenders(status: number | null, name: string, reg_number: string, company_name: string, start: string, end: string, page: number): Promise<Tender[]> {
         return connection.query(`
         SELECT tenders.*, companies.id AS company_id, companies.name AS company_name FROM tenders
         LEFT JOIN companies ON companies.id = company_id
@@ -279,7 +286,7 @@ class TenderStorage {
         ($5 = '' OR date1_start >= $5::date) AND
         ($6 = '' OR date1_start <= $6::date)
         LIMIT 50 OFFSET $7
-        `, [status, name, reg_number, company_name, start, end, page*50]).then(value => value.rows.map(row => Tender.fromQueryRow(row)))
+        `, [status, name, reg_number, company_name, start, end, page * 50]).then(value => value.rows.map(row => Tender.fromQueryRow(row)))
     }
 
 }

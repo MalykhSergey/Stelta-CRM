@@ -376,7 +376,7 @@ CREATE TABLE public.tenders (
     comment3 character varying,
     comment4 character varying,
     comment5 character varying,
-    contract_number character varying,
+    contract_number character varying UNIQUE,
     contract_date date,
     company_id integer,
     date_finish timestamp without time zone DEFAULT now() NOT NULL,
