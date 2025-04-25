@@ -46,6 +46,7 @@ export default class AnalyticStorage {
             SELECT
                 companies.name AS company_name,
                 tenders.name,
+                tenders.initial_max_price${format?'':'::float'},
                 COALESCE(reb_price, tenders.price)${format?'':'::float'} AS price,
                 CASE WHEN date2_finish > date1_start THEN TO_CHAR(date2_finish, 'DD.MM.YYYY') ELSE '' END,
                 CASE
@@ -71,6 +72,7 @@ export default class AnalyticStorage {
             return rows
                 .map(row => {
                     row.price = AnalyticStorage.transformNumber(row.price)
+                    row.initial_max_price = AnalyticStorage.transformNumber(row.initial_max_price)
                     return row
                 })
         return rows

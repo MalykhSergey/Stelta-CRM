@@ -57,12 +57,13 @@ class AnalyticsService {
             new TableHeader([
                 new HeaderCell("Заказчик"),
                 new HeaderCell("Объект"),
+                new HeaderCell("НМЦК (без НДС)"),
                 new HeaderCell("Стоимость (без НДС)"),
                 new HeaderCell("Дата предоставления ТКП"),
                 new HeaderCell("Статус"),
             ])
         ];
-        return {headers: headers, data: data, colSizes: [0.2, 0.4, 0.1, 0.1, 0.2,]};
+        return {headers: headers, data: data, colSizes: [0.15, 0.3, 0.15, 0.15, 0.1, 0.15,]};
     }
 
     static async getOrdersAnalytics(startDate: Date, endDate: Date, contractNumber: string, format: boolean) {
