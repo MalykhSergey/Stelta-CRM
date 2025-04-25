@@ -9,6 +9,8 @@ import TenderStageStrategy from "@/app/tender/[tenderId]/TenderStrategy";
 import {TenderType} from "@/models/Tender/TenderType";
 import ParentContract from "@/models/Tender/ParentContract";
 import {enableStaticRendering} from "mobx-react-lite";
+import RequestExecutor from "@/app/components/RequestExecutor/RequestExecutor";
+
 enableStaticRendering(typeof window === "undefined")
 
 enum ActiveTenderStatus {
@@ -61,38 +63,32 @@ export default class TenderFlowService {
                 showMessage("Выберите организацию!", "error")
                 return false
             }
-            const result = await (await fetch(`/api/contact_person?companyId=${this.tender.company.id}`, {
+            const url = `/api/contact_person?companyId=${this.tender.company.id}`;
+            const params = {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(this.tender.contactPerson)
-            })).json()
-            if (result?.error) {
-                showMessage(result.error)
-                return false
-            }
-            showMessage("Создано новое контактное лицо!", "successful")
-            this.tender.contactPerson.id = result
-            const new_contact_person = new ContactPerson(this.tender.contactPerson.id, this.tender.contactPerson.name, this.tender.contactPerson.phoneNumber, this.tender.contactPerson.email)
-            this.tender.company.addContactPerson(new_contact_person)
+            };
+            const createContactExecutor = new RequestExecutor<number>(url,params,(result)=>{
+                showMessage("Создано новое контактное лицо!", "successful")
+                this.tender.contactPerson.id = result
+                const new_contact_person = new ContactPerson(this.tender.contactPerson.id, this.tender.contactPerson.name, this.tender.contactPerson.phoneNumber, this.tender.contactPerson.email)
+                this.tender.company.addContactPerson(new_contact_person)
+            })
+            await createContactExecutor.execute();
         }
         // Устанавливаем parent_id, если есть в таблице
         this.tender.parentContract.parent_id = this.parent_contracts.get(this.tender.parentContract.contract_number) || 0
-        const result = await (await fetch(`/api/tender/${this.tender.id}`, {
+        const update_url = `/api/tender/${this.tender.id}`;
+        const update_params = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.tender)
-        })).json()
-        if (result?.error) {
-            showMessage(result.error)
-            return false;
-        } else {
-            showMessage("Данные успешно сохранены!", "successful")
-        }
-        return true;
+        };
+        const updateTenderExecutor = new RequestExecutor<void>(update_url, update_params, () => showMessage("Данные успешно сохранены!", "successful"))
+        return await updateTenderExecutor.execute();
     }
 
     async deleteHandler() {

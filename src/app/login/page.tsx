@@ -4,6 +4,8 @@ import {FormEvent, useEffect} from "react"
 import {useAuth} from "../AuthContext"
 import {showMessage} from "../components/Alerts/Alert"
 import styles from "./page.module.css"
+import RequestExecutor from "@/app/components/RequestExecutor/RequestExecutor";
+import {User} from "@/models/User/User";
 
 export default function LoginPage() {
     const router = useRouter()
@@ -18,19 +20,19 @@ export default function LoginPage() {
         e.preventDefault()
         const loginForm = new FormData(e.currentTarget)
         const name = loginForm.get("name") as string
-        const result = await (await fetch(`/api/login`, {
+        const url = `/api/login`;
+        const params = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(
                 {name: name, password: loginForm.get("password")})
-        })).json()
-        if (!("error" in result)) {
+        };
+        const login_executor = new RequestExecutor<User>(url, params, (result) => {
             showMessage(`Добро пожаловать ${name}!`, "successful")
             authContext.setUser(result)
             router.push('/')
-        } else {
-            showMessage(result.error, "error");
-        }
+        });
+        await login_executor.execute();
     }
     return (
         <form onSubmit={loginHandler} className={`card ${styles.login}`}>
