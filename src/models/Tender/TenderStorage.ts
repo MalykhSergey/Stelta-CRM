@@ -114,7 +114,7 @@ class TenderStorage {
                 await connection.query("UPDATE rebidding_prices SET price = $2 WHERE id =  $1", [rebiddingPrice.id, rebiddingPrice.price])
             }
             if (not_found_parent)
-                return {error: 'Тендер сохранён, но договор для связывания не найден!'};
+                return {error: 'Тендер сохранён, но рамочный договор для связывания не найден!'};
         } catch (e) {
             return handleDatabaseError(e,
                 {'23505': 'Ошибка обновления тендера: одно из полей нарушает уникальность!',},
@@ -182,11 +182,16 @@ class TenderStorage {
     }
 
     async getParentContracts(): Promise<ParentContract[]> {
-        return (await connection.query(`SELECT id as parent_id, contract_number FROM TENDERS WHERE contract_number IS NOT NULL LIMIT 300;`)).rows
+        return (await connection.query(`
+            SELECT id as parent_id, contract_number 
+            FROM tenders 
+            WHERE contract_number IS NOT NULL AND is_frame_contract
+            ORDER BY id DESC
+            LIMIT 300;`)).rows
     }
 
     async getParentContractByNumber(contract_number: string): Promise<number | undefined> {
-        const rows = (await connection.query('SELECT id FROM tenders WHERE contract_number = $1;', [contract_number])).rows;
+        const rows = (await connection.query('SELECT id FROM tenders WHERE contract_number = $1 and is_frame_contract;', [contract_number])).rows;
         if (rows.length > 0) {
             return rows[0].id
         }
