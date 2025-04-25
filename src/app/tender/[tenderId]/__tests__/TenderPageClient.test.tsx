@@ -6,6 +6,7 @@ import {Tender} from '@/models/Tender/Tender';
 import Company from "@/models/Company/Company";
 import {deleteTender} from "@/models/Tender/TenderService";
 import {showMessage} from "@/app/components/Alerts/Alert";
+import ParentContract from "@/models/Tender/ParentContract";
 
 vi.mock('@/app/AuthContext', () => ({
     useAuth: () => ({
@@ -55,6 +56,7 @@ describe('TenderPageClient Component', () => {
     const tenderMock = new Tender();
     tenderMock.company = new Company(0, '')
     const companiesData: Company[] = [new Company(0, '')];
+    const parentsContracts: ParentContract[] = [];
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -66,6 +68,7 @@ describe('TenderPageClient Component', () => {
             <TenderPageClient
                 tender={JSON.stringify({...tenderMock, status: 2})}
                 companies={JSON.stringify(companiesData)}
+                parent_contacts={parentsContracts}
             />
         );
 
@@ -101,6 +104,7 @@ describe('TenderPageClient Component', () => {
             <TenderPageClient
                 tender={JSON.stringify({...tenderMock, status: 2})}
                 companies={JSON.stringify(companiesData)}
+                parent_contacts={parentsContracts}
             />
         );
 
@@ -129,6 +133,7 @@ describe('TenderPageClient Component', () => {
             <TenderPageClient
                 tender={JSON.stringify(tenderDataStatus0)}
                 companies={JSON.stringify(companiesData)}
+                parent_contacts={parentsContracts}
             />
         );
 

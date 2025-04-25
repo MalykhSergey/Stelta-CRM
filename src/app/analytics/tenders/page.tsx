@@ -22,6 +22,8 @@ export default async function page({searchParams,}: {
     ];
     return (<>
         <FilterForm fields={fields}/>
-        {new JsxTable(table.headers, table.data, table.colSizes).render()}
+        <div className='align-left-2'>
+            {new JsxTable(table.headers, table.data, table.colSizes).render()}
+        </div>
     </>);
 }
