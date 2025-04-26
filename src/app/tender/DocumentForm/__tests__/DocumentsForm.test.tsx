@@ -77,7 +77,7 @@ describe('DocumentsForm', () => {
 
         mockProps.fileNames.forEach(file => {
             const link = screen.getByText(file.name).closest('a');
-            expect(link).toHaveAttribute('href', `/api/download/?fileName=${encodeURIComponent(FileName.getFilePath(file))}`);
+            expect(link).toHaveAttribute('href', `/api/file/?fileName=${encodeURIComponent(FileName.getFilePath(file))}`);
         });
     });
 

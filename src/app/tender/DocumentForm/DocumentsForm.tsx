@@ -27,7 +27,7 @@ interface DocumentsFormProps {
     onDelete?: () => void
 }
 
-const SUFFIX = `/api/download/?fileName`;
+const SUFFIX = `/api/file/?fileName`;
 
 const DocumentsForm: React.FC<DocumentsFormProps> = observer(
     ({
@@ -38,8 +38,7 @@ const DocumentsForm: React.FC<DocumentsFormProps> = observer(
          title,
          isEditable,
          isShowDelete: isShowDelete,
-         onDelete = () => {
-         },
+         onDelete = () => {},
          isOpened = false,
      }) => {
         const {showConfirmDialog} = useConfirmDialog();

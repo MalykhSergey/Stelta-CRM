@@ -1,7 +1,7 @@
 import FileName from "@/models/Tender/FileName";
 import {makeAutoObservable, runInAction} from "mobx";
 import {showMessage} from "@/app/components/Alerts/Alert";
-import {deleteHandler} from "@/app/tender/DocumentForm/Handler";
+import RequestExecutor from "@/app/components/RequestExecutor/RequestExecutor";
 
 
 export default class DocumentsFileStorage {
@@ -24,7 +24,7 @@ export default class DocumentsFileStorage {
 
     add_file(encodedFileName: string, tenderId: number, specialPlaceName: string, specialPlaceId: number, data: File) {
         const file_name = new FileName(0, tenderId, specialPlaceId, data.name, FileName.defineFileType(specialPlaceName))
-        const url = `/api/upload?fileName=${encodedFileName}&tenderId=${file_name.tenderId}&${specialPlaceName}=${specialPlaceId}`
+        const url = `/api/file?fileName=${encodedFileName}&tenderId=${file_name.tenderId}&${specialPlaceName}=${specialPlaceId}`
         const xhr = new XMLHttpRequest();
         const uploading_file = makeAutoObservable({file_name: file_name, progress: 0, request: xhr});
         xhr.upload.addEventListener("progress", (event) => {
@@ -61,14 +61,14 @@ export default class DocumentsFileStorage {
     }
 
     async remove_file(file_name: FileName) {
-        const result = await deleteHandler({...file_name})
-        if (result?.error) {
-            showMessage(result.error)
-        } else {
+        console.log(file_name)
+        const encodedFileName = encodeURIComponent(JSON.stringify(file_name))
+        const delete_executor = new RequestExecutor<void>(`/api/file?fileName=${encodedFileName}`,{method:'DELETE'},()=>{
             const index = this._source_ref.findIndex(item => FileName.compare(item, file_name));
             if (index > -1)
                 this._source_ref.splice(index, 1)
-        }
+        })
+        await delete_executor.execute();
     }
 
     cancel_uploading(uploading_file: { file_name: FileName, progress: number, request: XMLHttpRequest }) {
