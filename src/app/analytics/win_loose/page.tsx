@@ -20,11 +20,8 @@ export default async function page({searchParams,}: {
         {label: 'От:', name: 'start', type: 'date', defaultValue: startDate.toISOString().slice(0, 10)},
         {label: 'До:', name: 'end', type: 'date', defaultValue: endDate.toISOString().slice(0, 10)},
     ];
-    return <div style={{
-        width: '100%',
-        maxWidth: '1200px'
-    }}>
+    return <>
         <FilterForm fields={fields}/>
         {new RollupTable(table.headers, table.data, table.colSizes).render()}
-    </div>
+    </>
 }

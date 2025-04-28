@@ -84,8 +84,10 @@ export default class AnalyticStorage {
                 COALESCE(companies.name, 'Общий итог') AS company_name,
                 COALESCE(COUNT(*) FILTER (WHERE status >= 5), 0)${format ? '' : '::int'} AS win_count,
                 COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status >= 5), 0)${format ? '' : '::float'} AS win_sum,
-                COALESCE(COUNT(*) FILTER (WHERE status <= -4), 0)${format ? '' : '::int'} AS loose_count,
-                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status <= -4), 0)${format ? '' : '::float'} AS loose_sum
+                COALESCE(COUNT(*) FILTER (WHERE status = -4), 0)${format ? '' : '::int'} AS loose_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status = -4), 0)${format ? '' : '::float'} AS loose_sum,
+                COALESCE(COUNT(*) FILTER (WHERE status < 0 AND status > -4), 0)${format ? '' : '::int'} AS not_participate_count,
+                COALESCE(SUM(COALESCE(reb_price, tenders.price)) FILTER (WHERE status < 0 AND status > -4), 0)${format ? '' : '::float'} AS not_participate_sum
             FROM public.tenders
             LEFT JOIN (
                 SELECT DISTINCT ON (tender_id) tender_id, price AS reb_price
@@ -93,13 +95,14 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE contract_date >= $1 and contract_date <= $2  AND NOT is_frame_contract
+            WHERE date1_start >= $1 and date1_start <= $2 AND NOT is_frame_contract
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`, [startDate, endDate])).rows
         if (format) {
             return rows.map(row => {
                 row.win_sum = AnalyticStorage.transformNumber(row.win_sum)
                 row.loose_sum = AnalyticStorage.transformNumber(row.loose_sum)
+                row.not_participate_sum = AnalyticStorage.transformNumber(row.not_participate_sum)
                 return row
             })
         }

@@ -39,8 +39,11 @@ class AnalyticsService {
                 new HeaderCell("Заказчик", 1, 2),
                 new HeaderCell("Победили", 2),
                 new HeaderCell("Проиграли", 2),
+                new HeaderCell("Не учавствуем", 2),
             ]),
             new TableHeader([
+                new HeaderCell("количество"),
+                new HeaderCell("сумма (без НДС)"),
                 new HeaderCell("количество"),
                 new HeaderCell("сумма (без НДС)"),
                 new HeaderCell("количество"),
