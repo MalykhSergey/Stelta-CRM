@@ -1,3 +1,4 @@
+"use client"
 import styles from './MultiSelectDropDown.module.css';
 import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -16,8 +17,7 @@ export default function MultiSelectDropdown({name, items, labels, defaultValue}:
         defaultValue ? defaultValue.split(',') : []
     )
     const ref = useRef<HTMLDivElement>(null)
-
-    // Закрыть дропдаун по клику вне
+    // Закрыть дропдаун при клике вне
     useEffect(() => {
         function handleClickOutside(e: MouseEvent) {
             if (ref.current && !ref.current.contains(e.target as Node)) {

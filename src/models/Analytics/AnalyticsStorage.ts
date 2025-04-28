@@ -3,7 +3,8 @@ import {formatValue} from "react-currency-input-field";
 import {getFundingTypeName} from "@/models/Tender/FundingType";
 
 export default class AnalyticStorage {
-    static async getCompaniesFullAnalytics(startDate: Date, endDate: Date, format: boolean) {
+    static async getCompaniesFullAnalytics(startDate: Date, endDate: Date, statuses: number[], format: boolean) {
+        const status_ranges = AnalyticStorage.defineStatusRange(statuses);
         const rows = (await connection.query(`
             SELECT
                 COALESCE(companies.name, 'Общий итог') AS company_name,
@@ -24,10 +25,21 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND NOT is_frame_contract
+            WHERE 
+                date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND
+                NOT is_frame_contract AND
+                 (($3 AND status = -4) OR 
+                  ($4 AND (status < 0 AND status != -4)) OR 
+                  ($5::smallint[] IS NULL OR status = ANY($5)))
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`
-            , [startDate.toISOString().slice(0, 10), endDate.toISOString().slice(0, 10)])).rows
+            , [
+                startDate.toISOString().slice(0, 10),
+                endDate.toISOString().slice(0, 10),
+                status_ranges.is_loose,
+                status_ranges.not_participate,
+                status_ranges.other_named,
+            ])).rows
         if (format) {
             return rows.map(row => {
                 row.status_high_sum = AnalyticStorage.transformNumber(row.status_high_sum)
@@ -41,7 +53,8 @@ export default class AnalyticStorage {
         return rows
     }
 
-    static async getTendersAnalytics(startDate: Date, endDate: Date, format: boolean) {
+    static async getTendersAnalytics(startDate: Date, endDate: Date, statuses: number[], format: boolean) {
+        const status_ranges = AnalyticStorage.defineStatusRange(statuses);
         const rows = (await connection.query(`
             SELECT
                 companies.name AS company_name,
@@ -66,8 +79,16 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day'
-            ORDER BY CASE WHEN status >= 5 THEN 0 ELSE 1 END, funding_type desc;`, [startDate, endDate])).rows
+            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND
+                 (($3 AND status = -4) OR 
+                  ($4 AND (status < 0 AND status != -4)) OR 
+                  ($5::smallint[] IS NULL OR status = ANY($5)))
+            ORDER BY CASE WHEN status >= 5 THEN 0 ELSE 1 END, funding_type desc;`,
+            [startDate,
+                endDate,
+                status_ranges.is_loose,
+                status_ranges.not_participate,
+                status_ranges.other_named,])).rows
         if (format)
             return rows
                 .map(row => {
@@ -78,7 +99,8 @@ export default class AnalyticStorage {
         return rows
     }
 
-    static async getCompaniesWinLooseAnalytics(startDate: Date, endDate: Date, format: boolean) {
+    static async getCompaniesWinLooseAnalytics(startDate: Date, endDate: Date, statuses: number[], format: boolean) {
+        const status_ranges = AnalyticStorage.defineStatusRange(statuses);
         const rows = (await connection.query(`
         SELECT
                 COALESCE(companies.name, 'Общий итог') AS company_name,
@@ -95,9 +117,15 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND NOT is_frame_contract
+            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND NOT is_frame_contract  AND
+                 (($3 AND status = -4) OR 
+                  ($4 AND (status < 0 AND status != -4)) OR 
+                  ($5::smallint[] IS NULL OR status = ANY($5)))
             GROUP BY ROLLUP(companies.name)
-            ORDER BY companies.name NULLS LAST;`, [startDate, endDate])).rows
+            ORDER BY companies.name NULLS LAST;`, [startDate, endDate,
+            status_ranges.is_loose,
+            status_ranges.not_participate,
+            status_ranges.other_named,])).rows
         if (format) {
             return rows.map(row => {
                 row.win_sum = AnalyticStorage.transformNumber(row.win_sum)
@@ -109,7 +137,8 @@ export default class AnalyticStorage {
         return rows
     }
 
-    public static async getOrdersAnalytics(startDate: Date, endDate: Date, contract_number:string, format: boolean){
+    public static async getOrdersAnalytics(startDate: Date, endDate: Date, statuses: number[], contract_number: string, format: boolean) {
+        const status_ranges = AnalyticStorage.defineStatusRange(statuses);
         const rows = (await connection.query(`
             WITH 
             -- 1) Последние переторжки
@@ -137,7 +166,10 @@ export default class AnalyticStorage {
                   SELECT id 
                   FROM public.tenders 
                   WHERE contract_number = $3
-                )
+                ) AND
+                 (($4 AND status = -4) OR 
+                  ($5 AND (status < 0 AND status != -4)) OR 
+                  ($6::smallint[] IS NULL OR status = ANY($6)))
             ),
             
             -- 3) Информация по родительскому договору (единственная строка)
@@ -210,7 +242,10 @@ export default class AnalyticStorage {
               FROM summary
             ) AS sorted_data
             ORDER BY ord;
-`, [startDate, endDate, contract_number])).rows
+`, [startDate, endDate, contract_number,
+            status_ranges.is_loose,
+            status_ranges.not_participate,
+            status_ranges.other_named,])).rows
         if (format)
             return rows
                 .map(row => {
@@ -227,5 +262,21 @@ export default class AnalyticStorage {
             groupSeparator: ' ',
             decimalSeparator: ','
         })
+    }
+
+    private static defineStatusRange(statuses: number[]) {
+        const status_ranges = {
+            is_loose: false,
+            not_participate: false,
+            other_named: [] as number[] | null,
+        }
+        status_ranges.other_named = statuses.filter(status => {
+            status_ranges.is_loose = status_ranges.is_loose || status == -4
+            status_ranges.not_participate = status_ranges.not_participate || (status != -4 && status < 0)
+            return status >= 0;
+        })
+        if (status_ranges.other_named.length == 0 && !status_ranges.is_loose && !status_ranges.not_participate)
+            status_ranges.other_named = null
+        return status_ranges
     }
 }

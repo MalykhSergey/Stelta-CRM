@@ -31,14 +31,9 @@ export function FilterForm({fields}: Props) {
     })
 
     const handler = (form: FormData) => {
-        form.entries().forEach(value => {
-            console.log(value)
-        })
         const query = fields.reduce((acc, f) => {
             if (f.type === 'multiselect') {
                 const values = form.getAll(f.name) as string[]
-                console.log(values)
-                console.log(f.name)
                 if (values.length) {
                     acc[f.name] = values.join(',')
                 }
@@ -52,7 +47,10 @@ export function FilterForm({fields}: Props) {
     }
 
     return (
-        <form action={handler} id={styles.form} className='card'>
+        <form onSubmit={e => {
+            e.preventDefault()
+            handler(new FormData(e.currentTarget))
+        }} id={styles.form} className='card'>
             {fields.map(field => (
                 <div key={field.name} className='row-inputs'>
                     <label htmlFor={field.name}>{field.label}</label>

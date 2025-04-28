@@ -21,30 +21,32 @@ export async function GET(request: NextRequest, {
     const searchParams = request.nextUrl.searchParams
     const start_param = searchParams.get('start') as string
     const end_param = searchParams.get('end') as string
+    const statuses_param = searchParams.get('statuses') as string || ''
+    const statuses = statuses_param.split(',').map(value => parseInt(value))
     const {startDate, endDate} = getParamsDates(start_param, end_param)
     let file_name;
     switch ((await params).type) {
         case "company": {
-            tableData = await getCompaniesFullAnalytics(startDate, endDate, false)
+            tableData = await getCompaniesFullAnalytics(startDate, endDate, statuses, false)
             table = new CompanyFullAnalytics(tableData.headers, tableData.data, tableData.colSizes, true);
             file_name = `Аналитика по организациям ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')}.xlsx`;
             break
         }
         case "win_loose": {
-            tableData = await getCompaniesWinLooseAnalytics(startDate, endDate, false)
+            tableData = await getCompaniesWinLooseAnalytics(startDate, endDate, statuses, false)
             table = new CompanyWinLooseAnalytics(tableData.headers, tableData.data, tableData.colSizes, true);
             file_name = `Аналитика победили-проиграли ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')}.xlsx`;
             break
         }
         case "tenders": {
-            tableData = await getTendersAnalytics(startDate, endDate, false)
+            tableData = await getTendersAnalytics(startDate, endDate, statuses, false)
             table = new TendersAnalytics(tableData.headers, tableData.data, tableData.colSizes, false);
             file_name = `Аналитика по тендерам ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')}.xlsx`;
             break
         }
         case "orders": {
             const contract_number = searchParams.get('contract_number') || ''
-            tableData = await getOrdersAnalytics(startDate, endDate, contract_number, false)
+            tableData = await getOrdersAnalytics(startDate, endDate, statuses, contract_number, false)
             table = new OrdersAnalytics(tableData.headers, tableData.data, tableData.colSizes, false);
             file_name = `Аналитика по заказам ${startDate.toLocaleDateString('ru')}-${endDate.toLocaleDateString('ru')} для договора ${contract_number}.xlsx`;
             break
