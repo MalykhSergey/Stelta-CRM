@@ -26,5 +26,6 @@ export default class TendersAnalytics extends ExcelTable {
             {width: 50},
         ];
         this.sheet.getColumn('D').alignment = {horizontal: 'center', vertical: 'middle'};
+        this.sheet.getColumn('E').alignment = {horizontal: 'center', vertical: 'middle'};
     }
 }
