@@ -24,7 +24,7 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start >= $1 AND date1_start <= $2 AND NOT is_frame_contract
+            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND NOT is_frame_contract
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`
             , [startDate.toISOString().slice(0, 10), endDate.toISOString().slice(0, 10)])).rows
@@ -66,7 +66,7 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start >= $1 and date1_start <= $2
+            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day'
             ORDER BY CASE WHEN status >= 5 THEN 0 ELSE 1 END, funding_type desc;`, [startDate, endDate])).rows
         if (format)
             return rows
@@ -95,7 +95,7 @@ export default class AnalyticStorage {
                 ORDER BY tender_id, id DESC
                 ) AS reb_prices ON reb_prices.tender_id = tenders.id
             JOIN public.companies ON tenders.company_id = companies.id
-            WHERE date1_start >= $1 and date1_start <= $2 AND NOT is_frame_contract
+            WHERE date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day' AND NOT is_frame_contract
             GROUP BY ROLLUP(companies.name)
             ORDER BY companies.name NULLS LAST;`, [startDate, endDate])).rows
         if (format) {
@@ -132,7 +132,7 @@ export default class AnalyticStorage {
                 COALESCE(lr.reb_price, t.price) AS child_price
               FROM public.tenders t
               LEFT JOIN latest_reb lr ON lr.tender_id = t.id
-              WHERE t.date1_start BETWEEN $1 AND $2
+              WHERE t.date1_start BETWEEN $1 AND $2::date + INTERVAL '1 day'
                 AND t.parent_id = (
                   SELECT id 
                   FROM public.tenders 
