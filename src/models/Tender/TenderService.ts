@@ -1,18 +1,18 @@
 "use server"
 
-import tenderStorage from "./TenderStorage";
-import {authAction} from "../User/UserService";
-import {CalendarService} from "@/models/Tender/Calendar/CalendarService";
-import {User} from "@/models/User/User";
 import logger from "@/config/Logger";
-import {Tender} from "@/models/Tender/Tender";
+import { CalendarService } from "@/models/Tender/Calendar/CalendarService";
 import ParentContract from "@/models/Tender/ParentContract";
+import { Tender } from "@/models/Tender/Tender";
+import { User } from "@/models/User/User";
+import { authAction } from "../User/UserService";
+import tenderStorage from "./TenderStorage";
 
 export async function createTender(status: number) {
     return authAction(async (user: User) => {
-            logger.info(`${user.name} create tender`);
-            return await tenderStorage.createTender(status)
-        }
+        logger.info(`${user.name} create tender`);
+        return await tenderStorage.createTender(status)
+    }
     )
 }
 
@@ -77,6 +77,6 @@ export async function updateTenderById(tender: Tender) {
     })
 }
 
-export async function search_tenders(status: number | null, name: string, reg_number: string, company_name: string, startDate: string, endDate: string, page: number): Promise<Tender[]> {
-    return tenderStorage.searchTenders(status, name, reg_number, company_name, startDate, endDate, page);
+export async function search_tenders(status: number | null, type: number | null, funding_type: number | null, name: string, reg_number: string, company_name: string, startDate: string, endDate: string, page: number): Promise<{ remained: boolean, tenders: Tender[] }> {
+    return tenderStorage.searchTenders(status, type, funding_type, name, reg_number, company_name, startDate, endDate, page);
 }

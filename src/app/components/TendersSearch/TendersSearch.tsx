@@ -1,6 +1,8 @@
 "use client"
 import { PrimaryButton } from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
+import { getFundingTypeName } from "@/models/Tender/FundingType";
 import getStatusName from "@/models/Tender/Status";
+import { getTenderTypeName } from "@/models/Tender/TenderType";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -13,15 +15,19 @@ export default function TendersSearch() {
     const updateParams = (formData: FormData) => {
         const params = new URLSearchParams(searchParams);
         const status = formData.get('status') as string
+        const type = formData.get('type') as string
+        const funding_type = formData.get('funding_type') as string
         const name = formData.get('name') as string
         const reg_number = formData.get('reg_number') as string
-        const company = formData.get('company') as string
+        const company_name = formData.get('company_name') as string
         const start = formData.get('start') as string
         const end = formData.get('end') as string
         params.set('status', status)
+        params.set('type', type)
+        params.set('funding_type', funding_type)
         params.set('name', name)
         params.set('reg_number', reg_number)
-        params.set('company', company)
+        params.set('company_name', company_name)
         params.set('start', start)
         params.set('end', end)
         router.push(pathname + '?' + params.toString())
@@ -48,6 +54,25 @@ export default function TendersSearch() {
                     <option value="4">{getStatusName(4)}</option>
                     <option value="5">{getStatusName(5)}</option>
                     <option value="6">{getStatusName(6)}</option>
+                </select>
+            </div>
+            <div>
+                <label htmlFor='type' className={styles.filterLabel}>Тип:</label>
+                <select name='type' className='input'>
+                    <option value="">Любой</option>
+                    <option value="0">{getTenderTypeName(0)}</option>
+                    <option value="1">{getTenderTypeName(1)}</option>
+                    <option value="2">{getTenderTypeName(2)}</option>
+                    <option value="3">{getTenderTypeName(3)}</option>
+                </select>
+            </div>
+            <div>
+                <label htmlFor='funding_type' className={styles.filterLabel}>Принадлежность:</label>
+                <select name='funding_type' className='input'>
+                    <option value="">Любая</option>
+                    <option value="0">{getFundingTypeName(0)}</option>
+                    <option value="1">{getFundingTypeName(1)}</option>
+                    <option value="2">{getFundingTypeName(2)}</option>
                 </select>
             </div>
             <div className='column'>
