@@ -26,7 +26,8 @@ export default function ClientCompanies({ companiesProps }: { companiesProps: st
     }
 
     async function updateHandler(updated_company: ICompany) {
-        const result = await updateCompany({...updated_company})
+        // Контактные лица не нужны
+        const result = await updateCompany({ ...updated_company, contactPersons: [] })
         if (result?.error)
             showMessage(result.error)
         else {

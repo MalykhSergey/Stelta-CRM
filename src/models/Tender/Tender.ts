@@ -310,4 +310,14 @@ export class Tender {
                 return 0
         }
     }
+
+    serialize(simplify = false) {
+        if (simplify){
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const {stagedFileNames,...data} = this
+            return data
+        }
+        else
+            return this
+    }
 }  

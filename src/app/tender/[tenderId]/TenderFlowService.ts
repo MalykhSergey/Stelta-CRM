@@ -85,7 +85,13 @@ export default class TenderFlowService {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(this.tender)
+            // Сокращаем объект, удаляем файлы и лишние контактные лица
+            body: JSON.stringify(this.tender, (key, value) => {
+                if (value && typeof value.serialize === 'function') {
+                    return value.serialize(true);
+                }
+                return value;
+            })
         };
         const updateTenderExecutor = new RequestExecutor<void>(update_url, update_params, () => showMessage("Данные успешно сохранены!", "successful"))
         return await updateTenderExecutor.execute();
