@@ -1,12 +1,13 @@
 "use client"
+import { PrimaryButton } from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
 import getStatusName from "@/models/Tender/Status";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "../TendersFilter/TendersFilter.module.css";
-import {useRouter, useSearchParams} from "next/navigation";
-import {PrimaryButton} from "@/app/components/Buttons/PrimaryButton/PrimaryButton";
 
 export default function TendersSearch() {
+    const pathname = usePathname()
     const searchParams = useSearchParams();
     const router = useRouter();
     const updateParams = (formData: FormData) => {
@@ -23,12 +24,15 @@ export default function TendersSearch() {
         params.set('company', company)
         params.set('start', start)
         params.set('end', end)
-        router.push('./?' + params.toString())
+        router.push(pathname + '?' + params.toString())
     }
     return (
-        <form className={styles.filter} action={updateParams}>
-            <div className='row' style={{alignItems: 'center', gap: '20px'}}>
-                <FontAwesomeIcon icon={faSearch} className='icon' style={{height: '20px'}}/>
+        <form className={styles.filter} onSubmit={e => {
+            e.preventDefault()
+            updateParams(new FormData(e.currentTarget))
+        }}>
+            <div className='row' style={{ alignItems: 'center', gap: '20px' }}>
+                <FontAwesomeIcon icon={faSearch} className='icon' style={{ height: '20px' }} />
                 <h3>Поиск</h3>
             </div>
             <div className='column'>
@@ -49,25 +53,25 @@ export default function TendersSearch() {
             <div className='column'>
                 <label htmlFor="filter_name" className={styles.filterLabel}>Наименование:</label>
                 <input name='name' id="filter_name" type="text" className={styles.filterInput}
-                       placeholder="Наименование"/>
+                    placeholder="Наименование" />
             </div>
             <div className='column'>
                 <label htmlFor="filter_company" className={styles.filterLabel}>Организация:</label>
                 <input name='company_name' id="filter_company" type="text" className={styles.filterInput}
-                       placeholder="Название организации"/>
+                    placeholder="Название организации" />
             </div>
             <div className='column'>
                 <label htmlFor="filter_number" className={styles.filterLabel}>Реестровый номер:</label>
                 <input name='reg_number' id="filter_number" type="text" className={styles.filterInput}
-                       placeholder="№ ..."/>
+                    placeholder="№ ..." />
             </div>
             <div className='column'>
                 <label className={styles.filterLabel}>От:</label>
-                <input name='start' type="date" className='input'/>
+                <input name='start' type="date" className='input' />
             </div>
             <div className='column'>
                 <label className={styles.filterLabel}>До:</label>
-                <input name='end' type="date" className='input'/>
+                <input name='end' type="date" className='input' />
             </div>
             <PrimaryButton>Найти</PrimaryButton>
         </form>
