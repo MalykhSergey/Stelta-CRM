@@ -1,11 +1,11 @@
+import { getFundingTypeName } from "@/models/Tender/FundingType";
 import getStatusName from "@/models/Tender/Status";
-import {Tender} from "@/models/Tender/Tender";
-import {faFilter} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useCallback, useEffect, useRef} from "react";
+import { Tender } from "@/models/Tender/Tender";
+import { getTenderTypeName } from "@/models/Tender/TenderType";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCallback, useEffect, useRef } from "react";
 import styles from "./TendersFilter.module.css";
-import {getTenderTypeName} from "@/models/Tender/TenderType";
-import {getFundingTypeName} from "@/models/Tender/FundingType";
 
 export default function TendersFilter(props: {
     allTenders: Tender[],
@@ -38,14 +38,16 @@ export default function TendersFilter(props: {
             const companyVal = company.current?.value?.toLowerCase();
             props.setTenders(props.allTenders.filter(tender => {
                 if (statusVal) {
-                    const isSpecialCase = statusVal === '-1' && (tender.status === -4 || tender.status > 0);
-                    const isRegularCase = statusVal !== '-1' && tender.status.toString() !== statusVal;
-                    if (isSpecialCase || isRegularCase) return false;
+                    const parsedStatus = parseInt(statusVal);
+                    if ((parsedStatus === -1 && (tender.status === -4 || tender.status >= 0)) ||
+                        (parsedStatus !== -1 && parsedStatus !== tender.status)) {
+                        return false;
+                    }
                 }
                 if (typeVal && tender.type != parseInt(typeVal)) return false;
                 if (fundingTypeVal && tender.fundingType != parseInt(fundingTypeVal)) return false;
                 if (regNumberVal && !tender.regNumber.includes(regNumberVal)) return false;
-                if (fullNameVal && !(tender.name.toLowerCase().includes(fullNameVal)||tender.shortName.toLowerCase().includes(fullNameVal))) return false;
+                if (fullNameVal && !(tender.name.toLowerCase().includes(fullNameVal) || tender.shortName.toLowerCase().includes(fullNameVal))) return false;
                 if (companyVal && !tender.company.name.toLowerCase().includes(companyVal)) return false;
 
                 const targetDate = props.simpleRange ? tender.statusDate : tender.startDateRange;
@@ -68,8 +70,8 @@ export default function TendersFilter(props: {
     }, []);
     return (
         <div className={styles.filter}>
-            <div className='row' style={{alignItems: 'center', gap: '20px'}}>
-                <FontAwesomeIcon icon={faFilter} className='icon' style={{height: '20px'}}/>
+            <div className='row' style={{ alignItems: 'center', gap: '20px' }}>
+                <FontAwesomeIcon icon={faFilter} className='icon' style={{ height: '20px' }} />
                 <h3>Фильтр</h3>
             </div>
             <div>
@@ -109,27 +111,27 @@ export default function TendersFilter(props: {
             <div>
                 <label htmlFor="filter_name" className={styles.filterLabel}>Наименование:</label>
                 <input id="filter_name" ref={fullName} type="text" className={styles.filterInput}
-                       placeholder="Наименование"
-                       onChange={debouncedChangeFilter}/>
+                    placeholder="Наименование"
+                    onChange={debouncedChangeFilter} />
             </div>
             <div>
                 <label htmlFor="filter_company" className={styles.filterLabel}>Организация:</label>
                 <input id="filter_company" ref={company} type="text" className={styles.filterInput}
-                       placeholder="Название организации"
-                       onChange={debouncedChangeFilter}/>
+                    placeholder="Название организации"
+                    onChange={debouncedChangeFilter} />
             </div>
             <div>
                 <label htmlFor="filter_number" className={styles.filterLabel}>Реестровый номер:</label>
                 <input id="filter_number" ref={regNumber} type="text" className={styles.filterInput} placeholder="№ ..."
-                       onChange={debouncedChangeFilter}/>
+                    onChange={debouncedChangeFilter} />
             </div>
             <div>
                 <label htmlFor='start_date' className={styles.filterLabel}>От:</label>
-                <input id='start_date' ref={startDateRange} type="date" className='input' onChange={debouncedChangeFilter}/>
+                <input id='start_date' ref={startDateRange} type="date" className='input' onChange={debouncedChangeFilter} />
             </div>
             <div>
                 <label htmlFor='end_date' className={styles.filterLabel}>До:</label>
-                <input id='end_date' ref={endDateRange} type="date" className='input' onChange={debouncedChangeFilter}/>
+                <input id='end_date' ref={endDateRange} type="date" className='input' onChange={debouncedChangeFilter} />
             </div>
         </div>
     )
