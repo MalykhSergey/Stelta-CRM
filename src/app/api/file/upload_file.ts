@@ -9,10 +9,7 @@ import path from "path";
 import TransactionManager from "@/models/TransactionManager";
 import {Role} from "@/models/User/User";
 
-
-export const config = {api: {bodyParser: false}}
-
-export async function POST(request: Request) {
+export async function upload_file(request: Request) {
     const user = await authAction(async (user) => {
         if (user.role != Role.Editor && user.role != Role.Admin)
             return {error: "Запрещено редактирование"}

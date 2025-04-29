@@ -2,8 +2,9 @@
 import { faCheck, faExclamation, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { makeAutoObservable } from "mobx";
-import { observer } from "mobx-react-lite";
+import {enableStaticRendering, observer} from "mobx-react-lite";
 import styles from "./Alert.module.css";
+enableStaticRendering(typeof window === "undefined")
 enum AlertType {
   successful = "successful", error = "error", info = "info"
 }

@@ -67,3 +67,16 @@
 .emptyType {
     margin-bottom: 10px;
 }
+
+.type-0{
+    background-color: white;
+}
+.type-1{
+    background-color: #efefef !important;
+}
+.type-2{
+    background-color: #fff4d5 !important;
+}
+.type-3{
+    background-color: #eeffe4 !important;
+}

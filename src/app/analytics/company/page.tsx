@@ -1,18 +1,20 @@
 import {getCompaniesFullAnalytics} from "@/models/Analytics/AnalyticsService";
 import RollupTable from "@/models/Analytics/Table/JSX/RollupTable";
 import {Metadata} from "next";
-
-import getParamsDates from "@/app/components/DateRangeForm/GetParamsDates";
+import {FilterForm} from "@/app/components/FilterForm/FilterForm";
+import get_default_fields from "@/app/analytics/common_util";
 
 export const metadata: Metadata = {
     title: 'Аналитика: организации',
 }
+
 export default async function page({searchParams,}: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const start_param = (await searchParams).start as string
-    const end_param = (await searchParams).end as string
-    const {startDate, endDate} = getParamsDates(start_param, end_param)
-    const table = await getCompaniesFullAnalytics(startDate, endDate, true);
-    return new RollupTable(table.headers, table.data, table.colSizes).render()
+    const {statuses, startDate, endDate, fields} = await get_default_fields(searchParams);
+    const table = await getCompaniesFullAnalytics(startDate, endDate, statuses, true);
+    return (<>
+        <FilterForm fields={fields}/>
+        {new RollupTable(table.headers, table.data, table.colSizes).render()}
+    </>)
 }

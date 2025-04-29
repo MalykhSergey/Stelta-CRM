@@ -31,4 +31,14 @@ export default class Company implements ICompany {
     addContactPerson(contactPerson: ContactPerson) {
         this.contactPersons.push(contactPerson)
     }
+    
+    serialize(simplify = false) {
+        if (simplify){
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const {contactPersons,...data} = this
+            return data
+        }
+        else
+            return this
+    }
 }

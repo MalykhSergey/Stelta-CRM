@@ -56,7 +56,7 @@ describe('StageForm3', () => {
         expect(dateInput.value).toBe(fakeTender.contractDate);
 
         // Проверяем наличие и значение инпута номера договора
-        const numberInput = screen.getByLabelText(/Номер заключения договора:/) as HTMLInputElement;
+        const numberInput = screen.getByLabelText(/Номер заключённого договора:/) as HTMLInputElement;
         expect(numberInput).toBeInTheDocument();
         expect(numberInput.value).toBe(fakeTender.contractNumber);
     });
@@ -70,7 +70,7 @@ describe('StageForm3', () => {
 
     it('вызывает setContractNumber когда изменяется номер договора', () => {
         render(<StageForm3 tender={fakeTender as Tender} isEditable={true}/>);
-        const numberInput = screen.getByLabelText(/Номер заключения договора:/) as HTMLInputElement;
+        const numberInput = screen.getByLabelText(/Номер заключённого договора:/) as HTMLInputElement;
         fireEvent.change(numberInput, {target: {value: 'CN-002'}});
         expect(fakeTender.setContractNumber).toHaveBeenCalledWith('CN-002');
     });
@@ -79,7 +79,7 @@ describe('StageForm3', () => {
         render(<StageForm3 tender={fakeTender as Tender} isEditable={false}/>);
 
         const dateInput = screen.getByLabelText(/Дата заключения договора:/) as HTMLInputElement;
-        const numberInput = screen.getByLabelText(/Номер заключения договора:/) as HTMLInputElement;
+        const numberInput = screen.getByLabelText(/Номер заключённого договора:/) as HTMLInputElement;
         expect(dateInput).toBeDisabled();
         expect(numberInput).toBeDisabled();
     });

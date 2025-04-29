@@ -1,0 +1,70 @@
+.container {
+    position: relative;
+    min-width: 200px;
+    width: 100%;
+}
+
+.button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    text-align: left;
+    background: white;
+    cursor: pointer;
+    color: #000;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.icon {
+    transition: transform 0.3s;
+}
+
+.icon.rotate {
+    transform: rotate(180deg);
+}
+
+.button:hover {
+    background-color: white;
+}
+
+.button:active {
+    box-shadow: none;
+}
+
+.dropdown {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+    z-index: 2;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    gap: 4px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    visibility: hidden;
+}
+
+.dropdown.open {
+    visibility: visible;
+}
+
+.multiselectItem {
+    display: grid;
+    grid-template-columns: 10% 90%;
+    padding: 4px 8px;
+    gap: 4px;
+}
+
+.multiselectItem input {
+    margin-right: 6px;
+}

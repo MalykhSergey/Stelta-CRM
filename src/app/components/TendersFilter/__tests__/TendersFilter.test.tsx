@@ -40,7 +40,7 @@ describe('TendersFilter Component', () => {
         );
 
         // Выбираем элемент <select> для статуса (единственный комбобокс на странице)
-        const statusSelect = screen.getByRole('combobox');
+        const statusSelect = screen.getByLabelText('Статус:');
         // Устанавливаем значение "1"
         fireEvent.change(statusSelect, {target: {value: "1"}});
 

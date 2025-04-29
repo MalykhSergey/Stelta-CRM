@@ -36,6 +36,15 @@ export default class FileName {
         if (a.name != b.name) return false;
         return a.fileType == b.fileType;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static checkObject(obj: any): boolean {
+        return obj &&
+            typeof obj.id == 'number' &&
+            typeof obj.tenderId == 'number' &&
+            typeof obj.name == 'string' &&
+            typeof obj.fileType == 'number';
+    }
 }
 
 export enum FileType {

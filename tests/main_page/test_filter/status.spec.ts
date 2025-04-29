@@ -2,7 +2,7 @@ import { expect, test } from "../../login-fixture";
 
 test('Фильтрация по статусу', async ({ page }) => {
   await page.goto('http://127.0.0.1:3000/');
-  await page.getByRole('combobox').selectOption('1');
+  await page.getByLabel('Статус:').selectOption('1');
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`- heading "Подана 1 Этап" [level=3]`);
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`- heading "Подготовка 2 Этап" [level=3]`);
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`- heading "Подана 2 Этап" [level=3]`);

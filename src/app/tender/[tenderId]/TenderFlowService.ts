@@ -7,6 +7,11 @@ import {Role, User} from "@/models/User/User";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import TenderStageStrategy from "@/app/tender/[tenderId]/TenderStrategy";
 import {TenderType} from "@/models/Tender/TenderType";
+import ParentContract from "@/models/Tender/ParentContract";
+import {enableStaticRendering} from "mobx-react-lite";
+import RequestExecutor from "@/app/components/RequestExecutor/RequestExecutor";
+
+enableStaticRendering(typeof window === "undefined")
 
 enum ActiveTenderStatus {
     Stage0 = 0,
@@ -35,15 +40,17 @@ export default class TenderFlowService {
     };
     tender: Tender;
     companies: Company[];
+    parent_contracts: Map<string, number>;
     strategy: TenderStageStrategy;
     isAuth = false;
     private router: AppRouterInstance;
 
-    constructor(tender: string, companies: string, user: User, router: AppRouterInstance) {
+    constructor(tender: string, companies: string, parent_contacts: ParentContract[], user: User, router: AppRouterInstance) {
         this.isAuth = user.name != '' && user.role != Role.Viewer;
         this.router = router;
         this.companies = Company.fromJSONArray(companies)
         this.tender = Tender.fromJSON(tender)
+        this.parent_contracts = new Map(parent_contacts.map(parent_contact => [parent_contact.contract_number, parent_contact.parent_id]))
         if (this.tender.company.id != 0)
             this.tender.company = this.companies.find(company => company.id === this.tender.company.id)!
         this.strategy = TenderStageStrategy.getStrategy(this.tender)
@@ -56,36 +63,38 @@ export default class TenderFlowService {
                 showMessage("Выберите организацию!", "error")
                 return false
             }
-            const result = await (await fetch(`/api/contact_person?companyId=${this.tender.company.id}`, {
+            const url = `/api/contact_person?companyId=${this.tender.company.id}`;
+            const params = {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(this.tender.contactPerson)
-            })).json()
-            if (result?.error) {
-                showMessage(result.error)
-                return false
-            }
-            showMessage("Создано новое контактное лицо!", "successful")
-            this.tender.contactPerson.id = result
-            const new_contact_person = new ContactPerson(this.tender.contactPerson.id, this.tender.contactPerson.name, this.tender.contactPerson.phoneNumber, this.tender.contactPerson.email)
-            this.tender.company.addContactPerson(new_contact_person)
+            };
+            const createContactExecutor = new RequestExecutor<number>(url,params,(result)=>{
+                showMessage("Создано новое контактное лицо!", "successful")
+                this.tender.contactPerson.id = result
+                const new_contact_person = new ContactPerson(this.tender.contactPerson.id, this.tender.contactPerson.name, this.tender.contactPerson.phoneNumber, this.tender.contactPerson.email)
+                this.tender.company.addContactPerson(new_contact_person)
+            })
+            await createContactExecutor.execute();
         }
-        const result = await (await fetch(`/api/tender/${this.tender.id}`, {
+        // Устанавливаем parent_id, если есть в таблице
+        this.tender.parentContract.parent_id = this.parent_contracts.get(this.tender.parentContract.contract_number) || 0
+        const update_url = `/api/tender/${this.tender.id}`;
+        const update_params = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(this.tender)
-        })).json()
-        if (result?.error) {
-            showMessage(result.error)
-            return false;
-        } else {
-            showMessage("Данные успешно сохранены!", "successful")
-        }
-        return true;
+            // Сокращаем объект, удаляем файлы и лишние контактные лица
+            body: JSON.stringify(this.tender, (key, value) => {
+                if (value && typeof value.serialize === 'function') {
+                    return value.serialize(true);
+                }
+                return value;
+            })
+        };
+        const updateTenderExecutor = new RequestExecutor<void>(update_url, update_params, () => showMessage("Данные успешно сохранены!", "successful"))
+        return await updateTenderExecutor.execute();
     }
 
     async deleteHandler() {

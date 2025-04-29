@@ -21,4 +21,14 @@ export class DocumentRequest {
         if (index > -1)
             this.fileNames.splice(index, 1);
     }
+
+    serialize(simplify = false) {
+        if (simplify){
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const {fileNames,...data} = this
+            return data
+        }
+        else
+            return this
+    }
 }

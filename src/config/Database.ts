@@ -1,6 +1,8 @@
 import {DatabaseError, Pool} from "pg";
 import logger from "@/config/Logger";
-
+/**
+ * Пул соединений. Не использовать conn.query для транзакций!
+ */
 const conn = new Pool({
     user: process.env.PGSQL_USER,
     password: process.env.PGSQL_PASSWORD,
@@ -42,7 +44,4 @@ export function handleDatabaseError(
 }
 
 const default_errors = {'55P03': 'Временно заблокировано вами или другим пользователем!',}
-/**
- * Пул соединений. Не использовать conn.query для транзакций!
- */
 export default conn;

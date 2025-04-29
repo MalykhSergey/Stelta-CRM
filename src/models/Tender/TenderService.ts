@@ -6,6 +6,7 @@ import {CalendarService} from "@/models/Tender/Calendar/CalendarService";
 import {User} from "@/models/User/User";
 import logger from "@/config/Logger";
 import {Tender} from "@/models/Tender/Tender";
+import ParentContract from "@/models/Tender/ParentContract";
 
 export async function createTender(status: number) {
     return authAction(async (user: User) => {
@@ -31,6 +32,10 @@ export async function getAllTenders(): Promise<string> {
 
 export async function getTenderById(id: number): Promise<string> {
     return JSON.stringify(await tenderStorage.getById(id));
+}
+
+export async function getParentContracts(): Promise<ParentContract[]> {
+    return tenderStorage.getParentContracts();
 }
 
 export async function addDocumentRequest(tenderId: number) {

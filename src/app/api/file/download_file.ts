@@ -6,7 +6,7 @@ import fs from "fs/promises";
 import {Readable} from "node:stream";
 import {authorize} from "@/models/User/UserService";
 
-export async function GET(request: NextRequest) {
+export async function download_file(request: NextRequest) {
     if (!(await authorize())) {
         return new Response('Доступ запрещён!', {status: 403});
     }

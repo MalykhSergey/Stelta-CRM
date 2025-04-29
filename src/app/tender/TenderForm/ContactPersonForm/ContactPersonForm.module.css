@@ -39,6 +39,7 @@
     padding: 12px;
     font-size: 16px;
     color: black;
+    cursor: pointer;
 }
 
 .searchItem:hover {
