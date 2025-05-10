@@ -22,9 +22,10 @@ export default async function ServerPage({ searchParams, }: {
     let end = (await searchParams).end || ''
     const startDate = new Date(start)
     const endDate = new Date(end)
-    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-        start = end = ''
-    }
+    if (isNaN(startDate.getTime()))
+        start = ''
+    if (isNaN(endDate.getTime()))
+        end = ''
     const page = (await searchParams).page || '0'
     const { remained, tenders } = await search_tenders(status, type, funding_type, name, reg_number, company_name, start, end, parseInt(page));
     return (
