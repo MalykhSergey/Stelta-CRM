@@ -1,17 +1,24 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { files_for_upload } from "./files_for_upload/files_path";
 
-export default async function check_file_form(page:Page, title:string) {
+export default async function check_file_form(page: Page, title: string) {
     const form = await page.getByLabel(title);
-    await form.getByLabel('Прикрепить').click();
-    await form.locator('input[type="file"]').setInputFiles([files_for_upload[0]]);
-    await page.waitForTimeout(300);
-    await form.getByLabel('Прикрепить').click();
-    await form.locator('input[type="file"]').setInputFiles([files_for_upload[1]]);
-    await page.waitForTimeout(300);
-    await form.getByLabel('Прикрепить').click();
-    await form.locator('input[type="file"]').setInputFiles([files_for_upload[2]]);
-    await page.waitForTimeout(300);
+    async function uploadWithNetworkWait(filePath: string) {
+        const [fileChooser] = await Promise.all([
+            page.waitForEvent('filechooser'),
+            form.getByLabel('Прикрепить').click(),
+        ]);
+        await Promise.all([
+            fileChooser.setFiles(filePath),
+            page.waitForResponse(response =>
+                response.url().includes('/api/file') &&
+                response.status() === 200
+            ),
+        ]);
+    }
+    await uploadWithNetworkWait(files_for_upload[0]);
+    await uploadWithNetworkWait(files_for_upload[1]);
+    await uploadWithNetworkWait(files_for_upload[2]);
     await expect(form.locator('div').filter({ hasText: /^4\.png$/ }).first()).toBeVisible();
     await expect(form.locator('div').filter({ hasText: /^5\.png$/ }).first()).toBeVisible();
     await expect(form.locator('div').filter({ hasText: /^6\.png$/ }).first()).toBeVisible();
